@@ -3,1109 +3,819 @@ import type { Stage } from "@/course/course.schema";
 export const stage03 = {
   id: "stage-03",
   number: 3,
-  title: "Values, Types, and Data Flow",
+  title: "First Python Syntax and Values",
   summary:
-    "Understand Python's core types — int, float, str, bool, None — and how values flow through expressions, conversions, and comparisons.",
+    "Master Python's core syntax: statements, expressions, whitespace, comments, numeric literals, arithmetic, boolean values, None, variables, and naming conventions.",
   level: "beginner",
-  masteryGateConceptIds: [
-    "int",
-    "float",
-    "str-type",
-    "bool",
-    "none-type",
-    "type-conversion",
-    "truthiness",
-  ],
+  masteryGateConceptIds: ["python-syntax", "numeric-literals", "variables-names"],
 
   lessons: [
-    /* ── Lesson 1: Numbers: Integers and Floats ───────────────────────────── */
     {
-      id: "s3-integers-floats",
+      id: "s3-statements-vs-expressions",
       stageId: "stage-03",
-      title: "Numbers: Integers and Floats",
+      title: "Statements vs Expressions",
       kind: "concept",
       difficulty: "beginner",
       objectives: [
-        "Distinguish between Python's int and float types",
-        "Use type() to inspect the type of a value",
-        "Explain why 5/2 returns 3.5 but 5//2 returns 2",
-        "Use modulo (%) to find the remainder of a division",
+        "Distinguish a statement from an expression",
+        "Explain that expressions produce values; statements perform actions",
+        "Identify examples of each in Python code",
       ],
       prerequisites: [],
-      concepts: ["int", "float"],
+      concepts: ["python-syntax"],
       contentBlocks: [
-        /* SECTION 1 — ORIENTATION */
         {
           kind: "text",
           markdown:
-            "Computers handle numbers constantly — counting items, measuring distances, calculating prices. But not all numbers work the same way. A number of people in a room is always a whole number. A temperature or a price can have a fractional part. Python keeps these two ideas separate, and understanding the difference prevents a surprising class of bugs where arithmetic gives you an unexpected type of result.",
+            "## Statements vs Expressions\n\nTwo foundational concepts in any programming language:\n\n**An expression** is any piece of code that produces a **value** when evaluated.\n```python\n2 + 3           # expression — evaluates to 5\nlen('hello')    # expression — evaluates to 5\n'Hello, ' + 'world'  # expression — evaluates to 'Hello, world'\nTrue            # expression — evaluates to True\n```\n\n**A statement** is a complete instruction that **does something** — an action. Statements don't produce a value you can use elsewhere.\n```python\nx = 5           # assignment statement — stores a value\nprint('Hi')     # expression statement — calls a function for its side effect\nif x > 0:       # compound statement — controls flow\n    pass\n```\n\n**The key rule**: expressions can appear anywhere a value is expected. Statements cannot be nested inside expressions.\n\n```python\n# OK — expression inside a print() call:\nprint(2 + 3)     # 2 + 3 is an expression; print() is a statement\n\n# OK — expressions can be composed:\nresult = len('hello') * 2  # two expressions combined\n```",
         },
-
-        /* SECTION 3 — CORE CONCEPT: int */
-        {
-          kind: "text",
-          markdown:
-            "### The need for whole numbers\n\nSometimes you want to count things precisely — pages in a book, people in a queue, loop repetitions. For these you need a number type that holds only whole values, with no decimal point and no rounding.\n\nIn Python this type is called **`int`** (short for *integer*). An int can be positive, negative, or zero, and Python's ints can be as large as your computer's memory allows — they never overflow.\n\nYou can ask Python what type a value is by wrapping it in `type()`.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: "# Setup: showing int values and how to inspect their type\ncount = 42        # a whole number — no decimal point\ndebt  = -7        # negatives are fine\nbig   = 1_000_000 # underscores improve readability; value is 1000000\n\nprint(count)        # 42\nprint(type(count))  # <class 'int'>\nprint(type(big))    # <class 'int'>",
-          caption:
-            "A: Demonstrates int literals and type(). B: The example. C: count is 42, an int. Underscores in numeric literals are ignored by Python — they only help humans read large numbers. type() reveals the class. D: What if count were 42.0? type() would show <class 'float'> — that decimal point changes everything.",
-        },
-        {
-          kind: "mental-model",
-          title: "int — the counting number",
-          analogy:
-            "Think of an int like a tally mark on a whiteboard. You can add marks, erase marks, count them. You can never have half a tally mark.",
-          explanation:
-            "Python's int holds a precise whole number. There is no rounding, no decimal part, no approximation. Operations on two ints that produce a whole result stay as ints. The only exception is regular division (/), which always returns a float.",
-        },
-
-        /* SECTION 3 — CORE CONCEPT: float */
-        {
-          kind: "text",
-          markdown:
-            "### The need for fractional numbers\n\nSometimes a whole number is not enough. A kilogram of flour can be 0.75 kg. A bank balance can be $12.50. A temperature can be 36.6°C. You need a number that can represent a value between the whole numbers.\n\nPython's type for this is called **`float`** (short for *floating-point number*). A float is written with a decimal point. Even `1.0` is a float, not an int.\n\nFloats are stored in a fixed amount of memory (64 bits), which means very large or very precise floats may have tiny rounding errors — something whole ints never have.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: "# Setup: float literals and arithmetic\nprice   = 9.99\npi      = 3.14159\nwhole_f = 1.0       # looks like 1, but the dot makes it a float\n\nprint(type(price))    # <class 'float'>\nprint(type(whole_f))  # <class 'float'>\n\n# Regular division always returns float — even with two ints!\nprint(10 / 2)   # 5.0  (not 5!)\nprint(type(10 / 2))  # <class 'float'>",
-          caption:
-            "A: Shows float literals and the key fact that / always returns float. B: The example. C: price and whole_f are floats because they have decimal points. 10 / 2 returns 5.0, not 5 — the / operator always produces a float in Python 3. D: What if we use // instead of /? 10 // 2 returns 5, an int — floor division truncates to the whole part.",
-        },
-
-        /* SECTION 3 — COMPARISON: int vs float */
-        {
-          kind: "comparison",
-          leftLabel: "int — whole number",
-          rightLabel: "float — fractional number",
-          leftCode:
-            "x = 5\nprint(type(x))  # <class 'int'>\nprint(x)        # 5\n# Never has a decimal part\n# Exact — no rounding",
-          rightCode:
-            "x = 5.0\nprint(type(x))  # <class 'float'>\nprint(x)        # 5.0\n# Always has a decimal part\n# May have tiny rounding errors",
-          caption:
-            "The decimal point is the only visible difference in the literal, but the types are completely distinct and behave differently in division.",
-        },
-
-        /* SECTION 4 — VARIATIONS: division operators */
-        {
-          kind: "text",
-          markdown:
-            "### Division operators: /, //, and %\n\nPython has three division-related operators, each returning a different thing:\n\n- `/` — true division: always returns a float.\n- `//` — floor division: divides and rounds down to the nearest whole number; returns an int when both sides are ints.\n- `%` — modulo: returns the remainder after floor division.\n\nThese three operators are used together constantly — for example, to convert a total number of minutes into hours and leftover minutes.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: "total_minutes = 137\n\nhours     = total_minutes // 60  # how many full hours? → 2\nremainder = total_minutes % 60   # leftover minutes?   → 17\n\nprint(hours)      # 2\nprint(remainder)  # 17\n\n# Comparison of all three operators on the same pair of numbers\nprint(7 / 2)    # 3.5   (float)\nprint(7 // 2)   # 3     (floor — discards the .5)\nprint(7 % 2)    # 1     (remainder: 7 = 3*2 + 1)",
-          caption: "Using //, %, and / together to decompose a quantity into parts.",
-        },
-
-        /* SECTION 5 — BREAKDOWN */
-        {
-          kind: "callout",
-          variant: "danger",
-          title: "Breakdown: expecting an int from /",
-          body: 'A very common mistake: you perform `result = 10 / 5` expecting an int (because 10 divided by 5 is perfectly 2), then later write `print(result + 1)` and wonder why you see 3.0 instead of 3. The bug is that / always returns float. Use // when you need an integer quotient: `result = 10 // 5` gives 2, not 2.0.',
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: "# Broken version — developer expected int, got float\nresult = 10 / 5\nprint(type(result))  # <class 'float'>  — surprise!\nprint(result + 1)    # 3.0  (not 3)\n\n# Fixed version\nresult = 10 // 5\nprint(type(result))  # <class 'int'>\nprint(result + 1)    # 3",
-          caption: "/ always returns float. Use // when you need an integer result.",
-        },
-
-        /* SECTION 6 — WHY MATTERS */
-        {
-          kind: "why-matters",
-          body: "With ints and floats in hand, you can now write arithmetic that produces the type you actually want. You can use type() to check any value when something seems off. The modulo operator % opens up even-odd tests and digit extraction. Next you will meet booleans — values that are the direct output of comparison questions — which build directly on the arithmetic you just learned.",
-        },
-
-        /* SECTION 7 — COMPREHENSION CHECK */
         {
           kind: "callout",
           variant: "info",
-          title: "Comprehension Check",
-          body: "A program stores `pages = 250` and `books = 4`. A developer writes `average = pages / books` and then tries to use `average` in a sentence: `\"Average pages: \" + average`. Two things will go wrong. What are they, and how would you fix both?",
+          title: "Expression statements",
+          body: "A function call like `print('hi')` is actually an expression (it returns None) used as a statement. Python allows expressions to be used as standalone statements — the return value is simply discarded. This is called an 'expression statement'.",
         },
       ],
       interactions: [
         {
-          id: "s3-if-predict-division",
-          kind: "predict-output",
-          prompt:
-            "What does this program print? Pay close attention to which operator is used on each line.",
-          beginnerPurpose:
-            "Distinguish / (float division) from // (floor division) — a very common point of confusion.",
-          expectedConceptIds: ["int", "float"],
-          code: "print(5 / 2)\nprint(5 // 2)\nprint(5 % 2)",
-          expectedOutput: "2.5\n2\n1",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "/ returns a float; // returns the integer quotient; % returns the remainder.",
-            },
-            {
-              level: "syntax",
-              text: "5/2 = 2.5 exactly. 5//2 = 2 (how many times does 2 fit completely in 5?). 5%2 = 1 (what's left over?).",
-            },
-          ],
-          feedback: {
-            correct: "Correct! / → 2.5 (float), // → 2 (floor), % → 1 (remainder).",
-            incorrect:
-              "Remember: / always returns a float in Python 3. // gives the integer part of the division. % gives the remainder.",
-          },
-        },
-        {
-          id: "s3-if-fill-type-check",
-          kind: "fill-code",
-          prompt:
-            "Complete the code so it prints the type of the number 42 using the type() function.",
-          beginnerPurpose:
-            "Practice using type() to inspect values — a key debugging tool.",
-          expectedConceptIds: ["int"],
-          codeTemplate: "print(___)",
-          blanks: [
-            {
-              placeholder: "___",
-              answer: "type(42)",
-              caseSensitive: true,
-            },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "type() takes a value as its argument and returns the type: type(42) returns <class 'int'>.",
-            },
-          ],
-          feedback: {
-            correct: "Correct! type(42) returns <class 'int'>.",
-            incorrect: "Use the type() function: print(type(42))",
-          },
-        },
-        {
-          id: "s3-if-mc-int-vs-float",
+          id: "s3-stmt-expr-mc",
           kind: "multiple-choice",
-          prompt: "Which of the following is a float in Python?",
-          beginnerPurpose:
-            "Verify the learner can identify int vs float literals by their notation.",
-          expectedConceptIds: ["int", "float"],
+          prompt: "Which of the following is an EXPRESSION (produces a value)?",
+          beginnerPurpose: "Classify statements vs expressions.",
+          expectedConceptIds: ["python-syntax"],
           options: [
-            {
-              id: "opt-a",
-              text: "100",
-              isCorrect: false,
-              explanation: "100 has no decimal point — it's an int.",
-            },
-            {
-              id: "opt-b",
-              text: "100.0",
-              isCorrect: true,
-              explanation:
-                "100.0 has a decimal point, making it a float even though its mathematical value is a whole number.",
-            },
-            {
-              id: "opt-c",
-              text: "\"100\"",
-              isCorrect: false,
-              explanation: '"100" is a string, not a number at all.',
-            },
-            {
-              id: "opt-d",
-              text: "True",
-              isCorrect: false,
-              explanation: "True is a boolean, not a float.",
-            },
+            { id: "a", text: "x = 10", isCorrect: false, explanation: "x = 10 is an assignment statement. It doesn't produce a value — it stores one." },
+            { id: "b", text: "2 ** 8", isCorrect: true, explanation: "Correct! 2 ** 8 is an expression — it evaluates to the value 256." },
+            { id: "c", text: "import os", isCorrect: false, explanation: "import is a statement — it loads a module but doesn't produce a usable value." },
           ],
           allowMultiple: false,
           allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "A float is any number written with a decimal point.",
-            },
-          ],
-          feedback: {
-            correct: "Right! The decimal point makes 100.0 a float, even though it equals 100.",
-            incorrect:
-              "A float is identified by the presence of a decimal point in its literal form.",
-          },
+          hints: [{ level: "concept", text: "An expression always evaluates to a value you could store or use elsewhere." }],
+          feedback: { correct: "Correct! 2 ** 8 evaluates to 256 — it's an expression.", incorrect: "An expression produces a value. 2 ** 8 evaluates to 256 — that's a value you can use." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "int",
-          recallPrompt: "What is an int in Python, and how does it differ from a float?",
-          nextReviewAfterDays: 3,
-        },
-        {
-          conceptId: "float",
-          recallPrompt: "What does Python's / operator return when dividing two integers?",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s3-if-predict-division",
-          "s3-if-fill-type-check",
-          "s3-if-mc-int-vs-float",
-        ],
+        requiredInteractionIds: ["s3-stmt-expr-mc"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["int", "float"],
+        reviewHookIds: [],
       },
     },
 
-    /* ── Lesson 2: Booleans and Comparisons ───────────────────────────────── */
     {
-      id: "s3-booleans-comparisons",
+      id: "s3-whitespace-indentation",
       stageId: "stage-03",
-      title: "Booleans and Comparisons",
+      title: "Whitespace and Indentation",
       kind: "concept",
       difficulty: "beginner",
       objectives: [
-        "Identify True and False as Python's boolean values",
-        "Use comparison operators ==, !=, <, >, <=, >= to produce booleans",
-        "Understand that comparisons are expressions that evaluate to True or False",
-        "Avoid confusing = (assignment) with == (equality test)",
+        "Explain why Python uses indentation instead of braces",
+        "Use 4 spaces as the standard indentation unit",
+        "Avoid mixing tabs and spaces",
       ],
       prerequisites: [],
-      concepts: ["bool"],
+      concepts: ["python-syntax"],
       contentBlocks: [
-        /* SECTION 1 — ORIENTATION */
         {
           kind: "text",
           markdown:
-            "Programs constantly need to make decisions: is the user old enough to proceed? Is the score high enough to pass? Has the countdown reached zero? To answer these questions, Python needs a way to represent a yes-or-no answer as a value that can be stored, compared, and acted upon. This lesson introduces that idea.",
+            "## Whitespace and Indentation in Python\n\nUnlike most languages that use `{ }` braces to group code, Python uses **indentation** — the leading spaces on a line — to define code blocks.\n\n```python\n# Python — indentation defines the block\nif temperature > 30:\n    print('Hot day')     # indented = inside the if\n    print('Drink water') # also inside the if\nprint('Done')            # not indented = after the if\n\n# C/Java style — braces define the block\n# if (temperature > 30) {\n#     print('Hot day');\n# }\n```\n\n**The rules:**\n1. Use **4 spaces** per indent level (PEP 8 standard)\n2. All lines at the same level must align exactly\n3. Never mix tabs and spaces — Python 3 raises an error if you do\n4. Blank lines between functions/classes are fine and encouraged\n\n```python\ndef greet(name):\n    # This is inside the function (4 spaces)\n    message = 'Hello, ' + name\n    return message\n# This is outside the function (no indentation)\nprint(greet('Alice'))\n```",
         },
-
-        /* SECTION 2 — PREREQUISITES */
-        {
-          kind: "text",
-          markdown:
-            "### Quick recap: expressions produce values\n\nYou already know that `5 + 3` is an expression that produces `8`. An expression is any piece of code that Python evaluates and turns into a value. Comparison expressions work the same way — they produce a value, but that value is not a number: it is either `True` or `False`.",
-        },
-
-        /* SECTION 3 — CORE CONCEPT: bool */
-        {
-          kind: "text",
-          markdown:
-            "### The need for yes-or-no values\n\nWhen you ask Python \"is the temperature above 30?\", the answer is not a number. It is simply: yes or no. Python needs a type to represent that answer as a value you can store in a variable and use later.\n\nThe two values that represent yes and no in Python are written as **`True`** and **`False`** (capital first letter). They are the only possible values of a type called **`bool`** (short for *Boolean*, named after mathematician George Boole).\n\nYou produce a bool by writing a **comparison expression** — using one of six comparison operators to compare two values.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: "# Setup: all six comparison operators applied to numbers\nage = 20\n\nprint(age == 20)   # True  — equal to\nprint(age != 18)   # True  — not equal to\nprint(age > 18)    # True  — greater than\nprint(age < 18)    # False — less than\nprint(age >= 20)   # True  — greater than or equal to\nprint(age <= 19)   # False — less than or equal to\n\n# Booleans are values — you can store them\nis_adult = age >= 18\nprint(is_adult)        # True\nprint(type(is_adult))  # <class 'bool'>",
-          caption:
-            "A: Shows all six operators and confirms the result type is bool. B: The example. C: Each comparison asks a question; Python answers True or False. The result is a full value you can store. D: What if age were 15? age >= 18 would be False, so is_adult would be False.",
-        },
-        {
-          kind: "mental-model",
-          title: "bool — the answer to a yes/no question",
-          analogy:
-            "Think of a comparison expression as a question you ask Python. `age >= 18` means 'Is age at least 18?' Python answers with a slip of paper that says either True or False. That slip is the bool value.",
-          explanation:
-            "Every comparison expression produces exactly one bool value. That value can be stored in a variable, printed, or used directly as the condition of an if statement (coming next stage). There are only two bool values in existence: True and False.",
-        },
-
-        /* SECTION 5 — BREAKDOWN */
         {
           kind: "callout",
           variant: "danger",
-          title: "Breakdown: = versus ==",
-          body: "The single equals sign (=) is assignment — it stores a value into a variable. The double equals sign (==) is a comparison — it checks whether two values are equal and returns True or False. Writing `if x = 5` instead of `if x == 5` is a SyntaxError in Python. This is the single most common beginner mistake involving booleans.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: "score = 75   # = assigns 75 to score\n\n# Correct: compare score to 60\nresult = score == 60   # False — 75 is not 60\nprint(result)\n\n# What the mistake looks like (do not run — SyntaxError):\n# if score = 60:   # SyntaxError! Use == to compare\n#     print(\"match\")",
-          caption: "= stores; == compares. They look similar but do completely different things.",
-        },
-
-        /* SECTION 4 — VARIATIONS */
-        {
-          kind: "text",
-          markdown:
-            "### Comparing strings and mixed types\n\nComparison operators also work on strings. Python compares strings character by character using alphabetical order. `==` checks exact equality (including case). Comparing a string to a number with `==` is valid and simply returns `False` — it does not crash.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: 'name = "Alice"\n\nprint(name == "Alice")   # True  — exact match\nprint(name == "alice")   # False — case matters\nprint(name != "Bob")     # True  — they are different\n\n# Comparing across types: always False, never crashes\nprint(42 == "42")        # False — int vs string',
-          caption: "String comparisons are case-sensitive. Comparing different types returns False.",
-        },
-
-        /* SECTION 6 — WHY MATTERS */
-        {
-          kind: "why-matters",
-          body: "Booleans are the bridge between data and decisions. Now that you can produce True or False from any comparison, you have everything you need for the if/else statements in Stage 4, which let your program choose different actions based on conditions. The next lesson introduces None — the value that means no value at all — which rounds out Python's core types.",
-        },
-
-        /* SECTION 7 — COMPREHENSION CHECK */
-        {
-          kind: "callout",
-          variant: "info",
-          title: "Comprehension Check",
-          body: "A quiz program stores `user_answer = \"Paris\"` and the correct answer as `correct = \"paris\"`. The developer writes `is_correct = user_answer == correct` and is surprised it prints False. What is wrong, and what are two different ways to fix it?",
+          title: "IndentationError is one of the most common beginner errors",
+          body: "If you see `IndentationError: expected an indented block` or `IndentationError: unexpected indent`, Python found your indentation doesn't match. Check that you're using 4 spaces consistently. Configure your editor to convert Tab keypresses to 4 spaces.",
         },
       ],
       interactions: [
         {
-          id: "s3-bc-predict-comparison",
-          kind: "predict-output",
-          prompt: "What does this program print? (Three lines, each True or False.)",
-          beginnerPurpose:
-            "Practice evaluating comparison expressions and recognising the boolean output.",
-          expectedConceptIds: ["bool"],
-          code: "x = 10\nprint(x > 5)\nprint(x == 10)\nprint(x != 10)",
-          expectedOutput: "True\nTrue\nFalse",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "Ask each comparison as a question: Is 10 > 5? Is 10 equal to 10? Is 10 not equal to 10?",
-            },
-          ],
-          feedback: {
-            correct: "Correct! 10>5 is True, 10==10 is True, 10!=10 is False.",
-            incorrect:
-              "Evaluate each comparison: > means greater than, == means equal to, != means not equal to.",
-          },
-        },
-        {
-          id: "s3-bc-mc-which-is-bool",
+          id: "s3-indent-mc",
           kind: "multiple-choice",
-          prompt: "Which of the following expressions produces a boolean value?",
-          beginnerPurpose:
-            "Distinguish boolean-producing expressions from other expression types.",
-          expectedConceptIds: ["bool"],
+          prompt: "Python uses indentation to define code blocks. What is the PEP 8 standard indentation?",
+          beginnerPurpose: "Know the standard indentation convention.",
+          expectedConceptIds: ["python-syntax"],
           options: [
-            {
-              id: "opt-a",
-              text: "5 + 3",
-              isCorrect: false,
-              explanation: "5 + 3 produces 8, an integer, not a boolean.",
-            },
-            {
-              id: "opt-b",
-              text: '"hello"',
-              isCorrect: false,
-              explanation: '"hello" is a string literal, not a boolean.',
-            },
-            {
-              id: "opt-c",
-              text: "7 > 4",
-              isCorrect: true,
-              explanation:
-                "7 > 4 is a comparison expression. Python evaluates it and returns True, which is a boolean.",
-            },
-            {
-              id: "opt-d",
-              text: "3.14",
-              isCorrect: false,
-              explanation: "3.14 is a float literal.",
-            },
+            { id: "a", text: "2 spaces", isCorrect: false, explanation: "2 spaces is valid Python but not the PEP 8 standard. Use 4 spaces." },
+            { id: "b", text: "4 spaces", isCorrect: true, explanation: "Correct! PEP 8 (Python's official style guide) specifies 4 spaces per indentation level." },
+            { id: "c", text: "1 tab character", isCorrect: false, explanation: "Tab characters work, but PEP 8 recommends 4 spaces. Never mix tabs and spaces." },
           ],
           allowMultiple: false,
           allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Comparison operators (>, <, ==, !=, <=, >=) always produce boolean results.",
-            },
-          ],
-          feedback: {
-            correct: "Right! Comparison operators like > always return a boolean (True or False).",
-            incorrect:
-              "Booleans come from comparisons. An expression with a comparison operator (>, <, ==, !=, <=, >=) returns True or False.",
-          },
-        },
-        {
-          id: "s3-bc-fill-comparison",
-          kind: "fill-code",
-          prompt:
-            "Complete the comparison so that `is_passing` is True when `score` is at least 60.",
-          beginnerPurpose:
-            "Write a comparison expression that uses the >= operator correctly.",
-          expectedConceptIds: ["bool"],
-          codeTemplate: "score = 75\nis_passing = score ___ 60\nprint(is_passing)",
-          blanks: [
-            {
-              placeholder: "___",
-              answer: ">=",
-              caseSensitive: true,
-            },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "'At least 60' means 60 or more — which operator expresses 'greater than or equal to'?",
-            },
-            {
-              level: "syntax",
-              text: "The >= operator returns True when the left side is greater than or equal to the right side.",
-            },
-          ],
-          feedback: {
-            correct: "Correct! >= (greater than or equal to) is the right operator for 'at least'.",
-            incorrect: "Use >= to mean 'greater than or equal to': score >= 60.",
-          },
+          hints: [{ level: "concept", text: "Python's official style guide (PEP 8) specifies the standard." }],
+          feedback: { correct: "Correct! 4 spaces per level is the PEP 8 standard.", incorrect: "The PEP 8 style guide specifies 4 spaces per indentation level." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "bool",
-          recallPrompt: "Name the six comparison operators in Python and what each one checks.",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s3-bc-predict-comparison",
-          "s3-bc-mc-which-is-bool",
-          "s3-bc-fill-comparison",
-        ],
+        requiredInteractionIds: ["s3-indent-mc"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["bool"],
+        reviewHookIds: [],
       },
     },
 
-    /* ── Lesson 3: None — The Absence of a Value ──────────────────────────── */
     {
-      id: "s3-none-type",
+      id: "s3-comments",
+      stageId: "stage-03",
+      title: "Comments: Intent, Disabled Code, Warning Signs",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Write single-line comments with #",
+        "Explain when comments add value vs create noise",
+        "Use comments to explain WHY, not what",
+      ],
+      prerequisites: [],
+      concepts: ["python-syntax"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Python Comments\n\nA **comment** begins with `#`. Everything from `#` to the end of the line is ignored by Python.\n\n```python\n# Whole-line comment\nx = 5  # inline comment — comes after code on the same line\n\n# 'Commenting out' code — temporarily disabling a line:\n# print('debug output')  # Python ignores this entirely\n```\n\n**When to comment:**\n\n✅ **Comment the WHY** (non-obvious reasoning):\n```python\nretry_limit = 3  # three attempts before we give up and log an error\n```\n\n❌ **Don't comment the WHAT** (the code already says this):\n```python\nx = 5  # assign 5 to x  ← useless noise\n```\n\n**Three types of comments:**\n1. **Intent** — why a choice was made\n2. **Disabled code** — temporarily removing a line while debugging\n3. **Warning signs** — `# TODO:`, `# FIXME:`, `# HACK:` — flags for future attention\n\n```python\n# TODO: replace this linear search with a binary search (performance)\nfor item in data:\n    if item == target:\n        return item\n```",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Good comments explain reasoning, not mechanics",
+          body: "The best comments answer: 'Why does this code exist in this form?' Not: 'What does this line do?' The code itself tells you what it does — the comment tells you why it does it that way.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-comments-mc",
+          kind: "multiple-choice",
+          prompt: "Which comment adds the most value?",
+          beginnerPurpose: "Distinguish useful comments from noise.",
+          expectedConceptIds: ["python-syntax"],
+          options: [
+            { id: "a", text: "# add 1 to count\ncount = count + 1", isCorrect: false, explanation: "The code already says 'add 1 to count'. This comment is redundant noise." },
+            { id: "b", text: "# cap at 100 to prevent API rate limit errors\ncount = min(count, 100)", isCorrect: true, explanation: "Correct! This explains WHY the cap exists — information not visible from the code alone." },
+            { id: "c", text: "# loop\nfor x in items:", isCorrect: false, explanation: "'# loop' just restates what the code clearly shows. No value added." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "Which comment tells you something the code itself doesn't say?" }],
+          feedback: { correct: "Correct! The best comment explains reasoning the code can't express.", incorrect: "Good comments explain WHY, not WHAT. The comment about the API rate limit explains something the code can't." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-comments-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-numeric-literals",
+      stageId: "stage-03",
+      title: "Numeric Literals: Integers, Floats, Complex Numbers",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Write integer, float, and complex number literals",
+        "Use underscores in large numbers for readability",
+        "Explain the difference between int and float representation",
+      ],
+      prerequisites: [],
+      concepts: ["numeric-literals"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Numeric Literals in Python\n\nA **literal** is a value written directly in code.\n\n**Integer literals:**\n```python\n42          # decimal\n-17         # negative\n1_000_000   # underscores for readability (value = 1000000)\n0b1010      # binary (prefix 0b) = 10\n0o17        # octal (prefix 0o) = 15\n0xFF        # hexadecimal (prefix 0x) = 255\n```\n\n**Float literals:**\n```python\n3.14        # standard decimal\n-0.001      # negative float\n1.0         # whole number as float\n1e10        # scientific notation: 1 × 10¹⁰\n2.5e-3      # 0.0025\n```\n\n**Complex number literals:**\n```python\n3 + 4j      # real=3, imaginary=4 (use j, not i)\n2j          # pure imaginary\n(3 + 4j).real   # 3.0\n(3 + 4j).imag   # 4.0\n```\n\nComplex numbers are used in scientific computing, signal processing, and electrical engineering.",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Use underscores in large numbers",
+          body: "Python allows underscores anywhere in numeric literals to improve readability. `1_000_000` is identical to `1000000`. Use them as visual separators: `10_000_000` is clearly ten million at a glance.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-literals-predict",
+          kind: "predict-output",
+          prompt: "What does Python print?",
+          beginnerPurpose: "Trace numeric literal values.",
+          expectedConceptIds: ["numeric-literals"],
+          code: "print(1_000 + 500)\nprint(2e3)\nprint(0xFF)",
+          expectedOutput: "1500\n2000.0\n255",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "1_000 = 1000, 2e3 = 2000.0 (float), 0xFF = 255 (hex)." }],
+          feedback: { correct: "Correct! Underscores, scientific notation, and hex all work as expected.", incorrect: "1_000 = 1000; 2e3 is scientific notation for 2000.0 (a float); 0xFF is hex for 255." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-literals-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-arithmetic-operators",
+      stageId: "stage-03",
+      title: "Arithmetic Operators",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Use +, -, *, /, //, %, and ** operators correctly",
+        "Predict the type (int or float) of arithmetic results",
+        "Apply modulo to solve real problems",
+      ],
+      prerequisites: [],
+      concepts: ["arithmetic"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Python's Arithmetic Operators\n\n| Operator | Name | Example | Result |\n|----------|------|---------|--------|\n| `+` | Addition | `5 + 3` | `8` |\n| `-` | Subtraction | `5 - 3` | `2` |\n| `*` | Multiplication | `5 * 3` | `15` |\n| `/` | True division | `5 / 2` | `2.5` (always float) |\n| `//` | Floor division | `5 // 2` | `2` (truncates) |\n| `%` | Modulo (remainder) | `5 % 2` | `1` |\n| `**` | Exponentiation | `2 ** 10` | `1024` |\n\n**Type rules:**\n- `int op int` → int (except `/` which always gives float)\n- `float op anything` → float\n- `/` always returns float\n- `//` returns int if both operands are int\n\n```python\nprint(7 / 2)    # 3.5   (float)\nprint(7 // 2)   # 3     (int, floor)\nprint(7 % 2)    # 1     (remainder)\nprint(2 ** 8)   # 256   (power)\n\n# Modulo practical use: even/odd check\nprint(10 % 2)   # 0 → even\nprint(11 % 2)   # 1 → odd\n```",
+        },
+        {
+          kind: "why-matters",
+          body: "The // and % operators are used everywhere: paging (which page?), time conversion (hours and minutes), circular buffers (index wrapping), and checking divisibility. Mastering them early unlocks a wide range of problems.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-arith-predict",
+          kind: "predict-output",
+          prompt: "What does Python print for each line?",
+          beginnerPurpose: "Practice arithmetic operator results and types.",
+          expectedConceptIds: ["arithmetic"],
+          code: "print(10 / 4)\nprint(10 // 4)\nprint(10 % 4)\nprint(2 ** 3)",
+          expectedOutput: "2.5\n2\n2\n8",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "/ always gives float; // truncates; % gives remainder; ** is power." }],
+          feedback: { correct: "Correct! 10/4=2.5, 10//4=2, 10%4=2, 2**3=8.", incorrect: "/ gives float (2.5), // truncates (2), % gives remainder (2), ** is exponentiation (8)." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-arith-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-operator-precedence",
+      stageId: "stage-03",
+      title: "Operator Precedence and Grouping",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "List Python's arithmetic operator precedence from highest to lowest",
+        "Use parentheses to override default precedence",
+        "Predict the result of multi-operator expressions",
+      ],
+      prerequisites: [],
+      concepts: ["arithmetic"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Operator Precedence\n\nWhen multiple operators appear in one expression, Python uses **precedence rules** to determine order — just like PEMDAS/BODMAS in mathematics.\n\n**Python precedence (high to low):**\n1. `()` — parentheses (highest)\n2. `**` — exponentiation (right-to-left)\n3. `+x`, `-x` — unary plus/minus\n4. `*`, `/`, `//`, `%` — multiplication and division\n5. `+`, `-` — addition and subtraction (lowest)\n\n```python\nprint(2 + 3 * 4)     # 14  (multiply first: 2 + 12)\nprint((2 + 3) * 4)   # 20  (parentheses first: 5 * 4)\nprint(2 ** 3 ** 2)   # 512 (right-to-left: 2 ** (3**2) = 2**9)\nprint(10 - 2 + 3)    # 11  (left-to-right for same level)\n```\n\n**Best practice**: Use parentheses liberally to make complex expressions clear, even when they don't change the result:\n```python\n# Unclear:\nresult = a + b * c / d - e % f\n\n# Clear:\nresult = a + ((b * c) / d) - (e % f)\n```",
+        },
+        {
+          kind: "mental-model",
+          title: "Precedence is like PEMDAS",
+          analogy: "The mathematical order of operations (PEMDAS/BODMAS) you learned in school applies directly. Multiplication before addition, parentheses override everything.",
+          explanation: "Python's arithmetic precedence mirrors standard mathematics. When in doubt, add parentheses — they make the intent clear to both Python and human readers.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-precedence-predict",
+          kind: "predict-output",
+          prompt: "What does this expression evaluate to?",
+          beginnerPurpose: "Apply precedence rules to predict results.",
+          expectedConceptIds: ["arithmetic"],
+          code: "result = 5 + 2 * 3 - 1\nprint(result)",
+          expectedOutput: "10",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "Multiply first: 2*3=6. Then left to right: 5+6-1=10." }],
+          feedback: { correct: "Correct! 2*3=6, then 5+6=11, then 11-1=10.", incorrect: "Apply precedence: * before +/-. So: 2*3=6 first, then 5+6-1=10." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-precedence-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-text-literals",
+      stageId: "stage-03",
+      title: "Text Literals: Single, Double, Triple Quotes",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Write string literals with single quotes, double quotes, and triple quotes",
+        "Explain when to prefer each quote style",
+        "Write multi-line strings with triple quotes",
+      ],
+      prerequisites: [],
+      concepts: ["string-literals"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## String Literals\n\nA **string** is a sequence of characters. Python has three ways to write string literals:\n\n```python\n# Single quotes\nname = 'Alice'\n\n# Double quotes (identical to single quotes)\ngreeting = \"Hello\"\n\n# Triple quotes — for multi-line strings or strings containing quotes\nmessage = \"\"\"This is a\nmulti-line string.\"\"\"\n\npoem = '''Roses are red,\nViolets are blue.'''\n```\n\n**When to choose which:**\n\n| Style | Best for |\n|-------|----------|\n| `'single'` | Short strings, no single quotes inside |\n| `\"double\"` | Strings containing single quotes: `\"it's fine\"` |\n| `'''triple'''` or `\"\"\"triple\"\"\"` | Multi-line strings, docstrings |\n\n```python\n# Avoid escaping by choosing the right quote:\nmy_str = \"it's a test\"    # no escape needed\nalt    = 'it\\'s a test'   # backslash escape required\n\n# Triple quotes are literal — newlines included:\nblock = \"\"\"line 1\nline 2\nline 3\"\"\"\nprint(block)  # prints three lines\n```",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Be consistent within a project",
+          body: "Python doesn't care whether you use single or double quotes, but be consistent within a file. Most Python style guides and formatters (like Black) default to double quotes. Pick one style and stick to it.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-quotes-mc",
+          kind: "multiple-choice",
+          prompt: "Which string literal avoids needing a backslash escape?",
+          beginnerPurpose: "Choose the right quote style.",
+          expectedConceptIds: ["string-literals"],
+          options: [
+            { id: "a", text: "'don\\'t'", isCorrect: false, explanation: "This works but requires a backslash escape. There's a cleaner option." },
+            { id: "b", text: "\"don't\"", isCorrect: true, explanation: "Correct! Using double quotes when the string contains a single quote avoids the escape backslash." },
+            { id: "c", text: "\"don\\\"t\"", isCorrect: false, explanation: "This requires escaping the double quote. A single-quote string would be cleaner: 'don\"t'." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "If the string contains single quotes, use double quotes as delimiters (and vice versa)." }],
+          feedback: { correct: "Correct! Double quotes let you include a single quote without escaping.", incorrect: "When a string contains a single quote, wrap it in double quotes to avoid the backslash escape." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-quotes-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-escape-sequences",
+      stageId: "stage-03",
+      title: "Escape Sequences and Raw Strings",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Use common escape sequences: \\n, \\t, \\\\, \\', \\\"",
+        "Write raw strings with the r prefix to suppress escape processing",
+        "Explain when raw strings are essential",
+      ],
+      prerequisites: [],
+      concepts: ["string-literals"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Escape Sequences\n\nA **backslash** `\\` inside a string signals an escape sequence — a special character combination.\n\n| Sequence | Meaning |\n|----------|----------|\n| `\\n` | Newline (line break) |\n| `\\t` | Tab |\n| `\\\\` | Literal backslash |\n| `\\'` | Literal single quote |\n| `\\\"` | Literal double quote |\n| `\\r` | Carriage return |\n| `\\0` | Null character |\n\n```python\nprint('Hello\\nWorld')   # Hello\n                         # World\nprint('col1\\tcol2')     # col1    col2\nprint('path: C:\\\\Users') # path: C:\\Users\n```\n\n## Raw Strings\n\nPrefix a string with `r` to disable escape processing. Every character is literal:\n\n```python\n# Without r: escape processing\nprint('C:\\\\Users\\\\Alice')   # C:\\Users\\Alice\n\n# With r: no escape processing (raw string)\nprint(r'C:\\Users\\Alice')   # C:\\Users\\Alice\n```\n\nRaw strings are essential for **regular expressions** and **Windows file paths** where backslashes are common.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-escape-predict",
+          kind: "predict-output",
+          prompt: "What does this print?",
+          beginnerPurpose: "Trace escape sequences in strings.",
+          expectedConceptIds: ["string-literals"],
+          code: "print('Line 1\\nLine 2')\nprint(r'No\\nEscape')",
+          expectedOutput: "Line 1\nLine 2\nNo\\nEscape",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "\\n is a newline in regular strings. Raw strings (r'...') treat \\ literally." }],
+          feedback: { correct: "Correct! \\n becomes a newline; raw strings disable escape processing.", incorrect: "In a regular string, \\n is a newline. In a raw string (r'...'), the backslash is literal — no escaping." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-escape-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-boolean-literals",
+      stageId: "stage-03",
+      title: "Boolean Literals: True and False",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Write True and False boolean literals correctly",
+        "Use boolean operators: and, or, not",
+        "Explain that bool is a subclass of int in Python",
+      ],
+      prerequisites: [],
+      concepts: ["boolean"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Boolean Values\n\nA **boolean** is a value that is either `True` or `False` (capitalised — these are Python keywords).\n\n```python\nis_logged_in = True\nhas_permission = False\n\nprint(type(True))   # <class 'bool'>\n```\n\n**Boolean operators:**\n\n| Operator | Meaning | Example |\n|----------|---------|----------|\n| `and` | Both must be True | `True and False` → `False` |\n| `or` | At least one True | `True or False` → `True` |\n| `not` | Negation | `not True` → `False` |\n\n```python\nprint(True and True)    # True\nprint(True and False)   # False\nprint(True or False)    # True\nprint(not True)         # False\n```\n\n**Bool as int:**\nIn Python, `bool` is a subclass of `int`. `True == 1` and `False == 0`.\n```python\nprint(True + True)   # 2\nprint(False * 5)     # 0\nprint(int(True))     # 1\n```\nThis is occasionally useful (e.g., counting True values in a list) but can also surprise you.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-bool-predict",
+          kind: "predict-output",
+          prompt: "What does Python print?",
+          beginnerPurpose: "Trace boolean expressions.",
+          expectedConceptIds: ["boolean"],
+          code: "print(True and False)\nprint(True or False)\nprint(not False)\nprint(True + True)",
+          expectedOutput: "False\nTrue\nTrue\n2",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "and: both must be True. or: at least one. not: flip it. True is 1 in arithmetic." }],
+          feedback: { correct: "Correct! Boolean logic and True+True=2 (bool is int).", incorrect: "and requires both True, or requires one, not flips, True+True=2 (bool subclasses int)." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-bool-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-none",
       stageId: "stage-03",
       title: "None: The Absence of a Value",
       kind: "concept",
       difficulty: "beginner",
       objectives: [
-        "Describe what None represents in Python",
-        "Distinguish None from 0, False, and the empty string",
-        "Test for None using `is None` rather than ==",
-        "Recognise None in function return values",
+        "Explain what None represents in Python",
+        "Check for None using 'is None' (not ==)",
+        "Know which common functions return None",
       ],
       prerequisites: [],
       concepts: ["none-type"],
       contentBlocks: [
-        /* SECTION 1 — ORIENTATION */
         {
           kind: "text",
           markdown:
-            "Sometimes the honest answer to a question is not a number, not a word, and not yes-or-no. Sometimes the answer is: there is no answer yet. A user profile with no nickname set. A search that found nothing. A variable declared before its value has been computed. Python needs a way to represent that idea — not zero, not empty, but genuinely absent.",
+            "## None in Python\n\n`None` is Python's way of representing **the absence of a value**. It's a singleton — there is exactly one `None` object in any Python program.\n\n```python\nresult = None       # no value yet\nprint(result)       # prints: None\nprint(type(None))   # <class 'NoneType'>\n```\n\n**Common sources of None:**\n- Functions that don't explicitly `return` something return `None`\n- `list.sort()`, `list.append()` — modify in place, return None\n- Dictionary `.get(key)` when key is absent (default return)\n\n```python\ndef greet(name):\n    print(f'Hello, {name}')  # no return statement\n\nresult = greet('Alice')  # prints Hello, Alice\nprint(result)            # None — function returned nothing\n\n# list.sort() returns None, not the sorted list!\nnums = [3, 1, 2]\nsorted_nums = nums.sort()  # common bug: this is None!\nprint(sorted_nums)         # None\n```\n\n**Checking for None:**\n```python\n# Correct: use 'is None' or 'is not None'\nif result is None:\n    print('No value')\n\n# Avoid == None (works, but 'is None' is idiomatic Python)\n```",
         },
-
-        /* SECTION 2 — PREREQUISITES */
-        {
-          kind: "text",
-          markdown:
-            "### Quick recap: values and types\n\nEvery value in Python has a type. `42` is an int, `True` is a bool, `\"hello\"` is a string. Python is strict about this — you can always ask `type(x)` to find out what kind of value a variable holds. The value you are about to meet, `None`, has its own type too.",
-        },
-
-        /* SECTION 3 — CORE CONCEPT: None */
-        {
-          kind: "text",
-          markdown:
-            "### The need for 'no value'\n\nImagine a variable `nickname` that should hold a user's nickname — but the user has not chosen one yet. You could store an empty string `\"\"` or `0`, but those mean something: an empty string is a string, and `0` is a number. Neither really says 'this has not been set.' Python provides a dedicated value for this: **`None`**.\n\n`None` is Python's way of saying 'nothing is here.' It is not zero, not False, and not an empty string. It is its own value with its own type, called **`NoneType`**. There is exactly one `None` in all of Python — it is a *singleton*.\n\nThe recommended way to check whether a variable holds `None` is to write `x is None` rather than `x == None`. The keyword `is` checks that two names point to the exact same object in memory, which is the right test for a singleton.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: '# Setup: None as a "not yet set" placeholder\nnickname = None         # no nickname chosen yet\n\nprint(nickname)         # None\nprint(type(nickname))   # <class \'NoneType\'>\n\n# Correct way to test for None\nif nickname is None:\n    print("No nickname set")   # this branch runs\nelse:\n    print(f"Nickname: {nickname}")\n\n# None is not 0, False, or empty string\nprint(None == 0)      # False\nprint(None == False)  # False\nprint(None == "")     # False',
-          caption:
-            "A: Demonstrates None as a placeholder, type inspection, and the is None test. B: The example. C: nickname is None, so the is-None branch runs. The equality checks all return False — None is genuinely distinct. D: What if we wrote nickname == None instead of nickname is None? It would work in practice, but is None is the idiom Python developers expect.",
-        },
-        {
-          kind: "mental-model",
-          title: "None — the empty box with a label",
-          analogy:
-            "Picture a labelled box on a shelf. An int box contains a number. A string box contains text. A None box has the label on it — it exists — but when you open it, there is nothing inside. The box is not broken; it deliberately contains nothing.",
-          explanation:
-            "None is not an error. It is a deliberate signal that no meaningful value is present. Functions that do not return anything explicitly hand back None automatically. Variables that have been declared but not yet filled hold None.",
-        },
-
-        /* SECTION 4 — VARIATION: functions returning None */
-        {
-          kind: "text",
-          markdown:
-            "### Where None appears most often\n\nThe most surprising place beginners encounter `None` is as the return value of `print()`. The `print()` function displays text as a side effect, but it does not compute and return a useful value. Python functions that do not have a `return` statement automatically return `None`.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: '# print() returns None — this surprises many beginners\nx = print("hello")   # displays: hello\nprint(x)              # displays: None\n\n# The return value of print() is useless\n# Never store it unless you are specifically checking for None',
-          caption: "print() has a side effect (displaying text) but returns None. Storing that return value gives you None.",
-        },
-
-        /* SECTION 5 — BREAKDOWN */
         {
           kind: "callout",
-          variant: "danger",
-          title: "Breakdown: operating on None",
-          body: "If a function returns None and you try to use that result in an operation — like adding it to a number or calling a method on it — Python raises a TypeError: 'NoneType object is not subscriptable' or similar. This error almost always means you forgot to return a value from a function, or you stored the result of print(). Check with `print(type(x))` to confirm.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: '# Broken: trying to use None as if it were a string\nresult = print("hello")   # result is None\n\n# This will crash with TypeError\n# print(result.upper())    # AttributeError: \'NoneType\' has no attribute \'upper\'\n\n# Fix: the function should actually return a value\ndef get_greeting():\n    return "hello"   # explicit return — not None\n\ngreeting = get_greeting()\nprint(greeting.upper())   # HELLO',
-          caption: "None has no methods. Operating on it crashes. Make sure your functions return a real value.",
-        },
-
-        /* SECTION 6 — WHY MATTERS */
-        {
-          kind: "why-matters",
-          body: "None completes Python's set of basic value types: numbers (int, float), answers (bool), text (str), and absence (None). Recognising None — especially as an unexpected return value — will save you from a whole family of confusing errors. The next lesson shows how to move values between types intentionally, using conversion functions.",
-        },
-
-        /* SECTION 7 — COMPREHENSION CHECK */
-        {
-          kind: "callout",
-          variant: "info",
-          title: "Comprehension Check",
-          body: "A developer writes:\n\n```python\nlines = [\"cat\", \"dog\", \"bird\"]\nresult = lines.sort()\nprint(result[0])\n```\n\nThe program crashes with TypeError. The list.sort() method sorts the list in place and returns None. Explain what is happening and rewrite the two lines to fix it.",
+          variant: "warning",
+          title: "list.sort() and .append() return None",
+          body: "A very common bug: `sorted_list = my_list.sort()`. The sort() method modifies the list in place and returns None. Use `sorted_list = sorted(my_list)` to get a new sorted list, or call `my_list.sort()` without capturing the return value.",
         },
       ],
       interactions: [
         {
-          id: "s3-nt-predict-none-print",
-          kind: "predict-output",
-          prompt: "What does this program print?",
-          beginnerPurpose:
-            "Reveal that assigning the return value of print() gives None, a very common surprise.",
-          expectedConceptIds: ["none-type"],
-          code: 'value = print("hello")\nprint(value)',
-          expectedOutput: "hello\nNone",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "print() displays text AND returns a value. What does print() return?",
-            },
-            {
-              level: "syntax",
-              text: "The first print() shows 'hello'. Then value holds whatever print() returned. print() returns None.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Correct! print(\"hello\") outputs 'hello' and returns None. Storing that return value and printing it shows None.",
-            incorrect:
-              "print() outputs text but returns None. When you store its return value, you get None.",
-          },
-        },
-        {
-          id: "s3-nt-mc-none-not-zero",
+          id: "s3-none-mc",
           kind: "multiple-choice",
-          prompt: "Which statement about None is TRUE?",
-          beginnerPurpose:
-            "Disambiguate None from 0, False, and empty string — three common confusions.",
+          prompt: "What does this code print on the second line?",
+          beginnerPurpose: "Understand that in-place methods return None.",
           expectedConceptIds: ["none-type"],
+          code: "nums = [3, 1, 2]\nresult = nums.sort()\nprint(result)",
           options: [
-            {
-              id: "opt-a",
-              text: "None is the same as 0",
-              isCorrect: false,
-              explanation: "None != 0. They are completely different values of different types.",
-            },
-            {
-              id: "opt-b",
-              text: "None is the same as False",
-              isCorrect: false,
-              explanation:
-                "None != False. Although both are falsy (we'll cover that soon), they are distinct values.",
-            },
-            {
-              id: "opt-c",
-              text: "None is its own type (NoneType) with only one possible value",
-              isCorrect: true,
-              explanation:
-                "Correct! None is the sole instance of NoneType. There is only one None in any Python program.",
-            },
-            {
-              id: "opt-d",
-              text: 'None is the same as ""',
-              isCorrect: false,
-              explanation: 'None is not an empty string. "" is a string with no characters; None has no type at all beyond NoneType.',
-            },
+            { id: "a", text: "[1, 2, 3]", isCorrect: false, explanation: "sort() modifies nums in place but returns None, not the sorted list." },
+            { id: "b", text: "None", isCorrect: true, explanation: "Correct! sort() sorts the list in place and returns None. To get a sorted copy, use sorted(nums)." },
+            { id: "c", text: "[3, 1, 2]", isCorrect: false, explanation: "sort() sorts in place (nums is now [1,2,3]) but returns None." },
           ],
           allowMultiple: false,
           allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "None is unique — it's not a number, not a boolean, and not a string.",
-            },
-          ],
-          feedback: {
-            correct: "Exactly right! None is a singleton of type NoneType — completely distinct from 0, False, or \"\".",
-            incorrect:
-              "None is not equivalent to 0, False, or \"\". It is its own type (NoneType) representing the deliberate absence of a value.",
-          },
-        },
-        {
-          id: "s3-nt-explain-none",
-          kind: "plain-language-explain",
-          prompt:
-            "Explain to a fellow learner: What is None in Python, and when would you use it?",
-          beginnerPurpose:
-            "Consolidate understanding of None's purpose by articulating it in plain language.",
-          expectedConceptIds: ["none-type"],
-          code: 'nickname = None\nif nickname is None:\n    print("No nickname set")\nelse:\n    print(f"Nickname: {nickname}")',
-          keyPointsToHit: [
-            "None represents the absence of a value",
-            "None is not zero or False",
-            "Use `is None` to check for None",
-          ],
-          sampleAnswer:
-            "None is Python's way of saying 'there is no value here'. It's different from zero (which is a number) or False (which is a boolean) — None means nothing at all. You use it when a variable hasn't been set yet, or when a function can't return a useful result. Check for None with `is None` rather than ==.",
-          allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Think about what it means for something to be absent versus being zero or empty.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Well explained! The key points: absence of value, distinct from 0/False, checked with `is None`.",
-            incorrect:
-              "Try to cover three things: what None means, what it's NOT the same as, and how you test for it.",
-          },
+          hints: [{ level: "concept", text: "In-place methods like sort() modify the object and return None." }],
+          feedback: { correct: "Correct! sort() is in-place — it returns None.", incorrect: "sort() modifies the list in place and returns None. Use sorted(nums) to get a new sorted list." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "none-type",
-          recallPrompt: "What is None in Python, and how do you test whether a variable holds None?",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s3-nt-predict-none-print",
-          "s3-nt-mc-none-not-zero",
-          "s3-nt-explain-none",
-        ],
+        requiredInteractionIds: ["s3-none-mc"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["none-type"],
+        reviewHookIds: [],
       },
     },
 
-    /* ── Lesson 4: Converting Between Types ───────────────────────────────── */
     {
-      id: "s3-type-conversion",
+      id: "s3-names-and-assignment",
       stageId: "stage-03",
-      title: "Converting Between Types",
-      kind: "practice",
-      difficulty: "beginner",
-      objectives: [
-        "Convert between types using int(), float(), str(), and bool()",
-        "Predict when a conversion will succeed and when it will raise a ValueError",
-        "Explain the difference between implicit and explicit type conversion",
-      ],
-      prerequisites: [],
-      concepts: ["type-conversion", "int", "float", "str-type", "bool"],
-      contentBlocks: [
-        /* SECTION 1 — ORIENTATION */
-        {
-          kind: "text",
-          markdown:
-            "Real programs constantly receive data in the wrong shape. A number that arrives as text from a user's input. A calculation result that needs to become part of a sentence. A float that must be displayed without decimal places. Python does not automatically reshape values for you — you must ask it to convert explicitly. This lesson teaches you the tools for that.",
-        },
-
-        /* SECTION 2 — PREREQUISITES */
-        {
-          kind: "text",
-          markdown:
-            "### Quick recap: types are distinct\n\nYou have met int, float, str, and bool. Python treats these as completely separate categories. You cannot add a string to an int, and you cannot concatenate a number onto a sentence, without Python refusing with a TypeError. Conversion functions bridge the gap between these categories.",
-        },
-
-        /* SECTION 3 — CORE CONCEPT: explicit type conversion */
-        {
-          kind: "text",
-          markdown:
-            "### The need to change a value's type\n\nImagine a user types their age into a form. Your program receives it as the text `\"25\"` — a string of two characters. You want to do arithmetic with it, but arithmetic on strings does not work the way you expect (`\"25\" + 1` raises a TypeError). You need to transform the string `\"25\"` into the number `25`.\n\nPython provides four built-in conversion functions for this:\n\n- **`int(x)`** — converts x to an integer (truncates floats; fails on non-numeric strings)\n- **`float(x)`** — converts x to a float\n- **`str(x)`** — converts x to a string (almost always succeeds)\n- **`bool(x)`** — converts x to True or False (follows truthiness rules)\n\nThis is called **explicit type conversion** — you are consciously asking Python to change the type. Python never does it automatically in contexts where it could be ambiguous.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: '# Setup: converting between common types\nage_text = "25"          # string received from user input\nage      = int(age_text)  # convert to int so arithmetic works\n\nprint(age + 1)            # 26 — works now\nprint(type(age))          # <class \'int\'>\n\n# str() converts anything to a string for display\nprice   = 9.99\nlabel   = "Price: " + str(price)   # concatenation needs two strings\nprint(label)              # Price: 9.99\n\n# int() on a float TRUNCATES (does not round)\nprint(int(9.9))    # 9\nprint(int(-9.9))   # -9  (truncates toward zero, not toward negative infinity)',
-          caption:
-            "A: Demonstrates the four common conversions. B: The example. C: int(age_text) turns '25' into 25; str(price) turns 9.99 into '9.99'. int() on a float discards the decimal. D: What if age_text were '25.5'? int('25.5') would raise a ValueError — int() cannot parse a decimal string directly. You would need int(float('25.5')) instead.",
-        },
-        {
-          kind: "mental-model",
-          title: "Conversion functions as translators",
-          analogy:
-            "Think of int(), float(), str(), and bool() as translators at a border crossing. You hand over your value in one language (type), and the translator hands back an equivalent value in another language (type). Some translations are impossible — handing 'hello' to the int() translator is like handing a poem to a customs officer who only speaks numbers.",
-          explanation:
-            "Conversion functions produce a new value of the target type. They do not modify the original value. If the input cannot be meaningfully represented in the target type, Python raises a ValueError or TypeError rather than guessing.",
-        },
-
-        /* SECTION 4 — VARIATIONS */
-        {
-          kind: "text",
-          markdown:
-            "### When conversions fail\n\nNot every string can be turned into a number. `int(\"hello\")` raises a `ValueError` because `\"hello\"` has no numeric meaning. The same happens with `float(\"abc\")`. `int(\"3.14\")` also fails — it cannot parse a decimal string directly even though 3.14 is a valid float. You must convert via float first: `int(float(\"3.14\"))` gives `3`.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: '# Successful conversions\nprint(int("42"))       # 42\nprint(float("3.14"))   # 3.14\nprint(str(100))        # 100\nprint(int(9.9))        # 9  (truncates)\nprint(bool(0))         # False\nprint(bool(1))         # True\n\n# Chain conversion: string decimal → int\nprint(int(float("3.14")))   # 3\n\n# These would crash (do not uncomment):\n# int("hello")    # ValueError\n# float("abc")    # ValueError\n# int("3.14")     # ValueError — use int(float("3.14")) instead',
-          caption: "Successful conversions and the two-step trick for string decimals.",
-        },
-
-        /* SECTION 5 — BREAKDOWN */
-        {
-          kind: "callout",
-          variant: "danger",
-          title: "Breakdown: forgetting to convert before concatenation",
-          body: "The error 'TypeError: can only concatenate str (not \"int\") to str' almost always means you tried to join a number into a string using + without converting first. Fix: wrap the number in str() before concatenating, or use an f-string which handles conversion automatically.",
-        },
-        {
-          kind: "comparison",
-          leftLabel: "Correct: convert before concatenating",
-          rightLabel: "Broken: mixing str and int with +",
-          leftCode: 'answer = 42\nprint("The answer is " + str(answer))\n# Works: "The answer is 42"',
-          rightCode: 'answer = 42\nprint("The answer is " + answer)\n# TypeError: can only concatenate\n# str (not "int") to str',
-          caption: "str() converts the int to a string so + can join two strings together.",
-        },
-
-        /* SECTION 6 — WHY MATTERS */
-        {
-          kind: "why-matters",
-          body: "Type conversion is one of the most frequently used tools in practical Python programs. Every time a user types something, you receive a string — and almost always need to convert it. Every time you build a message that includes a calculated value, str() or an f-string is involved. The next lesson, truthiness, builds on bool() and shows how Python evaluates any value as true or false in a condition.",
-        },
-
-        /* SECTION 7 — COMPREHENSION CHECK */
-        {
-          kind: "callout",
-          variant: "info",
-          title: "Comprehension Check",
-          body: "A program receives two strings from user input: `a = \"7\"` and `b = \"3\"`. The developer writes `print(a + b)` expecting `10` but gets `73`. Explain why, then rewrite the line to print the correct arithmetic result `10`.",
-        },
-      ],
-      interactions: [
-        {
-          id: "s3-tc-predict-conversion",
-          kind: "predict-output",
-          prompt: "What does this program print?",
-          beginnerPurpose:
-            "Practice predicting the result of explicit type conversions including the truncating behaviour of int().",
-          expectedConceptIds: ["type-conversion", "int", "float"],
-          code: 'print(int("10"))\nprint(float("2.5"))\nprint(str(99))\nprint(int(7.8))',
-          expectedOutput: "10\n2.5\n99\n7",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "int() of a string gives the integer value; int() of a float drops the decimal.",
-            },
-          ],
-          feedback: {
-            correct: 'Correct! int("10")→10, float("2.5")→2.5, str(99)→"99" printed as 99, int(7.8)→7.',
-            incorrect:
-              "Work through each line: int() converts to integer (truncating for floats), float() to float, str() to string.",
-          },
-        },
-        {
-          id: "s3-tc-debug-type-error",
-          kind: "debug-code",
-          prompt:
-            'This code raises a TypeError because it tries to concatenate a string and an integer. Fix it so it prints: "The answer is 42".',
-          beginnerPurpose:
-            "Practice identifying and fixing a type mismatch using explicit conversion.",
-          expectedConceptIds: ["type-conversion", "str-type"],
-          brokenCode: 'answer = 42\nprint("The answer is " + answer)',
-          bugDescription:
-            "The + operator cannot join a string and an integer directly. You must convert the integer to a string first.",
-          fixedCode: 'answer = 42\nprint("The answer is " + str(answer))',
-          errorType: "TypeError",
-          allowedAttempts: 4,
-          hints: [
-            {
-              level: "concept",
-              text: "Python won't automatically convert an int to a string for concatenation. You must do it explicitly.",
-            },
-            {
-              level: "syntax",
-              text: "Use str(answer) to convert the integer to a string before concatenating.",
-            },
-          ],
-          feedback: {
-            correct: 'Fixed! str(answer) converts 42 to "42", making concatenation possible.',
-            incorrect:
-              "Wrap the integer in str() to convert it: str(answer) gives you \"42\" as a string.",
-          },
-        },
-        {
-          id: "s3-tc-fill-conversion",
-          kind: "fill-code",
-          prompt:
-            'The variable `score_str` holds the string "87". Complete the code to convert it to an integer and add 13 to it.',
-          beginnerPurpose:
-            "Practice applying int() to a string variable before using it in arithmetic.",
-          expectedConceptIds: ["type-conversion", "int"],
-          codeTemplate: 'score_str = "87"\nscore = ___(score_str)\nprint(score + 13)',
-          blanks: [
-            {
-              placeholder: "___",
-              answer: "int",
-              caseSensitive: true,
-            },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "The function that converts a value to an integer is int().",
-            },
-          ],
-          feedback: {
-            correct: "Correct! int(score_str) converts \"87\" to 87, and 87 + 13 = 100.",
-            incorrect: "Use the int() function to convert the string to an integer.",
-          },
-        },
-      ],
-      reviewHooks: [
-        {
-          conceptId: "type-conversion",
-          recallPrompt: "How do you convert a string to an integer in Python, and what happens if the string isn't a valid number?",
-          nextReviewAfterDays: 3,
-        },
-      ],
-      masteryCriteria: {
-        requiredInteractionIds: [
-          "s3-tc-predict-conversion",
-          "s3-tc-debug-type-error",
-          "s3-tc-fill-conversion",
-        ],
-        minimumCorrectFraction: 0.8,
-        reviewHookIds: ["type-conversion"],
-      },
-    },
-
-    /* ── Lesson 5: Truthiness ─────────────────────────────────────────────── */
-    {
-      id: "s3-truthiness",
-      stageId: "stage-03",
-      title: "Truthiness: What Python Considers True",
+      title: "Names and Assignment",
       kind: "concept",
       difficulty: "beginner",
       objectives: [
-        "List Python's falsy values: 0, 0.0, \"\", None, False, [], {}",
-        "Explain that any other value is truthy",
-        "Use bool() to check the truthiness of a value",
-        "Understand why truthiness matters for if statements",
+        "Assign values to names using =",
+        "Explain that = is assignment, not equality",
+        "Use augmented assignment operators: +=, -=, *=",
       ],
       prerequisites: [],
-      concepts: ["truthiness", "bool"],
+      concepts: ["variables-names"],
       contentBlocks: [
-        /* SECTION 1 — ORIENTATION */
         {
           kind: "text",
           markdown:
-            "You already know that `if` statements run their block when the condition is `True`. But Python goes further: you can use *any* value as a condition — not just an actual bool. Python has rules for which values count as 'yes' and which count as 'no'. This is called truthiness, and knowing it lets you write shorter, more readable conditions.",
-        },
-
-        /* SECTION 2 — PREREQUISITES */
-        {
-          kind: "text",
-          markdown:
-            "### Quick recap: booleans and conditions\n\nA condition in an `if` statement must resolve to either `True` or `False`. You have used comparison expressions like `age >= 18` for this. Python can also evaluate a plain value — a string, a number, even `None` — as if it were a bool. The `bool()` function shows you what Python decides.",
-        },
-
-        /* SECTION 3 — CORE CONCEPT: truthiness */
-        {
-          kind: "text",
-          markdown:
-            "### The need to use values directly as conditions\n\nYou often want to check 'do we have anything here?' rather than 'is this equal to some specific value?'. For example: 'is username non-empty?' Written as a comparison: `if username != \"\"`. But Python lets you write `if username:` instead, because any non-empty string is automatically treated as True in a boolean context.\n\nThis automatic treatment of values as True or False is called **truthiness**. Every Python value is either *truthy* (acts like True) or *falsy* (acts like False).\n\n**Falsy values** — the complete list:\n- `False`\n- `0` and `0.0` (any numeric zero)\n- `\"\"` (empty string)\n- `None`\n- `[]` (empty list), `{}` (empty dict), `()` (empty tuple)\n\n**Everything else is truthy** — including `-1`, `\"False\"` (a non-empty string), `[0]` (a list with one item).",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: '# Setup: checking truthiness of a range of values with bool()\nvalues = [0, 1, -1, "", "hello", None, 0.0, 3.14, [], [1]]\nfor v in values:\n    print(f"bool({v!r:10}) = {bool(v)}")',
-          caption:
-            "A: Iterates over a mix of values to show which are falsy and which are truthy. B: The example. C: 0, -0.0, empty string, None, and empty list are all False; everything else is True. D: What does bool('False') return? True — because 'False' is a non-empty string, regardless of its content.",
-        },
-        {
-          kind: "mental-model",
-          title: "Truthiness — emptiness vs presence",
-          analogy:
-            "Think of values like containers. An empty container — empty string, empty list, zero, None — has nothing in it. Python reads that as 'no'. A container with anything in it at all — even a single character, a negative number, a list with one item — Python reads as 'yes'.",
-          explanation:
-            "The falsy values are exactly the ones that represent emptiness, absence, or nothingness in their respective types. Everything that represents any kind of presence or content is truthy. This makes `if x:` a natural way to ask 'does x have anything meaningful in it?'",
-        },
-
-        /* SECTION 4 — VARIATION: idiomatic use */
-        {
-          kind: "text",
-          markdown:
-            "### Using truthiness in conditions\n\nBecause of truthiness, many checks that beginners write with explicit comparisons can be shortened to the value itself. Python developers strongly prefer the shorter form because it reads more like plain English.",
-        },
-        {
-          kind: "comparison",
-          leftLabel: "Idiomatic (uses truthiness)",
-          rightLabel: "Verbose (explicit comparison)",
-          leftCode: 'username = "alice"\nif username:\n    print("Welcome!")\n\nitems = []\nif not items:\n    print("Cart is empty")',
-          rightCode: 'username = "alice"\nif username != "":\n    print("Welcome!")\n\nitems = []\nif items == []:\n    print("Cart is empty")',
-          caption:
-            "Both versions work identically. The idiomatic form on the left is what experienced Python developers write.",
-        },
-
-        /* SECTION 5 — BREAKDOWN */
-        {
-          kind: "callout",
-          variant: "danger",
-          title: "Breakdown: the string \"False\" is truthy",
-          body: "A very common trap: `\"False\"` (the string) is truthy because it is a non-empty string. If you receive user input and the user types 'False', `if user_input:` will be True. Always convert and compare properly: `if user_input.lower() == \"false\":`. Truthiness is about emptiness and zero — not about content.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: '# The trap: string "False" is truthy\nuser_input = "False"\n\nif user_input:\n    print("This runs!")   # <-- prints, even though input says "False"\n\n# Correct way to handle a "false" string\nif user_input.lower() == "false":\n    print("User said false")   # correct check',
-          caption: "Non-empty strings are always truthy, regardless of what they contain.",
-        },
-
-        /* SECTION 6 — WHY MATTERS */
-        {
-          kind: "why-matters",
-          body: "Truthiness is used constantly in real Python code. It makes conditions more readable and reduces the number of explicit comparisons you need to write. With truthiness understood, you are fully equipped for Stage 4 where every if statement, while loop, and for loop relies on values being evaluated as True or False. You now know all of Python's core types and how they behave.",
-        },
-
-        /* SECTION 7 — COMPREHENSION CHECK */
-        {
-          kind: "callout",
-          variant: "info",
-          title: "Comprehension Check",
-          body: "A program has `count = 0` and runs `if count: print(\"items found\") else: print(\"nothing\")`. Later, `count` is changed to `0.0`. Which branch runs in each case, and why? What value of `count` would make the first branch run?",
+            "## Names and the Assignment Operator\n\nIn Python, `=` is the **assignment operator** — it binds a name to a value.\n\n```python\nname = 'Alice'   # bind the name 'name' to the string 'Alice'\nage = 30         # bind 'age' to the integer 30\npi = 3.14159     # bind 'pi' to a float\n```\n\n**Important**: `=` is NOT equality. For equality comparison, use `==`.\n\n```python\nx = 5       # assignment: store 5 in x\nx == 5      # comparison: is x equal to 5? Returns True\n```\n\n**Augmented assignment** — shorthand for updating a variable:\n```python\ncount = 0\ncount += 1   # same as: count = count + 1\ncount += 1   # now count = 2\ncount -= 1   # now count = 1\ncount *= 3   # now count = 3\ncount //= 2  # now count = 1\n```\n\n**Multiple assignment:**\n```python\na = b = c = 0      # all three are 0\nx, y = 10, 20      # tuple unpacking: x=10, y=20\n```",
         },
       ],
       interactions: [
         {
-          id: "s3-tr-mc-is-truthy",
+          id: "s3-assign-predict",
+          kind: "predict-output",
+          prompt: "What is printed?",
+          beginnerPurpose: "Trace augmented assignment operators.",
+          expectedConceptIds: ["variables-names"],
+          code: "x = 10\nx += 5\nx *= 2\nprint(x)",
+          expectedOutput: "30",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "x=10, then x=15, then x=30." }],
+          feedback: { correct: "Correct! 10 → 15 → 30.", incorrect: "x=10, x+=5 makes x=15, x*=2 makes x=30." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-assign-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-reassignment-state",
+      stageId: "stage-03",
+      title: "Reassignment and State Change",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Explain that variables in Python are rebindable — they can point to different values",
+        "Trace state changes across multiple assignments",
+        "Understand that old values are discarded when a variable is reassigned",
+      ],
+      prerequisites: [],
+      concepts: ["variables-names"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Reassignment in Python\n\nA variable in Python can be reassigned to point to any value at any time — even a value of a different type:\n\n```python\nx = 10          # x is an int\nprint(x)        # 10\n\nx = 'hello'     # x is now a str — the int 10 is gone\nprint(x)        # hello\n\nx = [1, 2, 3]  # x is now a list\nprint(x)        # [1, 2, 3]\n```\n\n**Variables are just labels**: In Python, a variable is a name that refers to an object. When you reassign, you move the label to a different object.\n\n**State tracing exercise:**\n```python\na = 5\nb = a        # b gets the value 5; a and b both refer to 5\na = 10       # a now refers to 10; b still refers to 5\nprint(a)     # 10\nprint(b)     # 5 — unchanged!\n```\n\nThis surprises many beginners who expect `b` to track `a`. In Python, `b = a` copies the current value — it doesn't create a link.",
+        },
+        {
+          kind: "mental-model",
+          title: "Variables as sticky labels",
+          analogy: "A variable is a sticky label on an object. When you write b = a, you put a new label 'b' on the same object as 'a'. When you reassign a = 10, you move the 'a' label to a different object. The 'b' label stays where it is.",
+          explanation: "For immutable values (int, str, float), this distinction rarely matters. For mutable objects (lists, dicts), it matters a great deal — you'll encounter this in the Collections stage.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-reassign-predict",
+          kind: "predict-output",
+          prompt: "What does Python print?",
+          beginnerPurpose: "Trace variable state after reassignment.",
+          expectedConceptIds: ["variables-names"],
+          code: "x = 5\ny = x\nx = 100\nprint(x)\nprint(y)",
+          expectedOutput: "100\n5",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "y = x copies the value 5. Reassigning x later doesn't affect y." }],
+          feedback: { correct: "Correct! y captured the value 5; reassigning x doesn't change y.", incorrect: "y = x copies the value. Reassigning x later doesn't affect y — y still holds 5." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-reassign-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-naming-rules-conventions",
+      stageId: "stage-03",
+      title: "Naming Rules and Conventions",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "State the rules for valid Python identifier names",
+        "Apply snake_case for variables and functions (PEP 8)",
+        "Recognise reserved keywords that cannot be used as names",
+      ],
+      prerequisites: [],
+      concepts: ["variables-names"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Python Naming Rules\n\n**Valid identifiers** must:\n- Start with a letter (a-z, A-Z) or underscore `_`\n- Contain only letters, digits (0-9), and underscores\n- Not be a Python keyword (`if`, `for`, `class`, `return`, etc.)\n\n```python\n# Valid names:\nuser_name = 'Alice'\n_private = True\nvalue1 = 42\nMyClass = object()\n\n# Invalid names (SyntaxError):\n# 1name = 'bad'    # starts with digit\n# my-name = 'bad'  # hyphen not allowed\n# for = 5          # reserved keyword\n```\n\n**PEP 8 naming conventions:**\n\n| Type | Convention | Example |\n|------|-----------|----------|\n| Variables/functions | `snake_case` | `user_name`, `get_data()` |\n| Constants | `UPPER_SNAKE_CASE` | `MAX_RETRIES = 3` |\n| Classes | `PascalCase` | `UserAccount` |\n| Private (internal) | `_leading_underscore` | `_cache` |\n\n**Check reserved keywords:**\n```python\nimport keyword\nprint(keyword.kwlist)  # all reserved keywords\n```",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Descriptive names over short names",
+          body: "Prefer `user_count` over `n`, `calculate_total` over `calc`, `maximum_temperature` over `maxT`. Well-named variables make code self-documenting. Single-letter names are acceptable only for loop counters (i, j, k) and conventional math notation (x, y).",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-naming-mc",
           kind: "multiple-choice",
-          prompt: "Which of the following values is FALSY in Python?",
-          beginnerPurpose:
-            "Identify falsy values — essential knowledge for understanding if statements.",
-          expectedConceptIds: ["truthiness"],
+          prompt: "Which variable name is valid Python AND follows PEP 8 conventions?",
+          beginnerPurpose: "Apply naming rules and conventions.",
+          expectedConceptIds: ["variables-names"],
           options: [
-            {
-              id: "opt-a",
-              text: "\"False\"",
-              isCorrect: false,
-              explanation:
-                '"False" is a non-empty string. Non-empty strings are truthy, even when they contain the word "False".',
-            },
-            {
-              id: "opt-b",
-              text: "-1",
-              isCorrect: false,
-              explanation: "Negative numbers are truthy. Only 0 and 0.0 are falsy.",
-            },
-            {
-              id: "opt-c",
-              text: "0.0",
-              isCorrect: true,
-              explanation:
-                "0.0 is falsy. Any zero — whether int (0) or float (0.0) — is falsy.",
-            },
-            {
-              id: "opt-d",
-              text: "[0]",
-              isCorrect: false,
-              explanation:
-                "[0] is a list with one element. Non-empty lists are truthy, regardless of what's inside.",
-            },
+            { id: "a", text: "1stUser", isCorrect: false, explanation: "Starts with a digit — SyntaxError. Names must start with a letter or underscore." },
+            { id: "b", text: "user-count", isCorrect: false, explanation: "Hyphens are not allowed in Python identifiers — SyntaxError." },
+            { id: "c", text: "user_count", isCorrect: true, explanation: "Correct! snake_case, starts with a letter, only letters/underscores — valid and PEP 8 compliant." },
           ],
           allowMultiple: false,
           allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "The falsy values are: False, 0, 0.0, \"\", None, [], {}, ().",
-            },
-          ],
-          feedback: {
-            correct: "Correct! 0.0 is falsy. Any zero value (int or float) is considered False.",
-            incorrect:
-              "Remember: falsy values are False, 0, 0.0, \"\", None, [], {}. \"False\" is a non-empty string (truthy); -1 is a non-zero number (truthy).",
-          },
-        },
-        {
-          id: "s3-tr-predict-bool",
-          kind: "predict-output",
-          prompt: "What does this program print? (Four lines, each True or False.)",
-          beginnerPurpose:
-            "Trace bool() calls to build a mental map of truthy/falsy values.",
-          expectedConceptIds: ["truthiness", "bool"],
-          code: 'print(bool(0))\nprint(bool(42))\nprint(bool(""))\nprint(bool("0"))',
-          expectedOutput: "False\nTrue\nFalse\nTrue",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: 'Zero is falsy; 42 is truthy; empty string is falsy; "0" is a non-empty string (truthy).',
-            },
-          ],
-          feedback: {
-            correct: 'Correct! 0→False, 42→True, ""→False, "0"→True (non-empty string, truthy even though it looks like zero).',
-            incorrect:
-              'Remember: bool(0) = False, bool("0") = True. "0" is a non-empty string, which is truthy.',
-          },
-        },
-        {
-          id: "s3-tr-fill-truthy-check",
-          kind: "fill-code",
-          prompt:
-            "Complete the condition so the if block runs only when `username` is a non-empty string (use Python's truthiness instead of an explicit comparison).",
-          beginnerPurpose:
-            "Write idiomatic Python by using truthiness directly in a condition.",
-          expectedConceptIds: ["truthiness"],
-          codeTemplate: 'username = "alice"\nif ___:\n    print(f"Welcome, {username}!")',
-          blanks: [
-            {
-              placeholder: "___",
-              answer: "username",
-              caseSensitive: true,
-            },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "A non-empty string is truthy in Python. You can use the variable directly as the condition.",
-            },
-            {
-              level: "syntax",
-              text: "Instead of `if username != \"\"`, just write `if username:`.",
-            },
-          ],
-          feedback: {
-            correct: "Correct! `if username:` is idiomatic Python — it's True for any non-empty string.",
-            incorrect:
-              "Use the variable itself as the condition: `if username:` is True when username is any non-empty string.",
-          },
+          hints: [{ level: "concept", text: "PEP 8 recommends snake_case for variables. Check for invalid characters." }],
+          feedback: { correct: "Correct! user_count is valid Python and follows PEP 8 snake_case convention.", incorrect: "Names must start with a letter or underscore and contain only letters, digits, and underscores. snake_case is PEP 8 standard." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "truthiness",
-          recallPrompt:
-            "List five values that are falsy in Python. What do all non-falsy values have in common?",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s3-tr-mc-is-truthy",
-          "s3-tr-predict-bool",
-          "s3-tr-fill-truthy-check",
-        ],
+        requiredInteractionIds: ["s3-naming-mc"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["truthiness"],
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-type-observation",
+      stageId: "stage-03",
+      title: "type() and Runtime Type Observation",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Use type() to inspect the type of any value",
+        "Understand that Python is dynamically typed",
+        "Use isinstance() to check type membership",
+      ],
+      prerequisites: [],
+      concepts: ["python-syntax"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Inspecting Types at Runtime\n\nPython is **dynamically typed** — variables don't have fixed types. A variable can hold an int, then a string, then a list.\n\n**type()** reveals the type of any value:\n```python\nprint(type(42))         # <class 'int'>\nprint(type(3.14))       # <class 'float'>\nprint(type('hello'))    # <class 'str'>\nprint(type(True))       # <class 'bool'>\nprint(type(None))       # <class 'NoneType'>\nprint(type([1, 2, 3]))  # <class 'list'>\n```\n\n**isinstance()** checks if a value is of a given type (or its subclasses):\n```python\nprint(isinstance(42, int))       # True\nprint(isinstance(True, int))     # True (bool is a subclass of int!)\nprint(isinstance(3.14, float))   # True\nprint(isinstance('hi', str))     # True\n\n# Prefer isinstance() over type() == for type checking:\nif isinstance(x, (int, float)):  # works for subclasses too\n    print('numeric')\n```",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Dynamic typing: strength and responsibility",
+          body: "Dynamic typing is convenient — you never declare variable types. But it also means type errors appear at runtime, not compile time. Python 3.5+ has optional type annotations (covered in the Type Annotations stage) to catch type errors earlier.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-type-predict",
+          kind: "predict-output",
+          prompt: "What does Python print?",
+          beginnerPurpose: "Use type() to observe types.",
+          expectedConceptIds: ["python-syntax"],
+          code: "x = 5\nprint(type(x))\nx = 'hello'\nprint(type(x))",
+          expectedOutput: "<class 'int'>\n<class 'str'>",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "x starts as int, then gets reassigned to str. type() reflects the current value." }],
+          feedback: { correct: "Correct! type() shows the current type of the value x holds.", incorrect: "x starts as int (type shows 'int'), then is reassigned to str (type shows 'str')." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-type-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-expression-prediction-drills",
+      stageId: "stage-03",
+      title: "First Expression Prediction Drills",
+      kind: "practice",
+      difficulty: "beginner",
+      objectives: [
+        "Predict the value and type of arithmetic expressions",
+        "Apply operator precedence mentally",
+        "Trace multi-step expressions before running them",
+      ],
+      prerequisites: [],
+      concepts: ["arithmetic", "numeric-literals"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Expression Prediction Practice\n\nThe best way to solidify your understanding of expressions is to predict their values before running them. Work through each expression step by step.\n\n**Practice method:**\n1. Read the expression\n2. Apply precedence (** first, then * / // %, then + -)\n3. Compute the result\n4. Identify the type (int or float)\n5. Run in REPL to verify\n\n**Sample expressions to trace:**\n```python\n3 + 4 * 2          # → 11 (int)\n(3 + 4) * 2        # → 14 (int)\n10 / 5             # → 2.0 (float — / always float)\n10 // 3            # → 3 (int — floor division)\n2 ** 4 - 1         # → 15 (int: 16 - 1)\n7 % 3 + 1          # → 2 (1 + 1)\n10 * 0.5           # → 5.0 (float — mixed)\ntrue_val = True\nprint(true_val + 5) # → 6 (True == 1)\n```",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Use the REPL to verify predictions",
+          body: "For every expression you're unsure about, try it in the Python REPL. Being wrong is fine — the REPL tells you immediately. The goal is to train your mental model so predictions get faster and more accurate over time.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-drill-predict",
+          kind: "predict-output",
+          prompt: "Predict all four outputs before running.",
+          beginnerPurpose: "Chain expression prediction skills together.",
+          expectedConceptIds: ["arithmetic"],
+          code: "print(2 ** 3 + 1)\nprint(15 // 4)\nprint(15 % 4)\nprint(3 * 4 / 6)",
+          expectedOutput: "9\n3\n3\n2.0",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "2**3=8+1=9; 15//4=3; 15%4=3; 3*4=12/6=2.0 (float)." }],
+          feedback: { correct: "Excellent! All four predictions correct.", incorrect: "2**3=8, 8+1=9; 15//4=3 (floor); 15%4=3 (15=3*4+3); 3*4/6=12/6=2.0 (/ gives float)." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-drill-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-output-prediction-drills",
+      stageId: "stage-03",
+      title: "First Output Prediction Drills",
+      kind: "practice",
+      difficulty: "beginner",
+      objectives: [
+        "Predict the complete output of short programs",
+        "Trace variable state changes to predict final print output",
+        "Spot common output surprises (None, float results)",
+      ],
+      prerequisites: [],
+      concepts: ["variables-names", "arithmetic"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Output Prediction Practice\n\nPredicting a program's complete output requires tracing state changes step by step. Work through each program line by line, updating your mental 'whiteboard' as you go.\n\n**Trace this program:**\n```python\nx = 3\ny = 7\nz = x + y          # z = 10\nx = z * 2          # x = 20 (x changed!)\nprint(x)           # 20\nprint(y)           # 7 (unchanged)\nprint(z - y)       # 3 (10 - 7)\n```\n\n**Output:**\n```\n20\n7\n3\n```\n\n**Common surprises to watch for:**\n```python\nresult = [3, 1, 2].sort()  # .sort() returns None!\nprint(result)              # None (not [1, 2, 3])\n\nprint(10 / 3)              # 3.3333... (not 3)\nprint(type(10 / 3))        # <class 'float'>\n```",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-output-drill",
+          kind: "predict-output",
+          prompt: "Trace the program and predict all output.",
+          beginnerPurpose: "Practice multi-step output tracing.",
+          expectedConceptIds: ["variables-names"],
+          code: "a = 4\nb = 3\nc = a * b\na = c - b\nprint(a)\nprint(b)\nprint(c)",
+          expectedOutput: "9\n3\n12",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "c = 4*3 = 12. a = c - b = 12 - 3 = 9. b unchanged = 3." }],
+          feedback: { correct: "Correct! a=9, b=3, c=12.", incorrect: "c=4*3=12; a=c-b=12-3=9; b stays 3. Print order: a(9), b(3), c(12)." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-output-drill"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s3-correction-drills",
+      stageId: "stage-03",
+      title: "First Correction Drills: Fix Broken Syntax",
+      kind: "practice",
+      difficulty: "beginner",
+      objectives: [
+        "Identify and fix common syntax errors in short programs",
+        "Recognise SyntaxError patterns: missing quotes, wrong operators",
+        "Apply the one-change-at-a-time debugging habit",
+      ],
+      prerequisites: [],
+      concepts: ["python-syntax"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Fixing Broken Syntax\n\nRecognising and fixing syntax errors is a core programming skill. Common beginner syntax errors in Python:\n\n1. **Missing or mismatched quotes:**\n```python\n# BROKEN:\nname = 'Alice\nprint(name)\n\n# FIXED:\nname = 'Alice'\nprint(name)\n```\n\n2. **Wrong operator for equality:**\n```python\n# BROKEN — assignment when comparison intended:\nif x = 5:\n    print('five')\n\n# FIXED:\nif x == 5:\n    print('five')\n```\n\n3. **Missing parentheses:**\n```python\n# BROKEN:\nprint 'Hello'\n\n# FIXED:\nprint('Hello')\n```\n\n4. **Using a keyword as a variable:**\n```python\n# BROKEN:\nfor = 5\n\n# FIXED (rename the variable):\nfor_loop_count = 5\n```\n\n**Approach for any error:**\n1. Read the error message — find the line number\n2. Look at that exact line\n3. Find ONE thing wrong\n4. Fix it, then re-run",
+        },
+      ],
+      interactions: [
+        {
+          id: "s3-debug-fill",
+          kind: "fill-code",
+          prompt: "Fix the broken code: change the equality check operator so it compares x to 10.",
+          beginnerPurpose: "Distinguish assignment = from comparison ==.",
+          expectedConceptIds: ["python-syntax"],
+          codeTemplate: "x = 10\nif x ___ 10:\n    print('ten')",
+          blanks: [{ placeholder: "___", answer: "==", caseSensitive: true }],
+          allowedAttempts: 3,
+          hints: [{ level: "syntax", text: "Single = is assignment. Use == to compare two values for equality." }],
+          feedback: { correct: "Correct! == is the equality comparison operator.", incorrect: "Use == to check if two values are equal. Single = is assignment." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s3-debug-fill"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
       },
     },
   ],
@@ -1113,22 +823,22 @@ export const stage03 = {
   project: {
     id: "s3-project",
     stageId: "stage-03",
-    title: "Unit Converter",
+    title: "Expression Explorer",
     brief:
-      "Build a program that converts a fixed set of values between units (e.g., miles to km, Fahrenheit to Celsius) and displays results with correct types.",
+      "Write a Python script that demonstrates all the core value types and operators covered in this stage. Include at least one example of each: int, float, string, bool, None, arithmetic operators, escape sequences, and type inspection.",
     requirements: [
-      "Convert at least 3 different unit types",
-      "Use float division correctly",
-      "Format output with f-strings",
-      "Show both original and converted values",
-      "Use correct variable types",
+      "At least one example of each type: int, float, str, bool, None",
+      "Demonstrate all 7 arithmetic operators (+, -, *, /, //, %, **)",
+      "Show at least two escape sequences",
+      "Use type() or isinstance() to inspect at least 3 values",
+      "Print clear output showing what each example demonstrates",
     ],
     acceptanceCriteria: [
-      "Correct arithmetic",
-      "Output shows value and unit",
-      "No type errors",
+      "Script runs without errors",
+      "All seven arithmetic operators are present and produce correct results",
+      "type() is used and output is included in printed results",
     ],
-    conceptIds: ["int", "float", "str-type", "string-formatting", "expression"],
+    conceptIds: ["python-syntax", "numeric-literals", "arithmetic", "variables-names"],
     difficulty: "beginner",
   },
 } satisfies Stage;
