@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Python Mastery — a self-paced, interactive Python course from zero to advanced." />
+    <meta name="theme-color" content="#0f0f0f" />
+    <title>Python Mastery</title>
+    <!--
+      Theme boot script: runs before React hydration to prevent flash.
+      Reads localStorage 'pmc-theme' and applies the data-theme attribute
+      on <html> so CSS custom properties resolve immediately.
+    -->
+    <script>
+      (function () {
+        var STORAGE_KEY = "pmc-theme";
+        var VALID = ["light", "dark", "ultradark", "system"];
+        var stored = null;
+        try { stored = localStorage.getItem(STORAGE_KEY); } catch (_) {}
+        var theme = VALID.includes(stored) ? stored : "system";
+        if (theme === "system") {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+    <!--
+      GitHub Pages SPA routing: if redirected via 404.html, restore the path.
+    -->
+    <script>
+      (function () {
+        var redirect = sessionStorage.getItem("spa-redirect");
+        if (redirect) {
+          sessionStorage.removeItem("spa-redirect");
+          var url = new URL(redirect);
+          window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

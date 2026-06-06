@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Python Mastery</title>
+    <script>
+      // GitHub Pages SPA redirect trick.
+      // Store the full URL in sessionStorage and redirect to index.
+      sessionStorage.setItem("spa-redirect", window.location.href);
+      window.location.replace(
+        window.location.origin +
+          window.location.pathname
+            .split("/")
+            .slice(0, 2)
+            .join("/") +
+          "/"
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
