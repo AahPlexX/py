@@ -29,7 +29,7 @@ export const stage02 = {
         "Reassign a variable to a new value",
         "Use a variable in a print() call",
       ],
-      prerequisites: ["s1-comments-and-clarity"],
+      prerequisites: ["s1-debugging-habit"],
       concepts: ["variable", "assignment"],
       contentBlocks: [
         {
