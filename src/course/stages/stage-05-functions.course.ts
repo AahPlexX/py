@@ -32,48 +32,87 @@ export const stage05 = {
       prerequisites: ["s4-break-continue"],
       concepts: ["function-definition"],
       contentBlocks: [
+        /* SECTION 1 — ORIENTATION */
+        {
+          kind: "text",
+          markdown:
+            "## Why functions exist\n\nImagine you need to send a greeting message in ten different places in your program. Without any special tool you would copy and paste the same lines of code ten times. If you later needed to change the wording, you would have to find and update every copy. This is fragile and time-consuming.\n\nFunctions solve this problem by letting you write a set of instructions once, give it a name, and then use that name whenever you want those instructions to run. Change the instructions in one place and every use benefits automatically.",
+        },
+        /* SECTION 3 — CORE CONCEPT: function definition */
+        {
+          kind: "text",
+          markdown:
+            "## The need: a named, reusable block\n\nWe need a way to package up a set of steps, give the package a name, and run those steps on demand just by mentioning the name. In Python this package is called a **function**.\n\nYou create a function by writing the word `def` (short for \"define\"), followed by the name you choose, a pair of parentheses, and a colon. Every line that belongs to the function must be indented four spaces beneath that opening line. Python uses indentation — not curly braces — to know where the function body begins and ends.\n\nUsing the function is called **calling** it. You call a function by writing its name followed by parentheses.",
+        },
         {
           kind: "mental-model",
-          title: "A Function Is a Recipe",
+          title: "A Function Is a Recipe Card",
           analogy:
-            "Think of a function as a recipe card. You write the recipe once, then you can follow it any number of times. The def keyword is you writing the card; calling the function is you following it.",
+            "Think of a function as a recipe card. You write the recipe once (the def block), then you can follow it any number of times just by saying its name (the call). Writing the card does not cook anything — cooking only happens when you decide to follow the recipe.",
           explanation:
             "When Python encounters a def statement it stores the instructions but does not run them yet. Running only happens when you call the function by name with parentheses.",
         },
         {
           kind: "text",
           markdown:
-            "## Defining a function\n\nA function definition has three parts:\n\n1. The `def` keyword followed by the function name and `():`\n2. An indented body of one or more statements\n3. (Optionally) a call somewhere else to actually run it\n\n```\ndef name():\n    # body\n```\n\nPython's convention for function names is **snake_case** — all lowercase, words separated by underscores.",
+            "## Anatomy of a function definition\n\nA function definition has three parts:\n\n1. The `def` keyword followed by the function name and `():`\n2. An indented body of one or more statements\n3. A call somewhere else in the program to actually run it\n\nPython's convention for function names is **snake_case** — all lowercase, words separated by underscores.",
         },
         {
           kind: "code",
           language: "python",
-          code: `def greet():
-    print("Hello, world!")
+          code: `# SETUP: showing that defining a function stores it; calling it runs it.
 
-# Call the function — this runs the body
-greet()
-greet()
-greet()`,
+def greet():          # def keyword + name + () + colon
+    print("Hello!")   # indented body — stored but not run yet
+
+# Nothing has printed yet. Now we call the function:
+greet()   # first call  → runs the body
+greet()   # second call → runs the body again
+greet()   # third call  → runs the body a third time`,
           caption:
             "Defining greet() once and calling it three times. Each call prints the same line.",
-          highlight: [1, 2, 5, 6, 7],
         },
         {
-          kind: "output",
-          text: "Hello, world!\nHello, world!\nHello, world!",
-          isError: false,
+          kind: "text",
+          markdown:
+            "**What happened step by step:**\n\n1. Python read lines 3–4 and stored the instructions under the name `greet`. Nothing printed.\n2. Line 7: Python saw `greet()`, found the stored instructions, and ran them — printing `Hello!`.\n3. Lines 8 and 9 each triggered the same run, producing two more prints.\n\n**Variation:** What would happen if you removed line 7 entirely and kept only one `greet()` call on line 8? Python would print `Hello!` exactly once — the body runs once per call.",
         },
         {
           kind: "callout",
           variant: "tip",
           title: "Indentation is mandatory",
-          body: "Python uses indentation (4 spaces by convention) to mark the function body. Every line of the body must be indented consistently. A line at the original indentation level signals the end of the function.",
+          body: "Python uses indentation (4 spaces by convention) to mark the function body. Every line of the body must be indented consistently. A line back at the original indentation level signals the end of the function.",
+        },
+        /* SECTION 5 — BREAKDOWN CASE */
+        {
+          kind: "callout",
+          variant: "danger",
+          title: "Calling a function before defining it",
+          body: "If you write greet() before the def greet(): block, Python raises a NameError: name 'greet' is not defined. Python reads files top to bottom; a name only exists after the line that creates it has run.",
         },
         {
-          kind: "why-matters",
-          body: "Functions let you name a chunk of logic so you can reuse it without copy-pasting. This makes programs shorter, easier to read, and simpler to fix — change the function body once and every call site benefits.",
+          kind: "code",
+          language: "python",
+          code: `# BROKEN: call before definition
+greet()          # NameError — 'greet' doesn't exist yet
+
+def greet():
+    print("Hello!")`,
+          caption: "Calling before defining causes a NameError.",
         },
+        /* SECTION 6 — WHAT THIS OPENS UP */
+        {
+          kind: "why-matters",
+          body: "Functions are the foundation of every program larger than a few lines. Once you can define and call functions you can name any set of steps, build programs out of named pieces, and fix or improve one piece without touching the rest. Every topic in this stage — parameters, return values, scope, defaults — builds directly on this.",
+        },
+        /* SECTION 7 — COMPREHENSION CHECK */
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Comprehension Check",
+          body: "Consider this code:\n\n```python\ndef announce():\n    print('Ready!')\n\nannounce()\nannounce()\n```\n\nA classmate claims the word 'Ready!' will appear three times when this runs. Are they correct? Explain why or why not without running the code.",
+        },
+        /* GLOSSARY */
         {
           kind: "glossary-term",
           term: "function definition",
@@ -216,53 +255,93 @@ morning()`,
       prerequisites: ["s5-defining-functions"],
       concepts: ["parameter"],
       contentBlocks: [
+        /* SECTION 1 — ORIENTATION */
         {
           kind: "text",
           markdown:
-            "## Parameters and arguments\n\nA **parameter** is the variable name listed inside the `def` parentheses. An **argument** is the actual value you supply when you *call* the function.\n\n| Term | Where it lives | Example |\n|------|---------------|---------|\n| parameter | `def` line | `name` in `def greet(name):` |\n| argument | call site | `\"Alice\"` in `greet(\"Alice\")` |",
+            "## Why functions need inputs\n\nThe greeting function from the last lesson always prints the exact same message. That is only useful if you always want exactly that message. In real programs you want to reuse the same logic with different data — greet a different person each time, add different numbers each time, format different text each time.\n\nFunctions need a way to accept information from the caller so they can work with whatever data the caller provides.",
+        },
+        /* SECTION 3 — CORE CONCEPT */
+        {
+          kind: "text",
+          markdown:
+            "## The need: placeholders for caller-supplied values\n\nWe want to define a function once but let the caller supply the specific value to work with. We need a placeholder name inside the definition that gets replaced with the real value when someone calls the function.\n\nIn Python, these placeholder names are listed inside the parentheses of the `def` line. Each placeholder is called a **parameter**. When you call the function you supply the actual values in the same parentheses — those real values are called **arguments**.\n\nPython matches arguments to parameters **positionally**: the first argument fills the first parameter, the second argument fills the second parameter, and so on. Inside the function body, each parameter works exactly like a regular variable — it holds the value that was passed in.",
+        },
+        {
+          kind: "mental-model",
+          title: "Parameters Are Like Labelled Slots",
+          analogy:
+            "Imagine a form with labelled blank fields: 'Name: ___', 'Age: ___'. The blank fields are the parameters — they exist on the form before anyone fills it in. When someone hands back a completed form, the values they wrote in are the arguments.",
+          explanation:
+            "Parameters live in the function definition and act as local variable names. Arguments are the concrete values supplied at the call site. Each call can pass different arguments, giving the function different data to work with each time.",
         },
         {
           kind: "code",
           language: "python",
-          code: `def greet(name):          # 'name' is the parameter
-    print("Hello,", name)
+          code: `# SETUP: a function that greets any name passed in.
 
-greet("Alice")            # "Alice" is the argument
-greet("Bob")              # "Bob" is the argument`,
+def greet(name):           # 'name' is the parameter — a placeholder
+    print("Hello,", name)  # 'name' holds whatever the caller passed
+
+greet("Alice")   # "Alice" is the argument — fills 'name'
+greet("Bob")     # "Bob" is the argument — fills 'name' this time`,
           caption:
-            "Same function, two different arguments — the parameter acts as a local variable inside the body.",
-          highlight: [1, 4, 5],
-        },
-        {
-          kind: "output",
-          text: "Hello, Alice\nHello, Bob",
-          isError: false,
+            "Same function, two different arguments. The parameter acts as a local variable inside the body.",
         },
         {
           kind: "text",
           markdown:
-            "## Multiple parameters\n\nYou can list as many parameters as you need, separated by commas. Arguments are matched **positionally** — first argument → first parameter, and so on.",
+            "**What happened step by step:**\n\n1. Python stored the function `greet` with a placeholder slot named `name`.\n2. `greet(\"Alice\")`: Python bound `name = \"Alice\"` and ran the body, printing `Hello, Alice`.\n3. `greet(\"Bob\")`: Python bound `name = \"Bob\"` and ran the body again, printing `Hello, Bob`.\n\n**Variation:** What if you called `greet()` with no argument? Python would raise a `TypeError` saying it expected one argument but got zero. The number of arguments must match the number of parameters.",
+        },
+        {
+          kind: "text",
+          markdown:
+            "## Multiple parameters\n\nYou can list as many parameters as you need, separated by commas. Arguments are matched positionally — first argument fills the first parameter, second argument fills the second, and so on.",
         },
         {
           kind: "code",
           language: "python",
-          code: `def add(a, b):
-    print(a + b)
+          code: `def describe(animal, sound):     # two parameters
+    print(animal, "goes", sound)
 
-add(3, 4)    # a=3, b=4
-add(10, 20)  # a=10, b=20`,
+describe("cat", "meow")   # animal="cat", sound="meow"
+describe("dog", "woof")   # animal="dog", sound="woof"`,
           caption: "Two parameters matched by position to two arguments.",
         },
+        /* SECTION 4 — VARIATIONS */
         {
-          kind: "output",
-          text: "7\n30",
-          isError: false,
+          kind: "text",
+          markdown:
+            "## Order matters\n\nBecause matching is positional, swapping the arguments gives a different result — Python does not know that 'meow' belongs to 'cat' by meaning, only by position.",
         },
         {
+          kind: "code",
+          language: "python",
+          code: `def describe(animal, sound):
+    print(animal, "goes", sound)
+
+describe("meow", "cat")   # animal="meow", sound="cat" — backwards!
+# prints: meow goes cat`,
+          caption: "Swapping arguments produces incorrect output. Order is everything.",
+        },
+        /* SECTION 5 — BREAKDOWN */
+        {
           kind: "callout",
-          variant: "warning",
-          title: "Argument count must match parameter count",
-          body: "Calling a function with the wrong number of arguments raises a TypeError. Python checks this before executing the function body.",
+          variant: "danger",
+          title: "Wrong number of arguments raises TypeError",
+          body: "Calling a function with too few or too many arguments raises a TypeError before the function body runs. Python checks argument count immediately. Example: calling describe('cat') with only one argument gives TypeError: describe() missing 1 required positional argument: 'sound'.",
+        },
+        /* SECTION 6 — WHAT THIS OPENS UP */
+        {
+          kind: "why-matters",
+          body: "Parameters are what make functions truly reusable. Without them every function would only ever do exactly one thing with exactly one set of data. With parameters a single function definition can handle an unlimited variety of inputs. The next lesson builds on this by showing how to send a value back out of a function.",
+        },
+        /* SECTION 7 — COMPREHENSION CHECK */
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Comprehension Check",
+          body: "Here is a function:\n\n```python\ndef area(width, height):\n    print(width * height)\n```\n\nA programmer calls it as `area(height=5, width=3)` using keyword syntax. What value will be printed? Now explain what the words 'parameter' and 'argument' refer to in this specific example.",
         },
       ],
       interactions: [
@@ -420,62 +499,99 @@ full_name("Jane", "Doe")`,
       prerequisites: ["s5-parameters-arguments"],
       concepts: ["return-value"],
       contentBlocks: [
+        /* SECTION 1 — ORIENTATION */
         {
           kind: "text",
           markdown:
-            "## The return statement\n\nSo far our functions have printed things but not *produced* values. The `return` statement makes a function hand a value back to wherever it was called.\n\n```python\ndef square(n):\n    return n * n\n\nresult = square(5)   # result is now 25\nprint(result)        # 25\n```\n\nThe value after `return` can be any expression. Python evaluates it and sends the result to the caller.",
+            "## The problem: functions that produce results\n\nThe functions we have written so far print things to the screen. Printing is useful for showing output to a person, but it does not let the program do anything further with the result. If a function calculates the area of a room, we might want to store that area, compare it with another area, or add it to a total — none of which is possible if the function only prints.\n\nWe need a way for a function to produce a value that the rest of the program can use.",
+        },
+        /* SECTION 3 — CORE CONCEPT: return */
+        {
+          kind: "text",
+          markdown:
+            "## Sending a value back to the caller\n\nImagine a function as a worker you send on an errand. You want the worker to come back and hand you something — not just go do something and walk away. In Python the word `return` is how the worker hands something back. When Python reaches a `return` statement it immediately stops running the function and passes the value back to whoever called it.\n\nThe caller can store that value in a variable, pass it to another function, or use it in an expression — exactly as if the function call itself were the value.\n\nThis is called a **return value**.",
         },
         {
           kind: "code",
           language: "python",
-          code: `def square(n):
-    return n * n
+          code: `# SETUP: a function that computes a value and hands it back.
 
-result = square(5)
-print(result)
-print(square(3) + square(4))  # use return value directly`,
+def square(n):
+    return n * n    # stop here and send n*n back to the caller
+
+result = square(5)          # result is now 25
+print(result)               # 25
+print(square(3) + square(4))  # use return values directly in an expression`,
           caption:
             "square() returns a value that can be assigned to a variable or used in an expression.",
-          highlight: [2],
         },
         {
-          kind: "output",
-          text: "25\n25",
-          isError: false,
+          kind: "text",
+          markdown:
+            "**What happened step by step:**\n\n1. `square(5)`: Python ran the body, hit `return n * n` with `n=5`, computed `25`, and sent `25` back.\n2. `result = square(5)` stored that `25` in `result`.\n3. `square(3) + square(4)`: both calls returned values (`9` and `16`), and those were added together to give `25`.\n\n**Variation:** What if you wrote `print(square(5))` on one line and then `result = square(5)` on the next? Both would work independently. `print` would display `25`; `result` would hold `25`. The function can be called many times and each call produces a fresh result.",
         },
         {
           kind: "callout",
           variant: "info",
           title: "Functions without return produce None",
-          body: "If a function has no return statement (or just `return` with no value), Python automatically returns `None`. Trying to use that result as a number or string usually causes a TypeError.",
+          body: "If a function has no return statement (or just `return` with no value), Python automatically returns the special value `None`. Trying to use `None` as a number or string usually causes a TypeError later. This is a very common beginner mistake: using print() inside a function when return is what you actually need.",
         },
+        /* SECTION 4 — VARIATION: early return */
         {
           kind: "text",
           markdown:
-            "## Early return\n\nYou can use `return` anywhere in the function body, not just at the end. Execution stops immediately and the value is sent back.",
+            "## Early return\n\nYou can place a `return` anywhere in the function body — not just at the end. When Python reaches it, execution stops immediately and the value is sent back. This is useful for handling special cases before proceeding to the main logic.",
         },
         {
           kind: "code",
           language: "python",
           code: `def safe_divide(a, b):
     if b == 0:
-        return 0        # early return — skip the rest
-    return a / b
+        return 0        # early return: skip the rest of the function
+    return a / b        # only reached when b != 0
 
 print(safe_divide(10, 2))   # 5.0
-print(safe_divide(7, 0))    # 0`,
+print(safe_divide(7, 0))    # 0  — no crash`,
           caption:
             "Early return exits the function as soon as b == 0, preventing a ZeroDivisionError.",
-          highlight: [3],
+        },
+        /* SECTION 5 — BREAKDOWN */
+        {
+          kind: "callout",
+          variant: "danger",
+          title: "print() inside a function does not return a value",
+          body: "A very common mistake: writing print(a + b) inside a function and then doing result = add(3, 5). The result variable will be None, not 8, because print returns None. Use return a + b when the caller needs to work with the value.",
         },
         {
-          kind: "output",
-          text: "5.0\n0",
-          isError: false,
+          kind: "code",
+          language: "python",
+          code: `# BROKEN: using print instead of return
+def add(a, b):
+    print(a + b)    # shows 8 on screen but sends None back
+
+result = add(3, 5)
+print(result)       # None — not 8!`,
+          caption: "Printing inside a function does not send the value to the caller.",
         },
+        /* SECTION 6 — WHAT THIS OPENS UP */
         {
           kind: "why-matters",
-          body: "Return values are what allow functions to compose. You can pass the output of one function as the input of another, building complex programs from small, testable pieces.",
+          body: "Return values are what allow functions to compose. You can pass the output of one function as the input of another, building complex programs from small, testable pieces. Once you understand return values you can write functions that are completely self-contained — their output depends only on their input — making them easy to test and reason about.",
+        },
+        /* SECTION 7 — COMPREHENSION CHECK */
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Comprehension Check",
+          body: "A programmer writes this code:\n\n```python\ndef celsius_to_fahrenheit(c):\n    print(c * 9 / 5 + 32)\n\ntemp = celsius_to_fahrenheit(100)\nprint('Boiling point in F:', temp)\n```\n\nWhat will the second print statement display? Explain why, and describe the minimal change needed to fix the code.",
+        },
+        /* GLOSSARY */
+        {
+          kind: "glossary-term",
+          term: "return value",
+          definition:
+            "The value that a function sends back to its caller via the return statement. If no return statement is reached, the function returns None.",
+          example: "def square(n):\n    return n * n\n\nresult = square(4)  # result is 16",
         },
       ],
       interactions: [
@@ -609,66 +725,112 @@ print(abs_diff(3, 10))   # 7`,
       prerequisites: ["s5-return-values"],
       concepts: ["scope"],
       contentBlocks: [
+        /* SECTION 1 — ORIENTATION */
+        {
+          kind: "text",
+          markdown:
+            "## The problem: where do variables live?\n\nWhen you create a variable inside a function, you might wonder: can I read it outside the function? Can another function see it? Can two functions have variables with the same name without one breaking the other?\n\nPython answers all of these questions through a concept called **scope** — the set of rules that determine where a variable can be seen and used.",
+        },
+        /* SECTION 2 — PREREQUISITE: variables */
+        {
+          kind: "text",
+          markdown:
+            "## Quick prerequisite: assignment creates a variable\n\nIn Python, writing `x = 5` creates a variable named `x` that holds the value `5`. Where you write that assignment determines which scope the variable belongs to.",
+        },
+        /* SECTION 3 — CORE CONCEPT: local scope */
+        {
+          kind: "text",
+          markdown:
+            "## Local scope: variables born inside a function\n\nEvery time a function is called, Python creates a fresh, private workspace for that call. Any variable you assign inside the function belongs to that private workspace and cannot be seen from outside. When the function finishes, its workspace is discarded — all those variables disappear.\n\nThis private workspace is called the **local scope** of the function. A variable created inside is a **local variable**.",
+        },
         {
           kind: "mental-model",
           title: "Scope Is Like a Private Room",
           analogy:
-            "A function is like a private room. Variables you create inside the room stay inside. The hallway (global scope) has its own things. You can carry a value out through the door (return), but the room's furniture doesn't move to the hallway by itself.",
+            "A function is like a private room. Variables you create inside the room stay inside — nobody in the hallway can see them. The hallway (global scope) has its own things. You can carry a value out through the door (return), but the room's furniture does not move to the hallway by itself.",
           explanation:
             "Each function call creates a new local scope. Variables assigned inside are local. When the function returns, its local scope is destroyed.",
         },
         {
           kind: "code",
           language: "python",
-          code: `def compute():
-    result = 42       # local variable — lives inside compute()
-    print(result)     # fine here
+          code: `# SETUP: demonstrating that a local variable cannot be accessed outside.
 
-compute()
-print(result)         # NameError: 'result' is not defined`,
+def compute():
+    result = 42       # local variable — lives only inside compute()
+    print(result)     # fine here: we are inside the function
+
+compute()             # prints 42
+print(result)         # NameError: 'result' is not defined here`,
           caption:
             "result is local to compute(). Accessing it outside raises a NameError.",
-          highlight: [2, 6],
-        },
-        {
-          kind: "output",
-          text: "42\nNameError: name 'result' is not defined",
-          isError: true,
         },
         {
           kind: "text",
           markdown:
-            "## Global scope\n\nVariables assigned at the top level of a module live in **global scope** and can be *read* inside functions, but you should avoid modifying them. Preferring parameters and return values makes functions easier to understand and test.",
+            "**What happened step by step:**\n\n1. `compute()` ran, created `result = 42` in its local scope, printed `42`, then returned.\n2. When it returned, its local scope (including `result`) was destroyed.\n3. The final `print(result)` ran in global scope where `result` never existed — NameError.\n\n**Variation:** What if you assigned `result = 100` in global scope before calling `compute()`? The local `result = 42` inside `compute()` would be a completely separate variable — modifying it would not affect the global `result`.",
+        },
+        /* SECTION 4 — VARIATION: global scope */
+        {
+          kind: "text",
+          markdown:
+            "## Global scope: variables at the top level\n\nVariables assigned at the top level of a file (not inside any function) belong to **global scope**. They exist for the entire lifetime of the program and can be *read* inside functions. However, assigning to a global variable inside a function requires the `global` keyword — without it Python creates a new local variable instead.",
         },
         {
           kind: "code",
           language: "python",
-          code: `greeting = "Hello"   # global
+          code: `greeting = "Hello"   # global variable
 
 def show_greeting():
-    print(greeting)      # reads the global — OK but not ideal
+    print(greeting)   # reading a global is allowed without any keyword
 
-show_greeting()`,
+show_greeting()       # Hello`,
           caption:
             "Functions can read globals, but relying on globals makes code harder to reason about.",
-        },
-        {
-          kind: "output",
-          text: "Hello",
-          isError: false,
         },
         {
           kind: "callout",
           variant: "tip",
           title: "Prefer passing data through parameters",
-          body: "Instead of reading globals inside a function, pass the value as a parameter. This makes the function self-contained: its output depends only on its inputs, not hidden state.",
+          body: "Instead of reading globals inside a function, pass the value as a parameter. This makes the function self-contained: its output depends only on its inputs, not on hidden state elsewhere in the program.",
         },
+        /* SECTION 5 — BREAKDOWN */
+        {
+          kind: "callout",
+          variant: "danger",
+          title: "Expecting a local variable to persist after a function returns",
+          body: "A local variable exists only during the function call. Code that tries to access it after the function returns will get a NameError. The correct pattern is to return the value from the function and capture it in the outer scope.",
+        },
+        {
+          kind: "code",
+          language: "python",
+          code: `# BROKEN: trying to access a local variable from outside
+def calculate_discount(price):
+    discount = price * 0.1   # local variable
+
+calculate_discount(50)
+print(discount)              # NameError — discount does not exist here`,
+          caption: "discount is local. To use it outside, return it.",
+        },
+        /* SECTION 6 — WHAT THIS OPENS UP */
+        {
+          kind: "why-matters",
+          body: "Understanding scope explains why functions can be called many times without interfering with each other — each call gets its own private workspace. It also explains why you must use return to get values out of a function, and why well-written functions avoid relying on globals. These ideas directly underpin testing, debugging, and building larger programs.",
+        },
+        /* SECTION 7 — COMPREHENSION CHECK */
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Comprehension Check",
+          body: "Consider this program:\n\n```python\ntotal = 0\n\ndef add_to_total(n):\n    total = total + n\n    return total\n\nadd_to_total(5)\nprint(total)\n```\n\nA programmer expects `total` to be `5` after running this. Will that happen? Explain what Python actually does with the name `total` inside the function, and describe the correct approach.",
+        },
+        /* GLOSSARY */
         {
           kind: "glossary-term",
           term: "local scope",
           definition:
             "The region of a program where a variable defined inside a function is visible. Local variables are created when the function is called and destroyed when it returns.",
-          example: "def f():\n    x = 1  # x is local to f",
+          example: "def f():\n    x = 1  # x is local to f; invisible outside",
         },
       ],
       interactions: [
@@ -832,38 +994,47 @@ print(result)`,
       prerequisites: ["s5-scope"],
       concepts: ["default-parameter", "docstring"],
       contentBlocks: [
+        /* SECTION 1 — ORIENTATION */
         {
           kind: "text",
           markdown:
-            "## Default parameter values\n\nYou can give a parameter a default value using `=` in the `def` line. If the caller does not pass an argument for that parameter, the default is used automatically.",
+            "## Two finishing touches: convenience and documentation\n\nThis lesson covers two independent improvements you can make to functions. The first lets callers skip an argument when a sensible default already exists. The second gives every function a built-in description that tools and teammates can read automatically.",
+        },
+        /* SECTION 3 — CORE CONCEPT 1: default parameters */
+        {
+          kind: "text",
+          markdown:
+            "## The need: optional arguments\n\nSuppose you write a greeting function that usually says 'Hello' but occasionally needs a different greeting. You could force every caller to supply the greeting word every time, but that is repetitive when the same word is almost always used.\n\nPython lets you attach a **default value** to a parameter by writing `parameter=value` in the `def` line. If the caller does not supply that argument, Python uses the default automatically. If the caller does supply it, their value overrides the default.\n\nThis is called a **default parameter**.",
         },
         {
           kind: "code",
           language: "python",
-          code: `def greet(name, greeting="Hello"):
+          code: `# SETUP: a greeting function where 'Hello' is the usual greeting.
+
+def greet(name, greeting="Hello"):   # greeting has a default value
     print(greeting + ", " + name + "!")
 
-greet("Alice")              # uses default greeting
-greet("Bob", "Good morning")  # overrides the default`,
+greet("Alice")               # caller skips greeting → uses "Hello"
+greet("Bob", "Good morning") # caller supplies greeting → overrides default`,
           caption:
-            "greeting has a default of 'Hello'. It can be overridden at the call site.",
-          highlight: [1],
+            "greeting defaults to 'Hello'. It can be overridden at the call site.",
         },
         {
-          kind: "output",
-          text: "Hello, Alice!\nGood morning, Bob!",
-          isError: false,
+          kind: "text",
+          markdown:
+            "**What happened step by step:**\n\n1. `greet(\"Alice\")`: only one argument supplied. Python used `greeting=\"Hello\"` automatically.\n2. `greet(\"Bob\", \"Good morning\")`: two arguments supplied. Python used `\"Good morning\"` instead of the default.\n\n**Variation:** What if you called `greet(greeting=\"Hi\", name=\"Eve\")`? Python allows you to name arguments explicitly (keyword arguments), so order does not matter when you do that. The output would be `Hi, Eve!`.",
         },
         {
           kind: "callout",
           variant: "warning",
           title: "Default parameters must come after non-default ones",
-          body: "Python requires that parameters with defaults appear after parameters without defaults. Writing `def f(a=1, b)` raises a SyntaxError.",
+          body: "Python requires that parameters with defaults appear after parameters without defaults. Writing `def f(a=1, b)` raises a SyntaxError because Python cannot tell which value the caller meant for which parameter when defaults are in the middle.",
         },
+        /* SECTION 3 — CORE CONCEPT 2: docstrings */
         {
           kind: "text",
           markdown:
-            "## Docstrings\n\nA **docstring** is a triple-quoted string placed as the very first statement in a function body. It documents what the function does, its parameters, and its return value. Tools like `help()` display it automatically.",
+            "## The need: built-in documentation\n\nCode gets read far more than it gets written. You, your teammates, and future you will all need to understand what a function does, what it expects, and what it returns. A comment above the function helps, but Python provides a better mechanism: a string placed as the very first statement inside the function body.\n\nThis string is called a **docstring** (short for documentation string). Python stores it as part of the function object. Tools like `help()`, code editors, and documentation generators display it automatically.",
         },
         {
           kind: "code",
@@ -880,28 +1051,62 @@ greet("Bob", "Good morning")  # overrides the default`,
     """
     return a + b
 
-help(add)`,
+help(add)   # displays the docstring`,
           caption:
             "A docstring lives on the first line of the body, wrapped in triple quotes. help() displays it.",
-          highlight: [2, 3, 4, 5, 6, 7, 8, 9, 10],
         },
         {
-          kind: "why-matters",
-          body: "Docstrings are the official way to document Python code. They are readable by humans and by automated tools, editors, and documentation generators. Writing them is a professional habit that pays off when others (or future you) use your functions.",
+          kind: "text",
+          markdown:
+            "**What happened:** The triple-quoted string `\"\"\"Return the sum...\"\"\"` is stored as `add.__doc__`. When `help(add)` is called, Python prints that stored string. The function works exactly as before — docstrings have no effect on execution.",
         },
+        /* SECTION 4 — VARIATIONS */
+        {
+          kind: "text",
+          markdown:
+            "## One-line vs multi-line docstrings\n\nFor simple functions a single line is enough. For functions with multiple parameters or complex behaviour, use the multi-line format shown above. The first line should be a short summary sentence ending with a period.",
+        },
+        {
+          kind: "code",
+          language: "python",
+          code: `def double(n):
+    """Return n multiplied by 2."""
+    return n * 2`,
+          caption: "A one-line docstring is fine for a simple function.",
+        },
+        /* SECTION 5 — BREAKDOWN */
+        {
+          kind: "callout",
+          variant: "danger",
+          title: "Putting a default parameter before a required one",
+          body: "Writing `def greet(greeting='Hello', name):` causes a SyntaxError: non-default argument follows default argument. Python cannot resolve which value belongs to which parameter when called as greet('Alice'). Always put required parameters first.",
+        },
+        /* SECTION 6 — WHAT THIS OPENS UP */
+        {
+          kind: "why-matters",
+          body: "Default parameters make APIs friendlier — callers only need to supply the values that differ from the common case. Docstrings are what enable the built-in help() system and most IDE features like hover documentation and autocomplete hints. Together these two features are what separate functions you just wrote from functions others can easily use.",
+        },
+        /* SECTION 7 — COMPREHENSION CHECK */
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Comprehension Check",
+          body: "A programmer defines this function:\n\n```python\ndef repeat(text, times=3):\n    \"\"\"Print text the given number of times.\"\"\"\n    for _ in range(times):\n        print(text)\n```\n\nThey call it as `repeat('Go!')`. How many times will 'Go!' be printed, and why? Then they call it as `repeat('Go!', 1)`. What changes and why?",
+        },
+        /* GLOSSARIES */
         {
           kind: "glossary-term",
           term: "default parameter",
           definition:
             "A function parameter that has a preset value used when no argument is supplied for it at the call site.",
-          example: `def greet(name, greeting="Hello"):\n    print(greeting, name)`,
+          example: "def greet(name, greeting='Hello'):\n    print(greeting, name)",
         },
         {
           kind: "glossary-term",
           term: "docstring",
           definition:
-            "A string literal that appears as the first statement of a function, class, or module, documenting its purpose and usage.",
-          example: `def f():\n    """Does something useful."""\n    pass`,
+            "A string literal that appears as the first statement of a function, class, or module, documenting its purpose and usage. Accessible via help() and stored in __doc__.",
+          example: "def f():\n    \"\"\"Does something useful.\"\"\"\n    pass",
         },
       ],
       interactions: [
