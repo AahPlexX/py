@@ -28,7 +28,7 @@ export const stage07 = {
         "Read a traceback bottom-up to find the root cause",
         "Distinguish the exception type from the human-readable message",
       ],
-      prerequisites: ["s6-comprehensions"],
+      prerequisites: [],
       concepts: ["traceback", "exception"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -287,7 +287,7 @@ ___greet___("World")`,
         "Match a code snippet to the exception it will raise",
         "Fix each type of error correctly",
       ],
-      prerequisites: ["s7-reading-tracebacks"],
+      prerequisites: [],
       concepts: ["exception"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -547,7 +547,7 @@ print(average([]))`,
         "Use finally for cleanup code that always runs",
         "Avoid bare except clauses and explain why they are dangerous",
       ],
-      prerequisites: ["s7-common-exceptions"],
+      prerequisites: [],
       concepts: ["try-except"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -763,7 +763,7 @@ print(divide(10, 0))`,
         "Apply the guard clause pattern to validate function inputs early",
         "Use assert for internal consistency checks during development",
       ],
-      prerequisites: ["s7-try-except"],
+      prerequisites: [],
       concepts: ["raise", "input-validation"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -1033,7 +1033,7 @@ except ValueError as e:
         "Describe the rubber duck debugging technique",
         "Follow a systematic debugging sequence rather than guessing",
       ],
-      prerequisites: ["s7-raising-exceptions"],
+      prerequisites: [],
       concepts: ["debugging-strategy"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */

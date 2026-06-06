@@ -30,7 +30,7 @@ export const stage08 = {
         "Read all lines with readlines() or iterate line by line with a for loop",
         "Choose the correct read mode ('r' for text, 'rb' for binary)",
       ],
-      prerequisites: ["s7-debugging-strategy"],
+      prerequisites: [],
       concepts: ["file-io", "context-manager"],
       contentBlocks: [
         {
@@ -238,7 +238,7 @@ print(len(content))`,
         "Use writelines() to write a list of strings at once",
         "Understand that 'w' mode truncates the file if it already exists",
       ],
-      prerequisites: ["s8-reading-files"],
+      prerequisites: [],
       concepts: ["file-io"],
       contentBlocks: [
         {
@@ -434,7 +434,7 @@ with open("server.log", "___a___") as f:
         "Use json.load() and json.dump() to read and write JSON files directly",
         "Choose between CSV and JSON based on the data's structure",
       ],
-      prerequisites: ["s8-writing-files"],
+      prerequisites: [],
       concepts: ["file-io", "stdlib", "module"],
       contentBlocks: [
         {
@@ -660,7 +660,7 @@ with open("scores.csv", "r", newline="") as f:
         "List at least six standard library modules and their primary use",
         "Access a function from an imported module using dot notation",
       ],
-      prerequisites: ["s8-csv-json"],
+      prerequisites: [],
       concepts: ["module", "import", "package", "stdlib"],
       contentBlocks: [
         {
@@ -884,7 +884,7 @@ print(math.ceil(4.1))`,
         "Understand the purpose of requirements.txt for reproducibility",
         "Know the difference between stdlib modules and third-party packages",
       ],
-      prerequisites: ["s8-imports-modules"],
+      prerequisites: [],
       concepts: ["virtual-env", "package"],
       contentBlocks: [
         {

@@ -31,7 +31,7 @@ export const stage03 = {
         "Explain why 5/2 returns 3.5 but 5//2 returns 2",
         "Use modulo (%) to find the remainder of a division",
       ],
-      prerequisites: ["s2-string-formatting"],
+      prerequisites: [],
       concepts: ["int", "float"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -272,7 +272,7 @@ export const stage03 = {
         "Understand that comparisons are expressions that evaluate to True or False",
         "Avoid confusing = (assignment) with == (equality test)",
       ],
-      prerequisites: ["s3-integers-floats"],
+      prerequisites: [],
       concepts: ["bool"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -487,7 +487,7 @@ export const stage03 = {
         "Test for None using `is None` rather than ==",
         "Recognise None in function return values",
       ],
-      prerequisites: ["s3-booleans-comparisons"],
+      prerequisites: [],
       concepts: ["none-type"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -705,7 +705,7 @@ export const stage03 = {
         "Predict when a conversion will succeed and when it will raise a ValueError",
         "Explain the difference between implicit and explicit type conversion",
       ],
-      prerequisites: ["s3-none-type"],
+      prerequisites: [],
       concepts: ["type-conversion", "int", "float", "str-type", "bool"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -900,7 +900,7 @@ export const stage03 = {
         "Use bool() to check the truthiness of a value",
         "Understand why truthiness matters for if statements",
       ],
-      prerequisites: ["s3-type-conversion"],
+      prerequisites: [],
       concepts: ["truthiness", "bool"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */

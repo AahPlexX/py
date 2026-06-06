@@ -30,7 +30,7 @@ export const stage09 = {
         "Understand `__init__` as the constructor",
         "Distinguish between classes and instances",
       ],
-      prerequisites: ["s8-virtual-environments"],
+      prerequisites: [],
       concepts: ["class", "object-instance", "constructor"],
       contentBlocks: [
         {
@@ -294,7 +294,7 @@ print(r.area())
         "Write class methods and static methods",
         "Use `__str__` and `__repr__` for string representations",
       ],
-      prerequisites: ["s9-classes-objects"],
+      prerequisites: [],
       concepts: ["method", "attribute", "class-attribute", "dunder-method"],
       contentBlocks: [
         {
@@ -555,7 +555,7 @@ print(repr(f))  # Fraction(3, 4)`,
         "Compare dataclasses vs namedtuples vs plain classes",
         "Use `field()` for mutable defaults",
       ],
-      prerequisites: ["s9-methods-attributes"],
+      prerequisites: [],
       concepts: ["dataclass", "field", "frozen-dataclass"],
       contentBlocks: [
         {
@@ -824,7 +824,7 @@ print(coord)
         "Call parent methods with `super()`",
         "Explain the prefer-composition-over-inheritance principle",
       ],
-      prerequisites: ["s9-dataclasses"],
+      prerequisites: [],
       concepts: ["inheritance", "composition", "super", "method-override"],
       contentBlocks: [
         {
@@ -1113,7 +1113,7 @@ print(p.speak())
         "Define duck-typed interfaces using `typing.Protocol`",
         "Understand structural subtyping vs nominal subtyping",
       ],
-      prerequisites: ["s9-inheritance-composition"],
+      prerequisites: [],
       concepts: ["property", "protocol", "duck-typing", "getter-setter"],
       contentBlocks: [
         {

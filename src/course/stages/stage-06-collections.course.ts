@@ -31,7 +31,7 @@ export const stage06 = {
         "Use len() to get the number of elements",
         "Append items with .append() and understand that lists are mutable",
       ],
-      prerequisites: ["s5-default-parameters"],
+      prerequisites: [],
       concepts: ["list", "mutation"],
       contentBlocks: [
         {
@@ -221,7 +221,7 @@ print(letters[-1])`,
         "Use insert(), remove(), pop(), sort(), reverse(), and copy()",
         "Distinguish methods that mutate the list from those that return a new value",
       ],
-      prerequisites: ["s6-lists"],
+      prerequisites: [],
       concepts: ["slicing", "mutation"],
       contentBlocks: [
         {
@@ -429,7 +429,7 @@ print(fruits)`,
         "Create a set and understand that sets contain only unique elements",
         "Use the in operator and perform basic set operations (union, intersection)",
       ],
-      prerequisites: ["s6-list-slicing-methods"],
+      prerequisites: [],
       concepts: ["tuple", "set"],
       contentBlocks: [
         {
@@ -634,7 +634,7 @@ print(len(unique_words))`,
         "Iterate over .keys(), .values(), and .items()",
         "Add and update keys; understand KeyError",
       ],
-      prerequisites: ["s6-tuples-sets"],
+      prerequisites: [],
       concepts: ["dict"],
       contentBlocks: [
         {
@@ -820,7 +820,7 @@ for name, score in grades.___items___():
         "Recognise a dict comprehension {k: v for ...}",
         "Explain when a comprehension is cleaner than an explicit loop",
       ],
-      prerequisites: ["s6-dictionaries"],
+      prerequisites: [],
       concepts: ["comprehension", "iteration"],
       contentBlocks: [
         {

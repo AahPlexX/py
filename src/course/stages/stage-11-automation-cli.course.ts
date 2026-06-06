@@ -29,7 +29,7 @@ export const stage11 = {
         "Exit with meaningful exit codes using `sys.exit()`",
         "Structure a script for import safety",
       ],
-      prerequisites: ["s10-refactoring-safely"],
+      prerequisites: [],
       concepts: ["cli-argument", "exit-code", "entry-point"],
       contentBlocks: [
         {
@@ -219,7 +219,7 @@ if __name__ == "__main__":
         "Set types, defaults, and help text for arguments",
         "Use subparsers for multi-command CLIs",
       ],
-      prerequisites: ["s11-cli-scripts"],
+      prerequisites: [],
       concepts: ["argparse", "cli-argument"],
       contentBlocks: [
         {
@@ -405,7 +405,7 @@ print(total)`,
         "Use module-level loggers with `logging.getLogger(__name__)`",
         "Distinguish between logging and `print` for observability",
       ],
-      prerequisites: ["s11-argparse"],
+      prerequisites: [],
       concepts: ["logging", "log-level", "log-handler"],
       contentBlocks: [
         {
@@ -593,7 +593,7 @@ logger.error("step 4")`,
         "Understand TOML as the modern config format",
         "Prioritise settings: defaults < config file < env var < CLI flag",
       ],
-      prerequisites: ["s11-logging"],
+      prerequisites: [],
       concepts: ["config-file", "configparser"],
       contentBlocks: [
         {
@@ -775,7 +775,7 @@ print(result["theme"])    # dark
         "Report progress and handle individual file errors gracefully",
         "Implement dry-run mode to preview operations before committing",
       ],
-      prerequisites: ["s11-config-files"],
+      prerequisites: [],
       concepts: ["batch-operation", "pathlib", "dry-run"],
       contentBlocks: [
         {

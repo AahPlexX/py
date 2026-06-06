@@ -33,7 +33,7 @@ export const stage04 = {
         "Add an else clause to handle the alternative case",
         "Explain why the colon (:) is required after the condition",
       ],
-      prerequisites: ["s3-truthiness"],
+      prerequisites: [],
       concepts: ["if-statement", "else-clause"],
       contentBlocks: [
         {
@@ -178,7 +178,7 @@ export const stage04 = {
         "Distinguish between an elif chain and separate if statements",
         "Recognise that only one branch in an if/elif/else chain executes",
       ],
-      prerequisites: ["s4-if-else"],
+      prerequisites: [],
       concepts: ["elif", "if-statement", "else-clause"],
       contentBlocks: [
         {
@@ -350,7 +350,7 @@ export const stage04 = {
         "Identify and explain what causes an infinite loop",
         "Trace the execution of a while loop step by step",
       ],
-      prerequisites: ["s4-elif-chains"],
+      prerequisites: [],
       concepts: ["while-loop"],
       contentBlocks: [
         {
@@ -495,7 +495,7 @@ export const stage04 = {
         "Identify the loop variable and its value during each iteration",
         "Explain that range() produces values up to but NOT including the stop value",
       ],
-      prerequisites: ["s4-while-loops"],
+      prerequisites: [],
       concepts: ["for-loop", "range", "loop-variable"],
       contentBlocks: [
         {
@@ -656,7 +656,7 @@ export const stage04 = {
         "Identify which loop break or continue applies to in nested code",
         "Choose between break and continue for a given problem",
       ],
-      prerequisites: ["s4-for-loops-range"],
+      prerequisites: [],
       concepts: ["break", "continue", "for-loop", "while-loop"],
       contentBlocks: [
         {

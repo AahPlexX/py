@@ -79,7 +79,7 @@ export const stage01 = {
         "Distinguish between human-readable source code and machine code",
         "Describe the difference between an interpreter and a compiler",
       ],
-      prerequisites: ["s1-what-is-a-program"],
+      prerequisites: [],
       concepts: ["programming-language"],
       contentBlocks: [
         {
@@ -131,7 +131,7 @@ export const stage01 = {
         "Explain Python's emphasis on readability",
         "Name areas where Python is commonly used",
       ],
-      prerequisites: ["s1-programming-languages"],
+      prerequisites: [],
       concepts: ["python-overview"],
       contentBlocks: [
         {
@@ -181,7 +181,7 @@ export const stage01 = {
         "Explain why precision matters in programming",
         "Recognise that debugging is a normal part of programming",
       ],
-      prerequisites: ["s1-what-is-python"],
+      prerequisites: [],
       concepts: ["programmer-workflow"],
       contentBlocks: [
         {
@@ -233,7 +233,7 @@ export const stage01 = {
         "Recognise step-by-step thinking, ordering, conditions, and repetition",
         "Write a simple algorithm in plain English before coding",
       ],
-      prerequisites: ["s1-what-programmers-do"],
+      prerequisites: [],
       concepts: ["algorithm-thinking"],
       contentBlocks: [
         {
@@ -285,7 +285,7 @@ export const stage01 = {
         "Describe how memory, names, and values relate",
         "Trace simple execution flow mentally",
       ],
-      prerequisites: ["s1-algorithms-before-code"],
+      prerequisites: [],
       concepts: ["mental-model-code"],
       contentBlocks: [
         {
@@ -335,7 +335,7 @@ export const stage01 = {
         "Distinguish between statements and expressions",
         "Identify indentation and comments when reading code",
       ],
-      prerequisites: ["s1-mental-models-for-code"],
+      prerequisites: [],
       concepts: ["execution-order"],
       contentBlocks: [
         {
@@ -383,7 +383,7 @@ export const stage01 = {
         "Recognise what a SyntaxError and NameError look like",
         "Treat error messages as helpful information",
       ],
-      prerequisites: ["s1-reading-code-top-to-bottom"],
+      prerequisites: [],
       concepts: ["error-types"],
       contentBlocks: [
         {
@@ -435,7 +435,7 @@ export const stage01 = {
         "Explain why copying code without understanding is risky",
         "Practice the copy → modify → observe → explain workflow",
       ],
-      prerequisites: ["s1-beginner-error-literacy"],
+      prerequisites: [],
       concepts: ["learning-from-examples"],
       contentBlocks: [
         {
@@ -487,7 +487,7 @@ export const stage01 = {
         "Include at least one conditional and one repeated action",
         "Recognise that algorithm thinking is programming thinking",
       ],
-      prerequisites: ["s1-using-examples-safely"],
+      prerequisites: [],
       concepts: ["algorithm-thinking"],
       contentBlocks: [
         {
@@ -539,7 +539,7 @@ export const stage01 = {
         "Translate a plain-English algorithm into structured pseudocode",
         "Recognise how pseudocode maps to real programming constructs",
       ],
-      prerequisites: ["s1-non-code-exercises"],
+      prerequisites: [],
       concepts: ["algorithm-thinking"],
       contentBlocks: [
         {
@@ -591,7 +591,7 @@ export const stage01 = {
         "Explain why changing multiple things simultaneously makes debugging harder",
         "Describe a systematic approach to isolating bugs",
       ],
-      prerequisites: ["s1-pseudocode-exercises"],
+      prerequisites: [],
       concepts: ["debugging-habits"],
       contentBlocks: [
         {

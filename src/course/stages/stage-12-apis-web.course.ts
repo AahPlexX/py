@@ -29,7 +29,7 @@ export const stage12 = {
         "Interpret HTTP status codes (2xx, 4xx, 5xx)",
         "Understand headers, query parameters, and request bodies",
       ],
-      prerequisites: ["s11-batch-operations"],
+      prerequisites: [],
       concepts: ["http-request", "status-code", "http-method"],
       contentBlocks: [
         {
@@ -217,7 +217,7 @@ export const stage12 = {
         "Parse JSON responses",
         "Handle connection errors and timeouts",
       ],
-      prerequisites: ["s12-http-concepts"],
+      prerequisites: [],
       concepts: ["http-request", "api-response", "json-contract"],
       contentBlocks: [
         {
@@ -403,7 +403,7 @@ print(result["email"])
         "Handle dates, decimals, and custom types in JSON",
         "Define and document an API contract",
       ],
-      prerequisites: ["s12-consuming-apis"],
+      prerequisites: [],
       concepts: ["json-contract", "serialization"],
       contentBlocks: [
         {
@@ -570,7 +570,7 @@ print(json.dumps(price))`,
         "Understand idempotent vs non-idempotent retry safety",
         "Use the retry pattern with a maximum attempt limit",
       ],
-      prerequisites: ["s12-json-contracts"],
+      prerequisites: [],
       concepts: ["retry-strategy", "status-code", "error-handling"],
       contentBlocks: [
         {
@@ -746,7 +746,7 @@ print(safe_divide(10, 0))    # None
         "Raise informative `ValueError` on invalid data",
         "Build a reusable validation helper",
       ],
-      prerequisites: ["s12-api-errors-retries"],
+      prerequisites: [],
       concepts: ["data-validation", "api-response"],
       contentBlocks: [
         {

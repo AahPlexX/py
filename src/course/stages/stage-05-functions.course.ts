@@ -29,7 +29,7 @@ export const stage05 = {
         "Call a function by its name followed by parentheses",
         "Understand that a function is a reusable named block of code",
       ],
-      prerequisites: ["s4-break-continue"],
+      prerequisites: [],
       concepts: ["function-definition"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -252,7 +252,7 @@ morning()`,
         "Define functions that accept one or more positional parameters",
         "Pass arguments in the correct order",
       ],
-      prerequisites: ["s5-defining-functions"],
+      prerequisites: [],
       concepts: ["parameter"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -496,7 +496,7 @@ full_name("Jane", "Doe")`,
         "Understand that functions without return send back None",
         "Apply early return to exit a function before the last line",
       ],
-      prerequisites: ["s5-parameters-arguments"],
+      prerequisites: [],
       concepts: ["return-value"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -722,7 +722,7 @@ print(abs_diff(3, 10))   # 7`,
         "Define global scope and distinguish it from local scope",
         "Predict a NameError when code references a variable that is out of scope",
       ],
-      prerequisites: ["s5-return-values"],
+      prerequisites: [],
       concepts: ["scope"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */
@@ -991,7 +991,7 @@ print(result)`,
         "Write a docstring as the first statement of a function",
         "Understand that default parameters must follow non-default ones",
       ],
-      prerequisites: ["s5-scope"],
+      prerequisites: [],
       concepts: ["default-parameter", "docstring"],
       contentBlocks: [
         /* SECTION 1 — ORIENTATION */

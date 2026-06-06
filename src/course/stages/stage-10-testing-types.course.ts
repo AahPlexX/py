@@ -30,7 +30,7 @@ export const stage10 = {
         "Use `assert` statements to verify expected outcomes",
         "Organize tests in a `tests/` directory",
       ],
-      prerequisites: ["s9-properties-protocols"],
+      prerequisites: [],
       concepts: ["unit-test", "assertion", "test-function"],
       contentBlocks: [
         {
@@ -218,7 +218,7 @@ print("All tests passed!")
         "Write parametrized tests for multiple inputs",
         "Understand test isolation and avoiding test interdependence",
       ],
-      prerequisites: ["s10-unit-testing"],
+      prerequisites: [],
       concepts: ["test-fixture", "parametrize", "test-isolation"],
       contentBlocks: [
         {
@@ -419,7 +419,7 @@ def test_add_item():
         "Express optional values with `X | None`",
         "Understand that type hints are not enforced at runtime",
       ],
-      prerequisites: ["s10-writing-good-tests"],
+      prerequisites: [],
       concepts: ["type-hint", "return-type", "optional-type"],
       contentBlocks: [
         {
@@ -606,7 +606,7 @@ print(result)`,
         "Use `Literal` and `TypedDict` for precise types",
         "Explain what mypy checks and what it cannot",
       ],
-      prerequisites: ["s10-type-hints-basics"],
+      prerequisites: [],
       concepts: ["mypy-concept", "generic-type", "typed-dict"],
       contentBlocks: [
         {
@@ -791,7 +791,7 @@ print(user["name"])`,
         "Remove duplication with helper functions",
         "Validate that behavior is unchanged after refactoring",
       ],
-      prerequisites: ["s10-advanced-typing"],
+      prerequisites: [],
       concepts: ["refactoring", "test-driven", "code-smell"],
       contentBlocks: [
         {
