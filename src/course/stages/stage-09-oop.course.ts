@@ -3,1461 +3,805 @@ import type { Stage } from "@/course/course.schema";
 export const stage09 = {
   id: "stage-09",
   number: 9,
-  title: "Object-Oriented Python",
+  title: "Tuples, Sequences, and Unpacking",
   summary:
-    "Model behavior with classes, dataclasses, methods, properties, and composition over inheritance.",
+    "Master immutable sequences, unpacking syntax, multiple assignment, and named tuples — the building blocks of structured, lightweight data in Python.",
   level: "intermediate",
-  masteryGateConceptIds: [
-    "class",
-    "object-instance",
-    "method",
-    "attribute",
-    "dataclass",
-    "property",
-    "composition",
-  ],
+  masteryGateConceptIds: ["tuple-immutability", "tuple-unpacking", "sequence-protocol"],
   lessons: [
-    /* ── Lesson 1: Classes and Objects ─────────────────────────────────── */
+    /* ── Lesson 9.1 — Creating and Using Tuples ────────────────────────── */
     {
-      id: "s9-classes-objects",
+      id: "s9-tuple-creation",
       stageId: "stage-09",
-      title: "Classes and Objects",
+      title: "Creating and Using Tuples",
       kind: "concept",
-      difficulty: "intermediate",
+      difficulty: "beginner",
       objectives: [
-        "Define a class using the `class` keyword",
-        "Create instances of a class",
-        "Understand `__init__` as the constructor",
-        "Distinguish between classes and instances",
+        "Create tuples using parentheses and the comma operator",
+        "Access tuple elements by index, slice, and membership test",
+        "Understand that commas — not parentheses — create tuples",
       ],
       prerequisites: [],
-      concepts: ["class", "object-instance", "constructor"],
-      contentBlocks: [
-        {
-          kind: "mental-model",
-          title: "A class is a blueprint; an object is a house built from it",
-          analogy:
-            "A class is like an architectural blueprint. The blueprint defines what every house will have — rooms, doors, windows — but the blueprint itself is not a house. Each time you build from the blueprint, you get a distinct house (object) that you can paint differently, furnish differently, and live in.",
-          explanation:
-            "In Python, `class Dog:` defines the blueprint. `rex = Dog()` constructs one specific dog from that blueprint. `rex` and `fido = Dog()` are two separate objects that share the same structure but hold independent data.",
-        },
-        {
-          kind: "text",
-          markdown: `## Defining a Class
-
-Use the \`class\` keyword followed by a PascalCase name. The special method \`__init__\` runs automatically when you create a new instance and is where you set up instance attributes.
-
-\`\`\`python
-class Dog:
-    def __init__(self, name: str, breed: str) -> None:
-        self.name = name      # instance attribute
-        self.breed = breed
-
-rex = Dog("Rex", "Labrador")
-fido = Dog("Fido", "Poodle")
-
-print(rex.name)    # Rex
-print(fido.breed)  # Poodle
-\`\`\`
-
-Every method receives \`self\` as its first parameter. \`self\` refers to the specific instance being operated on.`,
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: `class BankAccount:
-    def __init__(self, owner: str, balance: float = 0.0) -> None:
-        self.owner = owner
-        self.balance = balance
-
-    def deposit(self, amount: float) -> None:
-        self.balance += amount
-
-    def __repr__(self) -> str:
-        return f"BankAccount(owner={self.owner!r}, balance={self.balance:.2f})"
-
-acct = BankAccount("Alice", 100.0)
-acct.deposit(50.0)
-print(acct)          # BankAccount(owner='Alice', balance=150.00)
-print(acct.balance)  # 150.0`,
-          caption:
-            "`__repr__` gives a developer-friendly string representation of the object.",
-        },
-        {
-          kind: "callout",
-          variant: "tip",
-          title: "`self` is a convention, not a keyword",
-          body: "Python passes the instance as the first argument to every instance method. By convention it is named `self`, but you could name it anything. Sticking to `self` is strongly recommended for readability.",
-        },
-        {
-          kind: "glossary-term",
-          term: "class",
-          definition:
-            "A template that defines the structure (attributes) and behavior (methods) shared by all instances of that type.",
-          example: "class Point: ...",
-        },
-        {
-          kind: "glossary-term",
-          term: "object-instance",
-          definition:
-            "A concrete value created from a class. Each instance has its own copy of instance attributes.",
-          example: "p = Point(3, 4)  # p is an instance",
-        },
-        {
-          kind: "why-matters",
-          body: "Classes let you bundle related data and behavior together. Instead of tracking a name, breed, and age in three separate variables, a `Dog` class groups them under one coherent concept — making your code easier to understand, extend, and reuse.",
-        },
-      ],
-      interactions: [
-        {
-          id: "s9-co-predict-repr",
-          kind: "predict-output",
-          prompt: "What does this code print?",
-          beginnerPurpose:
-            "Practice reading class definitions and tracing attribute access.",
-          expectedConceptIds: ["class", "object-instance"],
-          code: `class Point:
-    def __init__(self, x: int, y: int) -> None:
-        self.x = x
-        self.y = y
-
-p = Point(3, 7)
-print(p.x + p.y)`,
-          expectedOutput: "10",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "Trace what values `x` and `y` receive in `__init__`.",
-            },
-            {
-              level: "syntax",
-              text: "`p.x` accesses the `x` attribute of the instance `p`.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Correct! `p.x` is 3 and `p.y` is 7, so 3 + 7 = 10.",
-            incorrect:
-              "Trace through: `Point(3, 7)` sets `self.x = 3` and `self.y = 7`. Then `p.x + p.y` = 3 + 7.",
-          },
-        },
-        {
-          id: "s9-co-fill-init",
-          kind: "fill-code",
-          prompt:
-            "Complete the `__init__` method so `Car('Toyota', 2020)` stores the make and year.",
-          beginnerPurpose: "Practice writing `__init__` with instance attributes.",
-          expectedConceptIds: ["class", "constructor"],
-          codeTemplate: `class Car:
-    def __init__(self, make: str, year: int) -> None:
-        ___BLANK_1___ = make
-        ___BLANK_2___ = year`,
-          blanks: [
-            { placeholder: "___BLANK_1___", answer: "self.make", caseSensitive: true },
-            { placeholder: "___BLANK_2___", answer: "self.year", caseSensitive: true },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "Instance attributes are stored on `self`.",
-            },
-            {
-              level: "syntax",
-              text: "Use `self.attribute_name = value` to set an attribute.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Perfect! `self.make` and `self.year` store the data on the instance.",
-            incorrect:
-              "Remember: to store data on an instance, write `self.attribute_name = value`.",
-          },
-        },
-        {
-          id: "s9-co-mc-class-vs-instance",
-          kind: "multiple-choice",
-          prompt:
-            "You define `class Circle:` and then write `c1 = Circle(5)` and `c2 = Circle(10)`. Which statement is true?",
-          beginnerPurpose:
-            "Clarify that a class is shared but instances hold independent data.",
-          expectedConceptIds: ["class", "object-instance"],
-          options: [
-            {
-              id: "a",
-              text: "`c1` and `c2` are the same object in memory.",
-              isCorrect: false,
-              explanation:
-                "Each call to `Circle(...)` creates a new, separate object.",
-            },
-            {
-              id: "b",
-              text: "`c1` and `c2` are separate objects that share the `Circle` blueprint.",
-              isCorrect: true,
-              explanation:
-                "Correct. Both are instances of `Circle` but hold independent attribute values.",
-            },
-            {
-              id: "c",
-              text: "Defining `class Circle:` creates one object automatically.",
-              isCorrect: false,
-              explanation:
-                "A class definition creates a *type*, not an instance. You need to call `Circle(...)` to make an instance.",
-            },
-            {
-              id: "d",
-              text: "Methods defined in `Circle` only belong to `c1`.",
-              isCorrect: false,
-              explanation:
-                "Methods defined in the class are available to every instance.",
-            },
-          ],
-          allowMultiple: false,
-          allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Think of the blueprint analogy: one blueprint, many houses.",
-            },
-          ],
-          feedback: {
-            correct: "Exactly! The class is the shared template; instances are the built objects.",
-            incorrect:
-              "A class is a blueprint. Each call like `Circle(5)` constructs a new independent object.",
-          },
-        },
-        {
-          id: "s9-co-run-class",
-          kind: "run-code",
-          prompt:
-            "Define a `Rectangle` class with `width` and `height` attributes and an `area()` method. Create an instance and print its area.",
-          beginnerPurpose: "Practice writing a complete class from scratch.",
-          expectedConceptIds: ["class", "method", "object-instance"],
-          starterCode: `class Rectangle:
-    def __init__(self, width: float, height: float) -> None:
-        # store width and height
-        pass
-
-    def area(self) -> float:
-        # return width * height
-        pass
-
-r = Rectangle(4, 6)
-print(r.area())
-`,
-          task: "Make `r.area()` return 24 and print it.",
-          expectedOutputContains: ["24"],
-          pyodideCompatible: true,
-          allowedAttempts: 10,
-          hints: [
-            {
-              level: "syntax",
-              text: "Store with `self.width = width`, then return `self.width * self.height`.",
-            },
-          ],
-          feedback: {
-            correct: "Well done! Your `Rectangle` class is complete.",
-            incorrect:
-              "Make sure `__init__` saves the values and `area()` returns their product.",
-          },
-        },
-      ],
-      reviewHooks: [
-        {
-          conceptId: "class",
-          recallPrompt: "What is the difference between a class and an instance?",
-          nextReviewAfterDays: 1,
-        },
-      ],
-      masteryCriteria: {
-        requiredInteractionIds: [
-          "s9-co-predict-repr",
-          "s9-co-fill-init",
-          "s9-co-mc-class-vs-instance",
-        ],
-        minimumCorrectFraction: 0.8,
-        reviewHookIds: ["class"],
-      },
-    },
-
-    /* ── Lesson 2: Methods and Attributes ──────────────────────────────── */
-    {
-      id: "s9-methods-attributes",
-      stageId: "stage-09",
-      title: "Methods and Attributes",
-      kind: "concept",
-      difficulty: "intermediate",
-      objectives: [
-        "Distinguish instance, class, and static attributes",
-        "Write instance methods that read and mutate state",
-        "Write class methods and static methods",
-        "Use `__str__` and `__repr__` for string representations",
-      ],
-      prerequisites: [],
-      concepts: ["method", "attribute", "class-attribute", "dunder-method"],
+      concepts: ["tuple-basics"],
       contentBlocks: [
         {
           kind: "text",
-          markdown: `## Instance vs Class Attributes
-
-**Instance attributes** are unique to each object and set via \`self\`.
-**Class attributes** are shared across all instances and defined at class body level.
-
-\`\`\`python
-class Counter:
-    count: int = 0        # class attribute — shared
-
-    def __init__(self, label: str) -> None:
-        self.label = label  # instance attribute — unique
-        Counter.count += 1
-
-a = Counter("a")
-b = Counter("b")
-print(Counter.count)  # 2
-print(a.label)        # a
-\`\`\``,
-        },
-        {
-          kind: "comparison",
-          leftLabel: "Instance method",
-          rightLabel: "Static method",
-          leftCode: `class Greeter:
-    def __init__(self, name: str) -> None:
-        self.name = name
-
-    def greet(self) -> str:
-        return f"Hello, {self.name}!"
-
-g = Greeter("Ada")
-print(g.greet())  # Hello, Ada!`,
-          rightCode: `class Greeter:
-    @staticmethod
-    def formal_title(name: str) -> str:
-        return f"Dr. {name}"
-
-# No instance needed
-print(Greeter.formal_title("Turing"))
-# Dr. Turing`,
-          caption:
-            "Instance methods receive `self`; static methods are utility functions that happen to live in the class namespace.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: `class Temperature:
-    def __init__(self, celsius: float) -> None:
-        self._celsius = celsius
-
-    @classmethod
-    def from_fahrenheit(cls, f: float) -> "Temperature":
-        return cls((f - 32) * 5 / 9)
-
-    @property
-    def celsius(self) -> float:
-        return self._celsius
-
-    def __str__(self) -> str:
-        return f"{self._celsius:.1f}°C"
-
-    def __repr__(self) -> str:
-        return f"Temperature(celsius={self._celsius})"
-
-boiling = Temperature.from_fahrenheit(212)
-print(boiling)         # 100.0°C
-print(repr(boiling))   # Temperature(celsius=100.0)`,
-          caption:
-            "`@classmethod` is ideal for alternative constructors. `__str__` targets end users; `__repr__` targets developers.",
+          markdown:
+            "## Why Tuples Exist\n\nImagine storing a geographic coordinate — latitude and longitude together. They always belong as a pair: you never pass one without the other, and order matters. Python's **tuple** is built exactly for this: an ordered, fixed-length sequence of values that signals \"these belong together and should not change.\"\n\n## Creating Tuples\n\nA tuple is formed by commas. Parentheses are optional (except for the empty tuple):\n\n```python\n# Commas create the tuple\npoint        = (40.7128, -74.0060)   # with parentheses\nrgb          = 255, 128, 0           # without — still a tuple\ncountry_code = (\"US\", 1)\n\nprint(type(point))        # <class 'tuple'>\nprint(point[0])           # 40.7128\nprint(rgb)                # (255, 128, 0)\n```\n\n## Reading from a Tuple\n\nTuples support all read operations lists do — indexing, slicing, `len()`, `in`, and iteration:\n\n```python\nseasons = (\"spring\", \"summer\", \"autumn\", \"winter\")\n\nprint(len(seasons))         # 4\nprint(seasons[1])           # summer\nprint(seasons[-1])          # winter\nprint(seasons[1:3])         # ('summer', 'autumn')\nprint(\"spring\" in seasons)  # True\n\nfor s in seasons:\n    print(s)\n```\n\n## What Tuples Cannot Do\n\nYou cannot add, remove, or replace elements after creation:\n\n```python\npoint = (3, 7)\n# point[0] = 99   # TypeError: 'tuple' object does not support item assignment\n# point.append(5) # AttributeError: 'tuple' object has no attribute 'append'\n```",
         },
         {
           kind: "callout",
           variant: "info",
-          title: "Name-mangling with underscores",
-          body: "A single underscore prefix (`_balance`) signals 'internal use — please don't touch from outside.' A double underscore (`__balance`) triggers Python's name-mangling mechanism, making accidental overrides in subclasses less likely.",
+          title: "The comma is the tuple operator",
+          body: "Writing `x = (42)` gives you the integer 42 — parentheses just group the expression. Writing `x = (42,)` gives you a one-element tuple. The trailing comma is what matters.",
+        },
+        {
+          kind: "mental-model",
+          title: "A tuple is a sealed envelope",
+          analogy: "Once you seal an envelope (create the tuple), you can read the contents through a window (index access), but you cannot change what is inside. If you need different contents, you make a new envelope.",
+          explanation: "This seal is what makes tuples reliable: code that receives a tuple knows the data will not change unexpectedly. It also enables tuples to be used as dictionary keys — something lists, which can change, can never do.",
         },
         {
           kind: "why-matters",
-          body: "Understanding when to use `@classmethod`, `@staticmethod`, or a plain instance method is a sign of mature Python design. It signals to readers exactly what role a function plays and whether it depends on instance or class state.",
+          body: "Tuples signal intent: 'these values belong together and will not change.' Functions returning multiple values use tuples automatically. Dictionary keys can be tuples but not lists. Understanding tuples unlocks a huge portion of idiomatic Python.",
         },
       ],
       interactions: [
         {
-          id: "s9-ma-predict-classattr",
+          id: "s9-tuple-creation-predict",
           kind: "predict-output",
           prompt: "What does this code print?",
-          beginnerPurpose: "Understand shared class attributes vs instance attributes.",
-          expectedConceptIds: ["attribute", "class-attribute"],
-          code: `class Widget:
-    total: int = 0
-
-    def __init__(self, name: str) -> None:
-        self.name = name
-        Widget.total += 1
-
-w1 = Widget("A")
-w2 = Widget("B")
-w3 = Widget("C")
-print(Widget.total)`,
-          expectedOutput: "3",
+          beginnerPurpose: "Confirm that commas create a tuple even without parentheses",
+          expectedConceptIds: ["tuple-basics"],
+          code: "data = 10, 20, 30\nprint(type(data).__name__, data[1])",
+          expectedOutput: "tuple 20",
           allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "`Widget.total` is incremented once for each `Widget(...)` call.",
-            },
-          ],
-          feedback: {
-            correct: "Right! Each instantiation increments the shared `total` by 1.",
-            incorrect:
-              "Each `Widget(...)` call runs `__init__`, which adds 1 to `Widget.total`. Three calls → 3.",
-          },
-        },
-        {
-          id: "s9-ma-fill-classmethod",
-          kind: "fill-code",
-          prompt:
-            "Complete the `from_string` classmethod that parses `'3,4'` into a `Point(3, 4)`.",
-          beginnerPurpose: "Practice writing alternative constructors with `@classmethod`.",
-          expectedConceptIds: ["method", "class-attribute"],
-          codeTemplate: `class Point:
-    def __init__(self, x: int, y: int) -> None:
-        self.x = x
-        self.y = y
-
-    ___BLANK_1___
-    def from_string(cls, s: str) -> "Point":
-        x, y = s.split(",")
-        return ___BLANK_2___(int(x), int(y))`,
-          blanks: [
-            { placeholder: "___BLANK_1___", answer: "@classmethod", caseSensitive: true },
-            { placeholder: "___BLANK_2___", answer: "cls", caseSensitive: true },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "Decorate the method with `@classmethod` and use `cls(...)` to construct the instance.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Perfect! `@classmethod` and `cls(...)` are the two key pieces of an alternative constructor.",
-            incorrect:
-              "Use `@classmethod` as the decorator and call `cls(...)` instead of the class name.",
-          },
-        },
-        {
-          id: "s9-ma-debug-static",
-          kind: "debug-code",
-          prompt:
-            "The `add` method doesn't need `self` — fix it so it works as a static utility.",
-          beginnerPurpose: "Learn when to apply `@staticmethod`.",
-          expectedConceptIds: ["method"],
-          brokenCode: `class MathUtils:
-    def add(a: int, b: int) -> int:
-        return a + b
-
-print(MathUtils.add(2, 3))`,
-          bugDescription:
-            "Python treats `a` as `self` when calling `MathUtils.add(2, 3)` without the `@staticmethod` decorator, so `b` is missing.",
-          fixedCode: `class MathUtils:
-    @staticmethod
-    def add(a: int, b: int) -> int:
-        return a + b
-
-print(MathUtils.add(2, 3))`,
-          errorType: "TypeError",
-          allowedAttempts: 4,
-          hints: [
-            {
-              level: "syntax",
-              text: "Add `@staticmethod` on the line before `def add`.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Correct! `@staticmethod` tells Python not to pass the instance or class as the first argument.",
-            incorrect:
-              "Without `@staticmethod`, Python injects `self` as the first argument, shifting `a` and `b` out of position.",
-          },
-        },
-        {
-          id: "s9-ma-plain-explain-dunder",
-          kind: "plain-language-explain",
-          prompt: "Explain in plain language what `__str__` and `__repr__` do and why they differ.",
-          beginnerPurpose:
-            "Build mental clarity about Python's special methods for string representation.",
-          expectedConceptIds: ["dunder-method", "method"],
-          code: `class Fraction:
-    def __init__(self, num: int, den: int) -> None:
-        self.num = num
-        self.den = den
-
-    def __str__(self) -> str:
-        return f"{self.num}/{self.den}"
-
-    def __repr__(self) -> str:
-        return f"Fraction({self.num}, {self.den})"
-
-f = Fraction(3, 4)
-print(str(f))   # 3/4
-print(repr(f))  # Fraction(3, 4)`,
-          keyPointsToHit: [
-            "`__str__` is for end-users and is called by `print()`",
-            "`__repr__` is for developers and should ideally look like a constructor call",
-            "If only `__repr__` is defined, Python uses it for both",
-          ],
-          sampleAnswer:
-            "`__str__` produces a human-friendly string (e.g., `3/4`) that `print()` uses. `__repr__` produces a developer-friendly string that ideally could be pasted back as code to recreate the object (e.g., `Fraction(3, 4)`). When `__str__` is absent, Python falls back to `__repr__`.",
-          allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Think: `__str__` for display, `__repr__` for debugging.",
-            },
-          ],
-          feedback: {
-            correct: "Great explanation! Those three key points show you understand the distinction.",
-            incorrect:
-              "Focus on the audience: `__str__` is for users (readable), `__repr__` is for devs (reconstructable).",
-          },
+          hints: [{ level: "concept", text: "The comma operator creates a tuple even without parentheses. Indexing works identically to lists." }],
+          feedback: { correct: "Correct! Commas make the tuple; data[1] is the element at index 1.", incorrect: "data = 10, 20, 30 uses commas — that creates a tuple. data[1] is 20 (0-based index)." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "method",
-          recallPrompt:
-            "What is the difference between an instance method and a class method?",
-          nextReviewAfterDays: 2,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s9-ma-predict-classattr",
-          "s9-ma-fill-classmethod",
-          "s9-ma-debug-static",
-        ],
+        requiredInteractionIds: ["s9-tuple-creation-predict"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["method"],
+        reviewHookIds: [],
       },
     },
 
-    /* ── Lesson 3: Dataclasses ─────────────────────────────────────────── */
+    /* ── Lesson 9.2 — The Single-Element Tuple Gotcha ──────────────────── */
     {
-      id: "s9-dataclasses",
+      id: "s9-singleton-tuple",
       stageId: "stage-09",
-      title: "Dataclasses",
+      title: "The Single-Element Tuple Gotcha",
       kind: "concept",
-      difficulty: "intermediate",
+      difficulty: "beginner",
       objectives: [
-        "Use `@dataclass` to eliminate boilerplate `__init__`",
-        "Mark fields as frozen, optional, or post-init computed",
-        "Compare dataclasses vs namedtuples vs plain classes",
-        "Use `field()` for mutable defaults",
+        "Write a one-element tuple using the trailing comma",
+        "Distinguish a grouped expression from a singleton tuple",
+        "Avoid the common mistake of omitting the trailing comma",
       ],
       prerequisites: [],
-      concepts: ["dataclass", "field", "frozen-dataclass"],
+      concepts: ["tuple-basics"],
       contentBlocks: [
         {
           kind: "text",
-          markdown: `## The Problem Dataclasses Solve
-
-Writing \`__init__\`, \`__repr__\`, and \`__eq__\` by hand for every data-holding class is tedious.
-The \`@dataclass\` decorator generates them automatically from annotated fields.`,
-        },
-        {
-          kind: "comparison",
-          leftLabel: "Plain class",
-          rightLabel: "@dataclass",
-          leftCode: `class Point:
-    def __init__(self, x: float, y: float):
-        self.x = x
-        self.y = y
-
-    def __repr__(self):
-        return f"Point(x={self.x}, y={self.y})"
-
-    def __eq__(self, other):
-        return (self.x, self.y) == (other.x, other.y)`,
-          rightCode: `from dataclasses import dataclass
-
-@dataclass
-class Point:
-    x: float
-    y: float
-
-# __init__, __repr__, __eq__
-# are all generated for free`,
-          caption: "The dataclass version is shorter and less error-prone.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: `from dataclasses import dataclass, field
-from typing import ClassVar
-
-@dataclass
-class Inventory:
-    name: str
-    quantity: int = 0
-    tags: list[str] = field(default_factory=list)
-    _count: ClassVar[int] = 0   # class variable, not a field
-
-    def add_tag(self, tag: str) -> None:
-        self.tags.append(tag)
-
-item = Inventory("Widget", 10)
-item.add_tag("sale")
-print(item)
-# Inventory(name='Widget', quantity=10, tags=['sale'])`,
-          caption:
-            "Use `field(default_factory=list)` for mutable defaults — never use `tags: list = []` directly.",
-          highlight: [6],
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: `from dataclasses import dataclass
-
-@dataclass(frozen=True)
-class Color:
-    r: int
-    g: int
-    b: int
-
-    def to_hex(self) -> str:
-        return f"#{self.r:02x}{self.g:02x}{self.b:02x}"
-
-red = Color(255, 0, 0)
-print(red.to_hex())   # #ff0000
-# red.r = 128         # raises FrozenInstanceError`,
-          caption:
-            "`frozen=True` makes the dataclass immutable and hashable — safe to use in sets and as dict keys.",
+          markdown:
+            "## The Trap\n\nEvery new Python programmer runs into this: you write `x = (42)` expecting a tuple, but Python gives you an integer. Parentheses serve two purposes — grouping expressions and visually delimiting tuples — but only **commas create tuples**.\n\n```python\n# NOT a tuple — just a grouped integer\na = (42)\nprint(type(a))   # <class 'int'>\n\n# IS a tuple — trailing comma is the signal\nb = (42,)\nprint(type(b))   # <class 'tuple'>\nprint(b[0])      # 42\n\n# Also valid without parentheses\nc = 42,\nprint(type(c))   # <class 'tuple'>\n```\n\n## Why This Matters in Practice\n\nWhen a function should return a single-item tuple, omitting the comma returns the raw value instead:\n\n```python\ndef wrap_value(v):\n    return (v,)   # correct — one-element tuple\n\ndef wrap_wrong(v):\n    return (v)    # wrong — just returns v\n\nresult = wrap_value(\"hello\")\nprint(result)           # ('hello',)\nprint(len(result))      # 1\nprint(result[0])        # hello\n```\n\nCalling `wrap_wrong(\"hello\")` returns the string `\"hello\"`, not a tuple — `len()` would give 5 (characters) instead of 1.",
         },
         {
           kind: "callout",
           variant: "warning",
-          title: "Never use mutable default arguments",
-          body: "Writing `tags: list = []` as a class-level default shares the same list across all instances — a classic Python footgun. Always use `field(default_factory=list)` or `field(default_factory=dict)` for mutable defaults.",
-        },
-        {
-          kind: "why-matters",
-          body: "Dataclasses are now the idiomatic way to create data-focused classes in Python. They appear throughout modern codebases, web frameworks (FastAPI, Pydantic), and standard library modules. Mastering them means less boilerplate and fewer bugs.",
+          title: "Trailing comma is mandatory for singleton tuples",
+          body: "For two or more elements, the last comma is optional. For a one-element tuple, the trailing comma is the only thing that distinguishes it from a grouped expression.",
         },
       ],
       interactions: [
         {
-          id: "s9-dc-predict-frozen",
-          kind: "predict-output",
-          prompt: "What happens when you run this code?",
-          beginnerPurpose: "Understand that frozen dataclasses are immutable.",
-          expectedConceptIds: ["dataclass", "frozen-dataclass"],
-          code: `from dataclasses import dataclass, FrozenInstanceError
-
-@dataclass(frozen=True)
-class Vec2:
-    x: float
-    y: float
-
-v = Vec2(1.0, 2.0)
-try:
-    v.x = 99.0
-except FrozenInstanceError as e:
-    print("Cannot modify frozen instance")`,
-          expectedOutput: "Cannot modify frozen instance",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "`frozen=True` prevents any attribute assignment after creation.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Correct! The `FrozenInstanceError` is caught and the message is printed.",
-            incorrect:
-              "With `frozen=True`, attempting `v.x = 99.0` raises `FrozenInstanceError`, which is caught by the `except` block.",
-          },
-        },
-        {
-          id: "s9-dc-fill-dataclass",
-          kind: "fill-code",
-          prompt:
-            "Complete the dataclass so it auto-generates `__init__` and `__repr__` for a `Book`.",
-          beginnerPurpose: "Practice the `@dataclass` decorator syntax.",
-          expectedConceptIds: ["dataclass"],
-          codeTemplate: `from dataclasses import ___BLANK_1___
-
-___BLANK_2___
-class Book:
-    title: str
-    author: str
-    pages: int = 0`,
-          blanks: [
-            { placeholder: "___BLANK_1___", answer: "dataclass", caseSensitive: true },
-            { placeholder: "___BLANK_2___", answer: "@dataclass", caseSensitive: true },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "Import `dataclass` from `dataclasses`, then apply `@dataclass` above the class.",
-            },
-          ],
-          feedback: {
-            correct: "Correct! `from dataclasses import dataclass` and `@dataclass` is all you need.",
-            incorrect:
-              "You need two things: `from dataclasses import dataclass` and the `@dataclass` decorator.",
-          },
-        },
-        {
-          id: "s9-dc-mc-mutable-default",
+          id: "s9-singleton-mc",
           kind: "multiple-choice",
-          prompt: "Which definition correctly gives every `Student` instance its own empty `grades` list?",
-          beginnerPurpose:
-            "Avoid the shared-mutable-default pitfall specific to dataclasses.",
-          expectedConceptIds: ["dataclass", "field"],
+          prompt: "Which of the following creates a one-element tuple containing the string 'ok'?",
+          beginnerPurpose: "Identify the trailing-comma syntax for singleton tuples",
+          expectedConceptIds: ["tuple-basics"],
           options: [
-            {
-              id: "a",
-              text: "`grades: list[int] = []`",
-              isCorrect: false,
-              explanation:
-                "This raises a `ValueError` at class definition time. Dataclasses explicitly forbid mutable defaults to prevent accidental sharing.",
-            },
-            {
-              id: "b",
-              text: "`grades: list[int] = field(default_factory=list)`",
-              isCorrect: true,
-              explanation:
-                "Correct. `field(default_factory=list)` calls `list()` for each new instance, giving everyone their own list.",
-            },
-            {
-              id: "c",
-              text: "`grades: list[int] = field(default=[])`",
-              isCorrect: false,
-              explanation:
-                "`field(default=mutable)` is still forbidden — use `default_factory` instead.",
-            },
-            {
-              id: "d",
-              text: "`grades: list[int] = list()`",
-              isCorrect: false,
-              explanation:
-                "Same problem as option A — evaluated once at class-definition time and shared.",
-            },
+            { id: "a", text: `("ok",)`, isCorrect: true, explanation: "Correct! The trailing comma inside parentheses signals a one-element tuple." },
+            { id: "b", text: `("ok")`, isCorrect: false, explanation: "This is just a grouped string — no comma, no tuple. type() gives str, not tuple." },
+            { id: "c", text: `tuple("ok")`, isCorrect: false, explanation: "tuple(\"ok\") iterates the string and creates ('o', 'k') — a tuple of individual characters." },
+            { id: "d", text: `["ok"]`, isCorrect: false, explanation: "Square brackets create a list, not a tuple." },
           ],
           allowMultiple: false,
           allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Mutable defaults (lists, dicts) must use `field(default_factory=...)` so each instance gets its own.",
-            },
-          ],
-          feedback: {
-            correct:
-              "`field(default_factory=list)` is the correct pattern for mutable defaults in dataclasses.",
-            incorrect:
-              "Dataclasses forbid bare mutable defaults. Use `field(default_factory=list)` to give each instance its own list.",
-          },
-        },
-        {
-          id: "s9-dc-run-dataclass",
-          kind: "run-code",
-          prompt:
-            "Create a frozen `Coordinate` dataclass with `lat` and `lon` float fields. Print an instance.",
-          beginnerPurpose: "Apply `@dataclass(frozen=True)` end-to-end.",
-          expectedConceptIds: ["dataclass", "frozen-dataclass"],
-          starterCode: `from dataclasses import dataclass
-
-# Define a frozen Coordinate dataclass here
-
-coord = Coordinate(51.5, -0.1)
-print(coord)
-`,
-          task: "Define `Coordinate` as a frozen dataclass, then print `Coordinate(51.5, -0.1)`.",
-          expectedOutputContains: ["51.5", "-0.1"],
-          pyodideCompatible: true,
-          allowedAttempts: 10,
-          hints: [
-            {
-              level: "syntax",
-              text: "Use `@dataclass(frozen=True)` and annotate `lat: float` and `lon: float`.",
-            },
-          ],
-          feedback: {
-            correct: "Excellent! Your frozen `Coordinate` dataclass works perfectly.",
-            incorrect:
-              "Make sure you use `@dataclass(frozen=True)` and define `lat: float` and `lon: float` fields.",
-          },
+          hints: [{ level: "concept", text: "Look for the trailing comma after 'ok'. Without it, parentheses are just grouping, not a tuple." }],
+          feedback: { correct: "Correct! Only (\"ok\",) has the trailing comma that signals a one-element tuple.", incorrect: "Only (\"ok\",) is a tuple. (\"ok\") is a string; tuple(\"ok\") splits into characters; [\"ok\"] is a list." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "dataclass",
-          recallPrompt: "Why should you use `field(default_factory=list)` instead of `= []`?",
-          nextReviewAfterDays: 2,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s9-dc-predict-frozen",
-          "s9-dc-fill-dataclass",
-          "s9-dc-mc-mutable-default",
-        ],
+        requiredInteractionIds: ["s9-singleton-mc"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["dataclass"],
+        reviewHookIds: [],
       },
     },
 
-    /* ── Lesson 4: Inheritance and Composition ─────────────────────────── */
+    /* ── Lesson 9.3 — Tuple Immutability ───────────────────────────────── */
     {
-      id: "s9-inheritance-composition",
+      id: "s9-tuple-immutability",
       stageId: "stage-09",
-      title: "Inheritance and Composition",
+      title: "Tuple Immutability",
       kind: "concept",
-      difficulty: "intermediate",
+      difficulty: "beginner",
       objectives: [
-        "Use inheritance to share behavior across related classes",
-        "Override methods in subclasses",
-        "Call parent methods with `super()`",
-        "Explain the prefer-composition-over-inheritance principle",
+        "Explain why assigning to a tuple element raises TypeError",
+        "Distinguish a tuple's immutability from the mutability of objects it contains",
+        "Convert between tuples and lists when mutation is needed",
       ],
       prerequisites: [],
-      concepts: ["inheritance", "composition", "super", "method-override"],
+      concepts: ["tuple-immutability"],
       contentBlocks: [
         {
           kind: "text",
-          markdown: `## Inheritance
-
-Inheritance lets a subclass *extend* a parent class's behavior.
-
-\`\`\`python
-class Animal:
-    def __init__(self, name: str) -> None:
-        self.name = name
-
-    def speak(self) -> str:
-        return "..."
-
-class Dog(Animal):
-    def speak(self) -> str:        # override
-        return f"{self.name} says Woof!"
-
-class Cat(Animal):
-    def speak(self) -> str:
-        return f"{self.name} says Meow!"
-
-for animal in [Dog("Rex"), Cat("Luna")]:
-    print(animal.speak())
-# Rex says Woof!
-# Luna says Meow!
-\`\`\``,
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: `class Shape:
-    def area(self) -> float:
-        raise NotImplementedError("Subclasses must implement area()")
-
-class Circle(Shape):
-    def __init__(self, radius: float) -> None:
-        self.radius = radius
-
-    def area(self) -> float:
-        import math
-        return math.pi * self.radius ** 2
-
-class Square(Shape):
-    def __init__(self, side: float) -> None:
-        self.side = side
-
-    def area(self) -> float:
-        return self.side ** 2
-
-shapes: list[Shape] = [Circle(5), Square(4)]
-for s in shapes:
-    print(f"{type(s).__name__}: {s.area():.2f}")
-# Circle: 78.54
-# Square: 16.00`,
-          caption:
-            "Polymorphism: the same `area()` call works differently depending on the actual type at runtime.",
-        },
-        {
-          kind: "comparison",
-          leftLabel: "Inheritance (is-a)",
-          rightLabel: "Composition (has-a)",
-          leftCode: `class Logger:
-    def log(self, msg: str) -> None:
-        print(f"[LOG] {msg}")
-
-class Service(Logger):  # Service IS-A Logger
-    def run(self) -> None:
-        self.log("running")`,
-          rightCode: `class Logger:
-    def log(self, msg: str) -> None:
-        print(f"[LOG] {msg}")
-
-class Service:          # Service HAS-A Logger
-    def __init__(self) -> None:
-        self._logger = Logger()
-
-    def run(self) -> None:
-        self._logger.log("running")`,
-          caption:
-            "Composition is more flexible: you can swap the logger implementation without changing `Service`.",
+          markdown:
+            "## Immutability Means No In-Place Changes\n\nOnce created, a tuple's elements cannot be added, removed, or replaced. Any attempt raises `TypeError` immediately:\n\n```python\npoint = (3, 7)\n\n# These all raise TypeError:\n# point[0] = 99          # can't assign to index\n# point.append(5)        # AttributeError — no append method\n# del point[0]           # can't delete element\n\n# To get a modified version, create a new tuple:\nmoved = (point[0] + 1, point[1] + 1)\nprint(moved)   # (4, 8)\n```\n\n## The Subtle Trap: Mutable Objects Inside\n\nImmutability applies to the tuple's *references*, not to the objects those references point to. If a tuple contains a list, you can mutate the list:\n\n```python\ndata = ([1, 2], [3, 4])\n\n# Can mutate the list INSIDE the tuple\ndata[0].append(99)\nprint(data)   # ([1, 2, 99], [3, 4])\n\n# Cannot replace the reference inside the tuple\n# data[0] = [10, 20]   # TypeError\n```\n\n## Converting for Temporary Mutation\n\nWhen you need to sort or otherwise change a tuple's contents, convert to a list, modify, then convert back:\n\n```python\noriginal    = (5, 3, 1, 4, 2)\nas_list     = list(original)\nas_list.sort()\nsorted_tuple = tuple(as_list)\nprint(sorted_tuple)   # (1, 2, 3, 4, 5)\n```",
         },
         {
           kind: "callout",
-          variant: "tip",
-          title: "When to use inheritance",
-          body: "Inheritance is appropriate when a clear 'is-a' relationship exists and you want to share substantial implementation. Avoid deep inheritance hierarchies (more than 2–3 levels). When in doubt, favour composition.",
+          variant: "warning",
+          title: "Immutability applies to references, not contained objects",
+          body: "A tuple holding a list locks the reference to that list — you cannot replace it. But the list itself remains mutable; you can still call append, remove, etc., on it.",
         },
         {
           kind: "why-matters",
-          body: "Real codebases frequently misuse inheritance, leading to tightly coupled, hard-to-test code. Understanding *when* to inherit vs *when* to compose is one of the most valuable design skills in Python.",
+          body: "Immutability is a safety guarantee. A tuple passed to a function cannot be accidentally modified by the callee. It also enables tuples to be used as dictionary keys and set members — something lists can never do because they are mutable (and therefore unhashable).",
         },
       ],
       interactions: [
         {
-          id: "s9-ic-predict-super",
-          kind: "predict-output",
-          prompt: "What does this code print?",
-          beginnerPurpose: "Practice tracing `super()` calls through the inheritance chain.",
-          expectedConceptIds: ["inheritance", "super"],
-          code: `class Vehicle:
-    def __init__(self, make: str) -> None:
-        self.make = make
-
-    def describe(self) -> str:
-        return f"Vehicle: {self.make}"
-
-class Car(Vehicle):
-    def __init__(self, make: str, model: str) -> None:
-        super().__init__(make)
-        self.model = model
-
-    def describe(self) -> str:
-        return f"{super().describe()}, Model: {self.model}"
-
-c = Car("Toyota", "Corolla")
-print(c.describe())`,
-          expectedOutput: "Vehicle: Toyota, Model: Corolla",
+          id: "s9-immutability-debug",
+          kind: "debug-code",
+          prompt: "This code tries to update a coordinate stored as a tuple. Fix it so it prints (10, 7) without changing the variable's type to a list.",
+          beginnerPurpose: "Recognize that changing a tuple requires creating a new one",
+          expectedConceptIds: ["tuple-immutability"],
+          brokenCode: "pos = (3, 7)\npos[0] = 10\nprint(pos)",
+          bugDescription: "Tuples are immutable — assigning to an index raises TypeError. You must create a new tuple and rebind the name.",
+          fixedCode: "pos = (3, 7)\npos = (10, pos[1])\nprint(pos)",
           allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "`super().describe()` calls the parent's `describe` first, then the subclass appends.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Correct! `super().describe()` returns `'Vehicle: Toyota'` and the subclass adds `, Model: Corolla`.",
-            incorrect:
-              "Trace the chain: `Car.describe()` calls `super().describe()` → `'Vehicle: Toyota'`, then appends `, Model: Corolla`.",
-          },
-        },
-        {
-          id: "s9-ic-fill-override",
-          kind: "fill-code",
-          prompt:
-            "Complete the `Triangle` class so `area()` returns `0.5 * base * height`. Call the parent `__init__` with `super()`.",
-          beginnerPurpose: "Practice method overriding and `super().__init__()`.",
-          expectedConceptIds: ["inheritance", "method-override", "super"],
-          codeTemplate: `class Shape:
-    def __init__(self, color: str) -> None:
-        self.color = color
-
-    def area(self) -> float:
-        return 0.0
-
-class Triangle(___BLANK_1___):
-    def __init__(self, color: str, base: float, height: float) -> None:
-        ___BLANK_2___.__init__(color)
-        self.base = base
-        self.height = height
-
-    def area(self) -> float:
-        return ___BLANK_3___ * self.base * self.height`,
-          blanks: [
-            { placeholder: "___BLANK_1___", answer: "Shape", caseSensitive: true },
-            { placeholder: "___BLANK_2___", answer: "super()", caseSensitive: true },
-            { placeholder: "___BLANK_3___", answer: "0.5", caseSensitive: true },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "Inherit with `class Triangle(Shape):` and call `super().__init__(color)` to initialize the parent.",
-            },
-          ],
-          feedback: {
-            correct: "Excellent! You've correctly chained `super().__init__()` and overridden `area()`.",
-            incorrect:
-              "Write `class Triangle(Shape):`, call `super().__init__(color)`, and return `0.5 * self.base * self.height`.",
-          },
-        },
-        {
-          id: "s9-ic-mc-composition",
-          kind: "multiple-choice",
-          prompt:
-            "Which of the following best illustrates composition over inheritance?",
-          beginnerPurpose:
-            "Distinguish between structural coupling (inheritance) and flexible delegation (composition).",
-          expectedConceptIds: ["composition", "inheritance"],
-          options: [
-            {
-              id: "a",
-              text: "`class EmailService(Logger):` — EmailService inherits logging behavior.",
-              isCorrect: false,
-              explanation:
-                "This is inheritance. EmailService is now tightly coupled to Logger's implementation.",
-            },
-            {
-              id: "b",
-              text: "`class EmailService: def __init__(self): self.logger = Logger()` — EmailService holds a Logger.",
-              isCorrect: true,
-              explanation:
-                "Correct! EmailService *has-a* Logger. You can swap in a different logger without changing EmailService.",
-            },
-            {
-              id: "c",
-              text: "`class Logger(EmailService):` — Logger inherits from EmailService.",
-              isCorrect: false,
-              explanation:
-                "This is backwards and doesn't model either relationship correctly.",
-            },
-            {
-              id: "d",
-              text: "There is no difference; inheritance and composition achieve identical results.",
-              isCorrect: false,
-              explanation:
-                "They have different trade-offs: inheritance couples classes tightly; composition is more flexible.",
-            },
-          ],
-          allowMultiple: false,
-          allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Composition means *holding* an object; inheritance means *being* a kind of object.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Right! Holding a `Logger` instance lets you swap implementations — that is composition.",
-            incorrect:
-              "Composition is about *containing* another object (`self.logger = Logger()`), not inheriting from it.",
-          },
-        },
-        {
-          id: "s9-ic-run-polymorphism",
-          kind: "run-code",
-          prompt:
-            "Create a `Bird` base class with `speak()` returning `'...'`. Subclass `Parrot` overrides `speak()` to return `'Squawk!'`. Print the result.",
-          beginnerPurpose: "Practice polymorphism via method overriding.",
-          expectedConceptIds: ["inheritance", "method-override"],
-          starterCode: `class Bird:
-    def speak(self) -> str:
-        return "..."
-
-# Define Parrot here
-
-p = Parrot()
-print(p.speak())
-`,
-          task: "Override `speak()` in `Parrot` to return `'Squawk!'`.",
-          expectedOutputContains: ["Squawk!"],
-          pyodideCompatible: true,
-          allowedAttempts: 10,
-          hints: [
-            { level: "syntax", text: "Use `class Parrot(Bird):` and define a `speak` method." },
-          ],
-          feedback: {
-            correct: "Great! Polymorphism in action — `Parrot` overrides `Bird.speak()`.",
-            incorrect: "Define `class Parrot(Bird):` and override `speak()` to `return 'Squawk!'`.",
-          },
+          hints: [{ level: "concept", text: "You cannot change pos[0] in place. Instead, create a brand-new tuple: pos = (10, pos[1])." }],
+          feedback: { correct: "Correct! pos = (10, pos[1]) creates a new tuple and rebinds the name.", incorrect: "Tuples cannot be mutated in place. Use pos = (10, pos[1]) to create and bind a new tuple." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "composition",
-          recallPrompt:
-            "Give one reason to prefer composition over inheritance.",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s9-ic-predict-super",
-          "s9-ic-fill-override",
-          "s9-ic-mc-composition",
-        ],
+        requiredInteractionIds: ["s9-immutability-debug"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["composition"],
+        reviewHookIds: [],
       },
     },
 
-    /* ── Lesson 5: Properties and Protocols ────────────────────────────── */
+    /* ── Lesson 9.4 — Indexing and Slicing Tuples ──────────────────────── */
     {
-      id: "s9-properties-protocols",
+      id: "s9-tuple-indexing",
       stageId: "stage-09",
-      title: "Properties and Protocols",
+      title: "Indexing and Slicing Tuples",
       kind: "concept",
-      difficulty: "intermediate",
+      difficulty: "beginner",
       objectives: [
-        "Create computed properties using `@property`",
-        "Add validation logic in property setters",
-        "Define duck-typed interfaces using `typing.Protocol`",
-        "Understand structural subtyping vs nominal subtyping",
+        "Access tuple elements by positive and negative index",
+        "Slice a tuple to produce a new tuple",
+        "Use index() and count() on tuples",
       ],
       prerequisites: [],
-      concepts: ["property", "protocol", "duck-typing", "getter-setter"],
+      concepts: ["tuple-basics"],
       contentBlocks: [
         {
           kind: "text",
-          markdown: `## Properties: Controlled Attribute Access
-
-The \`@property\` decorator lets you expose an attribute-like interface while running code underneath.
-
-\`\`\`python
-class Circle:
-    def __init__(self, radius: float) -> None:
-        self._radius = radius   # private backing field
-
-    @property
-    def radius(self) -> float:
-        return self._radius
-
-    @radius.setter
-    def radius(self, value: float) -> None:
-        if value < 0:
-            raise ValueError("Radius cannot be negative")
-        self._radius = value
-
-    @property
-    def diameter(self) -> float:     # computed, read-only
-        return self._radius * 2
-
-c = Circle(5)
-print(c.diameter)   # 10
-c.radius = 3
-print(c.diameter)   # 6
-\`\`\``,
+          markdown:
+            "## Same Interface as Lists — Read Side Only\n\nTuples and lists share the same indexing and slicing syntax. Everything you know about list indexing applies directly to tuples. The only difference: slicing a tuple returns a **new tuple** (not a list), and you cannot assign to an index.\n\n```python\nrgb = (255, 128, 0)\n\nprint(rgb[0])     # 255  — first element\nprint(rgb[-1])    # 0    — last element\nprint(rgb[1:])    # (128, 0)    — slice returns a tuple\nprint(rgb[::-1])  # (0, 128, 255) — reversed\n```\n\n## Searching in a Tuple\n\nTuples have the same two search methods as lists:\n\n```python\ngrades = (90, 85, 90, 78, 90)\n\nprint(grades.count(90))   # 3  — how many 90s?\nprint(grades.index(78))   # 3  — position of first 78\n```\n\n## Practical Example — Months\n\n```python\nmonths = (\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\n          \"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\")\n\nq1 = months[:3]    # ('Jan', 'Feb', 'Mar')\nq4 = months[-3:]   # ('Oct', 'Nov', 'Dec')\nprint(q1, q4)\n```",
         },
         {
           kind: "callout",
-          variant: "tip",
-          title: "Start public, add property later",
-          body: "Python's property mechanism means you can start with a plain attribute (`self.radius`) and later upgrade to a property with validation — without changing any calling code. Don't add properties prematurely.",
+          variant: "info",
+          title: "Slicing preserves the container type",
+          body: "Slicing a tuple gives a tuple. Slicing a list gives a list. Slicing a string gives a string. The type is always preserved.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-tuple-indexing-predict",
+          kind: "predict-output",
+          prompt: "What does this print?",
+          beginnerPurpose: "Apply negative indexing and slicing to a tuple",
+          expectedConceptIds: ["tuple-basics"],
+          code: "t = (10, 20, 30, 40, 50)\nprint(t[-2], t[1:4])",
+          expectedOutput: "40 (20, 30, 40)",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "t[-2] counts from the right: t[-1]=50, t[-2]=40. t[1:4] takes indices 1, 2, 3 and returns a tuple." }],
+          feedback: { correct: "Correct! t[-2]=40, t[1:4]=(20,30,40).", incorrect: "t[-2] is the second-to-last element: 40. t[1:4] slices indices 1, 2, 3 returning a tuple." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-tuple-indexing-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.5 — Unpacking a Tuple into Variables ─────────────────── */
+    {
+      id: "s9-tuple-unpacking",
+      stageId: "stage-09",
+      title: "Unpacking a Tuple into Variables",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Unpack a tuple into named variables in a single assignment",
+        "Understand that variable count must match tuple length",
+        "Apply unpacking inside a for loop over a list of tuples",
+      ],
+      prerequisites: [],
+      concepts: ["tuple-unpacking"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## The Problem with Index Access\n\nAccessing tuple elements by index produces cryptic code:\n\n```python\npoint = (40.7128, -74.0060)\nlat = point[0]   # what does 0 mean?\nlng = point[1]   # and 1?\n```\n\n## Unpacking: One Line, Named Variables\n\n**Tuple unpacking** assigns every element to its own variable simultaneously:\n\n```python\nlat, lng = point\nprint(lat)   # 40.7128\nprint(lng)   # -74.006\n```\n\nPython evaluates the right side first (into a tuple), then distributes each element to the corresponding variable on the left. The count must match exactly:\n\n```python\n# Raises ValueError — too many values to unpack:\n# a, b = (1, 2, 3)\n\n# Raises ValueError — not enough values:\n# x, y, z = (1, 2)\n\n# Exact match works:\nx, y, z = (1, 2, 3)\nprint(x, y, z)   # 1 2 3\n```\n\n## Unpacking in for Loops\n\nThe most common use of unpacking: iterating a list of tuples and naming each field:\n\n```python\ncities = [\n    (\"Paris\",    2161000),\n    (\"Tokyo\",   13960000),\n    (\"Sydney\",   5312000),\n]\n\nfor name, population in cities:\n    print(f\"{name}: {population:,}\")\n# Paris: 2,161,000\n# Tokyo: 13,960,000\n# Sydney: 5,312,000\n```\n\nWithout unpacking, you would write `city[0]` and `city[1]` — far less clear.",
         },
         {
-          kind: "code",
-          language: "python",
-          code: `from typing import Protocol
-
-class Drawable(Protocol):
-    def draw(self) -> str: ...
-
-class Circle:
-    def draw(self) -> str:
-        return "Drawing circle"
-
-class Square:
-    def draw(self) -> str:
-        return "Drawing square"
-
-def render(shape: Drawable) -> None:
-    print(shape.draw())
-
-render(Circle())   # Drawing circle
-render(Square())   # Drawing square`,
-          caption:
-            "`Drawable` is a Protocol. Any class with a matching `draw` method satisfies it — no explicit inheritance required.",
+          kind: "callout",
+          variant: "info",
+          title: "Unpacking works on any iterable",
+          body: "You can unpack lists, strings, ranges, and any other iterable the same way — not just tuples. The syntax requires any iterable whose length matches the variable count.",
         },
         {
           kind: "mental-model",
-          title: "Protocols are 'if it walks like a duck…'",
-          analogy:
-            "A Protocol is like a job description. If you can do everything on the list, you're hired — it doesn't matter who trained you or which school you attended.",
-          explanation:
-            "Python's `Protocol` formalises duck typing. A class satisfies a Protocol if it has all the required methods with matching signatures — no subclassing needed. This is called structural subtyping.",
-        },
-        {
-          kind: "why-matters",
-          body: "Properties let you add validation or computation without changing your API. Protocols let you write flexible, testable code that accepts any compatible object — enabling easy mocking in tests and plug-and-play component replacement.",
+          title: "Unpacking is parallel assignment",
+          analogy: "Think of `a, b, c = (1, 2, 3)` as three assignments happening at the same instant. Python 'freezes' all right-side values before changing any left-side variable.",
+          explanation: "This simultaneous evaluation is why variable swapping works without a temporary: `a, b = b, a` captures both old values before assigning either new one.",
         },
       ],
       interactions: [
         {
-          id: "s9-pp-predict-property",
+          id: "s9-unpacking-fill",
+          kind: "fill-code",
+          prompt: "Fill in the blank so that `name`, `age`, and `score` each receive their corresponding value from `record`.",
+          beginnerPurpose: "Practice writing the tuple unpacking syntax",
+          expectedConceptIds: ["tuple-unpacking"],
+          codeTemplate: "record = (\"Alice\", 30, 95.5)\n____ = record\nprint(name, age, score)",
+          blanks: [{ placeholder: "____", answer: "name, age, score", caseSensitive: false }],
+          allowedAttempts: 3,
+          hints: [{ level: "syntax", text: "Write the three variable names separated by commas on the left side of the = sign." }],
+          feedback: { correct: "Correct! name, age, score = record unpacks all three elements in left-to-right order.", incorrect: "Write the three variable names separated by commas: name, age, score = record." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-unpacking-fill"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.6 — Multiple Assignment and Variable Swap ────────────── */
+    {
+      id: "s9-multiple-assignment",
+      stageId: "stage-09",
+      title: "Multiple Assignment and Variable Swap",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Assign multiple variables in one line using tuple syntax",
+        "Swap two variables without a temporary variable",
+        "Explain why Python's swap idiom evaluates correctly",
+      ],
+      prerequisites: [],
+      concepts: ["tuple-unpacking"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Multiple Assignment in One Line\n\nYou can write values directly on the right side of a multi-variable assignment — Python packs them into a temporary tuple and unpacks immediately:\n\n```python\n# Assign three variables at once\nx, y, z = 1, 2, 3\nprint(x, y, z)   # 1 2 3\n\n# Re-assign in one step\nx, y = 10, 20\nprint(x, y)      # 10 20\n```\n\n## The Variable Swap Idiom\n\nIn many languages you need a temporary variable to swap two values:\n\n```python\n# Java / C style:\ntemp = a\na    = b\nb    = temp\n```\n\nPython's simultaneous evaluation makes this unnecessary:\n\n```python\na = \"hello\"\nb = \"world\"\n\n# Swap without a temp\na, b = b, a\n\nprint(a)   # world\nprint(b)   # hello\n```\n\nPython evaluates the entire right side (`b, a`) before any assignment, capturing old values of both. Then it assigns simultaneously: `a` gets old `b`, `b` gets old `a`.\n\n## Real-World Use: Sorting\n\n```python\ndef one_pass(items):\n    for i in range(len(items) - 1):\n        if items[i] > items[i + 1]:\n            items[i], items[i + 1] = items[i + 1], items[i]\n\ndata = [3, 1, 4, 1, 5]\none_pass(data)\nprint(data)   # [1, 3, 1, 4, 5]\n```",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "This idiom is idiomatic Python",
+          body: "You will see `a, b = b, a` constantly in production code: sorting algorithms, coordinate rotations, and anywhere two variables need to exchange values.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-swap-predict",
           kind: "predict-output",
           prompt: "What does this code print?",
-          beginnerPurpose: "Trace property getter and setter behaviour.",
-          expectedConceptIds: ["property", "getter-setter"],
-          code: `class Temperature:
-    def __init__(self, celsius: float) -> None:
-        self._c = celsius
-
-    @property
-    def fahrenheit(self) -> float:
-        return self._c * 9 / 5 + 32
-
-t = Temperature(100)
-print(t.fahrenheit)`,
-          expectedOutput: "212.0",
+          beginnerPurpose: "Trace simultaneous right-side evaluation through a swap assignment",
+          expectedConceptIds: ["tuple-unpacking"],
+          code: "x, y = 5, 10\nx, y = y, x + y\nprint(x, y)",
+          expectedOutput: "10 15",
           allowedAttempts: 3,
-          hints: [
-            { level: "concept", text: "The `fahrenheit` property computes on the fly each time it's accessed." },
-          ],
-          feedback: {
-            correct: "Correct! 100°C × 9/5 + 32 = 212.0°F.",
-            incorrect: "Trace the formula: `100 * 9 / 5 + 32 = 180 + 32 = 212.0`.",
-          },
+          hints: [{ level: "concept", text: "The right side (y, x + y) is evaluated first using the OLD values: y=10, x+y=5+10=15. Then x gets 10, y gets 15." }],
+          feedback: { correct: "Correct! Right side evaluated with old values first: y=10, x+y=15. Then x=10, y=15.", incorrect: "Python captures both right-side values before assigning. Old y=10, old x+y=5+10=15. Then x=10, y=15." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-swap-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.7 — Extended Unpacking with * ────────────────────────── */
+    {
+      id: "s9-extended-unpacking",
+      stageId: "stage-09",
+      title: "Extended Unpacking with *",
+      kind: "concept",
+      difficulty: "intermediate",
+      objectives: [
+        "Use the starred expression *rest to capture remaining elements",
+        "Position the star variable at beginning, middle, or end",
+        "Understand that the starred variable always collects a list",
+      ],
+      prerequisites: [],
+      concepts: ["tuple-unpacking"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## The Problem with Fixed-Count Unpacking\n\nRegular unpacking requires an exact count match. But what if you want the first element, the last, and everything in between as a group? **Extended unpacking** uses `*` to collect any number of remaining elements.\n\n```python\n# Star at the end — captures the tail\nfirst, *rest = (1, 2, 3, 4, 5)\nprint(first)   # 1\nprint(rest)    # [2, 3, 4, 5]  ← always a list\n\n# Star at the beginning — captures everything but the last\n*body, last = (1, 2, 3, 4, 5)\nprint(body)    # [1, 2, 3, 4]\nprint(last)    # 5\n\n# Star in the middle — captures the middle section\nhead, *middle, tail = (1, 2, 3, 4, 5)\nprint(head)    # 1\nprint(middle)  # [2, 3, 4]\nprint(tail)    # 5\n```\n\n## Practical: Parsing Structured Data\n\nExtended unpacking shines when the first/last fields are special and the middle is variable-length:\n\n```python\n# CSV row: name, *scores, final_grade\nrow = (\"Alice\", 88, 92, 79, 95, \"A\")\nname, *scores, grade = row\n\nprint(name)                           # Alice\nprint(scores)                         # [88, 92, 79, 95]\nprint(grade)                          # A\nprint(sum(scores) / len(scores))      # 88.5\n```\n\n## Ignoring the Middle\n\n```python\n# _ by convention means 'I don't need this'\nfirst, *_, last = range(100)\nprint(first, last)   # 0 99\n```",
         },
         {
-          id: "s9-pp-fill-setter",
+          kind: "callout",
+          variant: "warning",
+          title: "Only one starred variable per assignment",
+          body: "You cannot write `*a, *b = (1, 2, 3)` — Python would not know how to divide elements between two greedy collectors. Only one `*` per unpacking statement is allowed.",
+        },
+        {
+          kind: "mental-model",
+          title: "The star is a greedy vacuum",
+          analogy: "Named variables claim their exact one element first (left-to-right from each end). Then *rest vacuums up whatever remains.",
+          explanation: "The starred variable always gets a list — even an empty one if nothing remains after named variables claim their elements. This consistency is why extended unpacking is safe to use even when the sequence length is unknown.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-extended-predict",
+          kind: "predict-output",
+          prompt: "What does this print?",
+          beginnerPurpose: "Trace extended unpacking with the star in the middle",
+          expectedConceptIds: ["tuple-unpacking"],
+          code: "data = (10, 20, 30, 40, 50)\na, *b, c = data\nprint(a, b, c)",
+          expectedOutput: "10 [20, 30, 40] 50",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "`a` claims 10 (first), `c` claims 50 (last), `*b` vacuums up everything in between as a list." }],
+          feedback: { correct: "Correct! a=10, c=50, *b gets the middle three as a list.", incorrect: "a claims the first element (10), c claims the last (50), *b collects everything between into a list." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-extended-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.8 — Nested Unpacking ─────────────────────────────────── */
+    {
+      id: "s9-nested-unpacking",
+      stageId: "stage-09",
+      title: "Nested Unpacking",
+      kind: "concept",
+      difficulty: "intermediate",
+      objectives: [
+        "Unpack nested tuples in a single assignment statement",
+        "Apply nested unpacking inside for loops",
+        "Judge when nested unpacking aids versus hurts readability",
+      ],
+      prerequisites: [],
+      concepts: ["tuple-unpacking"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Mirroring Structure on Both Sides\n\nWhen a tuple contains other tuples, you can mirror the nesting on the left side of an assignment to unpack all levels simultaneously:\n\n```python\n# A tuple containing a tuple\npoint_3d = ((1, 2), 3)\n\n# Nested unpacking\n(x, y), z = point_3d\nprint(x, y, z)   # 1 2 3\n```\n\n## In for Loops\n\nNested unpacking in loops is common when iterating geometry, connections, or coordinate pairs:\n\n```python\nsegments = [((0, 0), (3, 4)), ((1, 1), (5, 5))]\n\nfor (x1, y1), (x2, y2) in segments:\n    length = ((x2 - x1)**2 + (y2 - y1)**2) ** 0.5\n    print(f\"({x1},{y1}) to ({x2},{y2})  length={length:.2f}\")\n# (0,0) to (3,4)  length=5.00\n# (1,1) to (5,5)  length=5.66\n```\n\n## Practical Config Parsing\n\n```python\nconfig = ((\"localhost\", 5432), \"mydb\")\n(host, port), db = config\nprint(f\"Connect to {db} at {host}:{port}\")\n# Connect to mydb at localhost:5432\n```\n\n## When to Stop Nesting\n\nOne or two levels of nested unpacking: expressive and clear. Three or more: consider index access instead — deeply nested patterns become hard to read.",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "The left-side pattern must match exactly",
+          body: "If the inner tuple has 3 elements but you wrote `(a, b)`, Python raises `ValueError: too many values to unpack`. The nesting structure on the left must mirror the right exactly.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-nested-fill",
           kind: "fill-code",
-          prompt:
-            "Add a setter for `speed` that raises `ValueError` if speed is negative.",
-          beginnerPurpose: "Practice combining `@property` getter with a `.setter`.",
-          expectedConceptIds: ["property", "getter-setter"],
-          codeTemplate: `class Car:
-    def __init__(self, speed: float) -> None:
-        self._speed = speed
-
-    @property
-    def speed(self) -> float:
-        return self._speed
-
-    @___BLANK_1___.setter
-    def speed(self, value: float) -> None:
-        if value < 0:
-            raise ___BLANK_2___("Speed cannot be negative")
-        self._speed = value`,
-          blanks: [
-            { placeholder: "___BLANK_1___", answer: "speed", caseSensitive: true },
-            { placeholder: "___BLANK_2___", answer: "ValueError", caseSensitive: true },
-          ],
+          prompt: "Fill in the blank so that `city`, `lat`, and `lng` receive the correct values from the nested tuple `record`.",
+          beginnerPurpose: "Write nested unpacking syntax that mirrors the nested data structure",
+          expectedConceptIds: ["tuple-unpacking"],
+          codeTemplate: "record = (\"Tokyo\", (35.6895, 139.6917))\n____, (lat, lng) = record\nprint(city, lat, lng)",
+          blanks: [{ placeholder: "____", answer: "city", caseSensitive: false }],
           allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "The setter decorator is `@<property_name>.setter`. Use `ValueError` for invalid values.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Perfect! `@speed.setter` registers the setter and `ValueError` is the right exception.",
-            incorrect:
-              "Use `@speed.setter` as the decorator and raise `ValueError` for negative values.",
-          },
+          hints: [{ level: "syntax", text: "The first element of the outer tuple is a string — it goes into a plain variable. The second element is an inner tuple — it gets unpacked with (lat, lng)." }],
+          feedback: { correct: "Correct! `city` gets 'Tokyo'; `(lat, lng)` destructures the coordinate pair.", incorrect: "The outer level unpacks into `city` (a string) and `(lat, lng)` (the inner tuple). Write `city` in the blank." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-nested-fill"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.9 — Returning Multiple Values from Functions ──────────── */
+    {
+      id: "s9-returning-tuples",
+      stageId: "stage-09",
+      title: "Returning Multiple Values from Functions",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Return multiple values using implicit tuple packing",
+        "Unpack the return value at the call site",
+        "Recognize multi-return patterns in the standard library",
+      ],
+      prerequisites: [],
+      concepts: ["tuple-unpacking"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Functions Can Only Return One Object — But It Can Be a Tuple\n\nWhen you write `return a, b, c`, Python packs those into a tuple `(a, b, c)` automatically. The caller unpacks it:\n\n```python\ndef minmax(numbers):\n    return min(numbers), max(numbers)\n\ndata = [4, 1, 7, 2, 9, 3]\nlow, high = minmax(data)\nprint(f\"min={low}, max={high}\")   # min=1, max=9\n```\n\n## Receiving the Whole Tuple\n\nThe caller can also hold the return value as one variable:\n\n```python\nresult = minmax(data)      # whole tuple\nprint(result)              # (1, 9)\nprint(result[0])           # 1\n```\n\n## Real Example: Parsing a Date\n\n```python\ndef parse_date(date_str):\n    \"\"\"'2024-03-15' -> (year, month, day) as ints.\"\"\"\n    parts = date_str.split(\"-\")\n    return int(parts[0]), int(parts[1]), int(parts[2])\n\nyear, month, day = parse_date(\"2024-03-15\")\nprint(f\"{day}/{month}/{year}\")   # 15/3/2024\n```\n\n## Standard Library Uses This Constantly\n\n- `divmod(17, 5)` returns `(3, 2)` — quotient and remainder\n- `enumerate(items)` yields `(index, value)` pairs\n- `dict.items()` yields `(key, value)` pairs\n- `os.path.splitext('file.txt')` returns `('file', '.txt')`",
         },
         {
-          id: "s9-pp-mc-protocol",
+          kind: "callout",
+          variant: "info",
+          title: "When to use other structures",
+          body: "Tuples are ideal for 2–4 closely related return values with obvious order. When you have many fields or unclear positions, prefer a named tuple (covered in Lesson 9.13) or a dataclass.",
+        },
+        {
+          kind: "why-matters",
+          body: "Multi-value returns via tuples are one of Python's most used patterns. Recognizing `quotient, remainder = divmod(17, 5)` and `index, value = enumerate(items)` is essential for reading real Python code.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-returning-predict",
+          kind: "predict-output",
+          prompt: "What does this code print?",
+          beginnerPurpose: "Trace multi-value return and unpacking at the call site",
+          expectedConceptIds: ["tuple-unpacking"],
+          code: "def stats(nums):\n    return sum(nums), len(nums)\n\ntotal, count = stats([10, 20, 30])\nprint(total / count)",
+          expectedOutput: "20.0",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "stats returns (60, 3). Unpacking: total=60, count=3. 60/3=20.0 (float division)." }],
+          feedback: { correct: "Correct! sum=60, len=3, 60/3=20.0.", incorrect: "stats returns a two-element tuple (60, 3). total=60, count=3. 60 / 3 is 20.0 in Python 3." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-returning-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.10 — When to Choose a Tuple over a List ──────────────── */
+    {
+      id: "s9-tuple-vs-list",
+      stageId: "stage-09",
+      title: "When to Choose a Tuple over a List",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "List the semantic and technical reasons to prefer a tuple over a list",
+        "Use tuples as dictionary keys",
+        "Recognize tuple idioms in real Python code",
+      ],
+      prerequisites: [],
+      concepts: ["tuple-immutability"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Semantic Difference\n\nLists and tuples both store ordered sequences. The choice communicates intent:\n\n- **Tuple**: a fixed record where each position has a specific meaning — `(latitude, longitude)`, `(name, age, salary)`. Signals 'do not change this'.\n- **List**: a homogeneous, variable-length collection that can grow and shrink — `[\"apple\", \"bread\", \"milk\"]`. Signals 'this can change'.\n\n## Technical Difference: Dictionary Keys\n\nBecause tuples are immutable, Python can hash them. Lists are mutable — Python cannot hash them. This means:\n\n```python\n# Tuple as dict key — valid\noffices = {\n    (40.7128, -74.0060): \"New York\",\n    (51.5074, -0.1278):  \"London\",\n}\nprint(offices[(51.5074, -0.1278)])   # London\n\n# List as dict key — raises TypeError\n# {[1, 2]: \"value\"}  # TypeError: unhashable type: 'list'\n```\n\n## Code Examples\n\n```python\n# Good use of tuples: fixed records\nemployee  = (\"Alice\", \"Engineering\", 95000)\ncolor_rgb = (255, 128, 0)\n\n# Good use of lists: collections that change\nshopping_cart = [\"apple\", \"bread\"]\nshopping_cart.append(\"milk\")\n```",
+        },
+        {
+          kind: "comparison",
+          leftLabel: "Tuple",
+          rightLabel: "List",
+          leftCode: "# Fixed structure — positions have meaning\npoint = (40.7128, -74.0060)\n# Immutable: can be a dict key\n# Signals: 'do not change'\n# Heterogeneous types normal",
+          rightCode: "# Variable-length collection\npoints = [(40.7, -74.0), (51.5, -0.1)]\npoints.append((35.7, 139.7))  # grows\n# Mutable: cannot be a dict key\n# Signals: 'can grow and change'",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-vs-list-mc",
           kind: "multiple-choice",
-          prompt:
-            "You have a `Protocol` called `Saveable` with a `save()` method. Which class satisfies it WITHOUT explicitly inheriting from `Saveable`?",
-          beginnerPurpose: "Understand structural subtyping / duck typing with Protocols.",
-          expectedConceptIds: ["protocol", "duck-typing"],
+          prompt: "Which of the following would raise a TypeError in Python?",
+          beginnerPurpose: "Understand why lists cannot be dictionary keys but tuples can",
+          expectedConceptIds: ["tuple-immutability"],
           options: [
-            {
-              id: "a",
-              text: "`class File: def load(self): ...` — only has `load`, not `save`.",
-              isCorrect: false,
-              explanation: "`File` doesn't have `save()`, so it doesn't satisfy `Saveable`.",
-            },
-            {
-              id: "b",
-              text: "`class Document: def save(self) -> None: ...` — has a matching `save` method.",
-              isCorrect: true,
-              explanation:
-                "Correct! `Document` structurally satisfies `Saveable` because it has the required `save()` method.",
-            },
-            {
-              id: "c",
-              text: "Neither — you must always write `class Document(Saveable):` to satisfy a Protocol.",
-              isCorrect: false,
-              explanation:
-                "That is nominal subtyping. Protocols use *structural* subtyping — no explicit inheritance needed.",
-            },
-            {
-              id: "d",
-              text: "`class Record: pass` — any class satisfies any Protocol.",
-              isCorrect: false,
-              explanation:
-                "Only classes with all required methods and attributes satisfy a Protocol.",
-            },
+            { id: "a", text: `{(1, 2): "point"}`, isCorrect: false, explanation: "Tuples are hashable and can be dict keys. This is perfectly valid." },
+            { id: "b", text: `{[1, 2]: "point"}`, isCorrect: true, explanation: "Correct! Lists are mutable and unhashable — Python raises TypeError: unhashable type: 'list'." },
+            { id: "c", text: `t = (1, 2); t[0]`, isCorrect: false, explanation: "Reading t[0] is always valid. No mutation is involved." },
+            { id: "d", text: `len((1, 2, 3))`, isCorrect: false, explanation: "len() works on any sequence including tuples. Returns 3." },
           ],
           allowMultiple: false,
           allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "A Protocol is satisfied by having the right methods, not by inheriting from the Protocol.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Exactly! Structural subtyping means 'if it has the right shape, it qualifies'.",
-            incorrect:
-              "You don't need to inherit from a Protocol. Any class with matching methods satisfies it.",
-          },
-        },
-        {
-          id: "s9-pp-debug-property",
-          kind: "debug-code",
-          prompt: "The property isn't working — find and fix the bug.",
-          beginnerPurpose: "Diagnose a common mistake when defining a property setter.",
-          expectedConceptIds: ["property", "getter-setter"],
-          brokenCode: `class BankAccount:
-    def __init__(self, balance: float) -> None:
-        self._balance = balance
-
-    @property
-    def balance(self) -> float:
-        return self._balance
-
-    @balance.setter
-    def set_balance(self, value: float) -> None:
-        if value < 0:
-            raise ValueError
-        self._balance = value
-
-acct = BankAccount(100.0)
-acct.balance = 200.0
-print(acct.balance)`,
-          bugDescription:
-            "The setter method is named `set_balance` but must be named `balance` to match the property.",
-          fixedCode: `class BankAccount:
-    def __init__(self, balance: float) -> None:
-        self._balance = balance
-
-    @property
-    def balance(self) -> float:
-        return self._balance
-
-    @balance.setter
-    def balance(self, value: float) -> None:
-        if value < 0:
-            raise ValueError
-        self._balance = value
-
-acct = BankAccount(100.0)
-acct.balance = 200.0
-print(acct.balance)`,
-          errorType: "AttributeError",
-          allowedAttempts: 4,
-          hints: [
-            {
-              level: "syntax",
-              text: "The getter and setter must have the same method name.",
-            },
-          ],
-          feedback: {
-            correct:
-              "Correct! The setter method name must match the property name exactly.",
-            incorrect:
-              "Rename `set_balance` to `balance` so the `@balance.setter` decorator attaches correctly.",
-          },
+          hints: [{ level: "concept", text: "Dictionary keys must be hashable. Lists are mutable, so Python cannot compute a stable hash for them." }],
+          feedback: { correct: "Correct! Lists are unhashable and raise TypeError when used as dict keys.", incorrect: "Lists cannot be dict keys because they are mutable and therefore unhashable. Only immutable, hashable objects can be keys." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "property",
-          recallPrompt:
-            "How do you add validation logic to an attribute using `@property`?",
-          nextReviewAfterDays: 3,
-        },
-        {
-          conceptId: "protocol",
-          recallPrompt: "How does a Protocol differ from an abstract base class?",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s9-pp-predict-property",
-          "s9-pp-fill-setter",
-          "s9-pp-mc-protocol",
-          "s9-pp-debug-property",
-        ],
+        requiredInteractionIds: ["s9-vs-list-mc"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["property", "protocol"],
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.11 — Sequence Comparison and Ordering ────────────────── */
+    {
+      id: "s9-sequence-comparison",
+      stageId: "stage-09",
+      title: "Sequence Comparison and Ordering",
+      kind: "concept",
+      difficulty: "intermediate",
+      objectives: [
+        "Compare tuples with == and < using lexicographic rules",
+        "Explain element-by-element comparison and prefix behaviour",
+        "Use tuples as sort keys for multi-field sorting",
+      ],
+      prerequisites: [],
+      concepts: ["sequence-protocol"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Lexicographic Comparison\n\nPython compares sequences element by element from left to right. The comparison returns as soon as a difference is found:\n\n```python\nprint((1, 2, 3) == (1, 2, 3))   # True  — all elements equal\nprint((1, 2, 3) == (1, 2, 4))   # False — differ at index 2\n\n# Ordering:\nprint((1, 2, 3) < (1, 2, 4))    # True  — 3 < 4 at index 2\nprint((1, 3)    < (1, 2, 99))   # False — 3 > 2 at index 1\n\n# Prefix rule: shorter is smaller when all compared elements match\nprint((1,)      < (1, 0))       # True  — (1,) runs out first\n```\n\n## Multi-Field Sorting with Tuple Keys\n\nBecause Python compares tuples element-by-element, a tuple makes an ideal composite sort key:\n\n```python\nemployees = [\n    (\"Alice\", \"Engineering\", 95000),\n    (\"Bob\",   \"Marketing\",   72000),\n    (\"Carol\", \"Engineering\", 88000),\n    (\"Dave\",  \"Marketing\",   72000),\n]\n\n# Sort by department ascending, then salary descending\nemployees.sort(key=lambda e: (e[1], -e[2]))\nfor name, dept, sal in employees:\n    print(f\"{dept:15} {name:10} {sal:,}\")\n```\n\n## Version Numbers\n\n```python\n# Semantic versioning sorts correctly as tuples\nversions = [(1, 10, 0), (1, 9, 3), (2, 0, 0), (1, 10, 1)]\nversions.sort()\nprint(versions)\n# [(1, 9, 3), (1, 10, 0), (1, 10, 1), (2, 0, 0)]\n```",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Negative key trick for descending numbers",
+          body: "To sort a numeric field in descending order within a tuple key, negate it: `(category, -price)`. This avoids a separate reverse step.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-comparison-predict",
+          kind: "predict-output",
+          prompt: "What does this print?",
+          beginnerPurpose: "Trace lexicographic comparison when one tuple is a prefix of the other",
+          expectedConceptIds: ["sequence-protocol"],
+          code: "a = (3, 1)\nb = (3, 1, 0)\nprint(a < b)",
+          expectedOutput: "True",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "Elements match at index 0 (3==3) and index 1 (1==1). Then `a` runs out of elements — the shorter prefix is considered smaller." }],
+          feedback: { correct: "Correct! When all compared elements match and one tuple is exhausted first, it is considered smaller.", incorrect: "(3,1) vs (3,1,0): both match through index 1, then a is exhausted. The shorter prefix is less than the longer sequence." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-comparison-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.12 — Sequence Protocols and Duck Typing ──────────────── */
+    {
+      id: "s9-sequence-protocol",
+      stageId: "stage-09",
+      title: "Sequence Protocols and Duck Typing",
+      kind: "concept",
+      difficulty: "intermediate",
+      objectives: [
+        "Describe the sequence protocol: __len__ and __getitem__",
+        "Explain duck typing in the context of sequences",
+        "Write functions that accept any sequence using Sequence[T] typing",
+      ],
+      prerequisites: [],
+      concepts: ["sequence-protocol"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Duck Typing: If It Walks Like a Sequence...\n\nPython uses **duck typing**: if an object supports the operations a function needs, it works — regardless of the object's class. For sequences, the minimal requirement is `len()` and integer indexing:\n\n```python\ndef first_and_last(seq):\n    \"\"\"Works on any sequence.\"\"\"\n    return seq[0], seq[-1]\n\nprint(first_and_last([10, 20, 30]))     # (10, 30)\nprint(first_and_last((10, 20, 30)))     # (10, 30)\nprint(first_and_last(\"hello\"))          # ('h', 'o')\nprint(first_and_last(range(5)))         # (0, 4)\n```\n\n## The Formal Sequence Protocol\n\nThe abstract base class `collections.abc.Sequence` defines the contract. Implement `__len__` and `__getitem__` and you get `__contains__`, `__iter__`, `__reversed__`, `index`, and `count` for free:\n\n```python\nfrom collections.abc import Sequence\n\nprint(isinstance([1, 2], Sequence))    # True\nprint(isinstance((1, 2), Sequence))    # True\nprint(isinstance(\"hello\", Sequence))   # True\nprint(isinstance({1, 2}, Sequence))    # False — sets are not sequences\n```\n\n## Writing Generic Functions\n\nAnnotate with `Sequence[T]` instead of `list[T]` when your function only reads data:\n\n```python\nfrom collections.abc import Sequence\n\ndef running_total(numbers: Sequence[float]) -> list[float]:\n    totals, acc = [], 0.0\n    for n in numbers:\n        acc += n\n        totals.append(acc)\n    return totals\n\nprint(running_total([1, 2, 3]))      # [1.0, 3.0, 6.0]\nprint(running_total((10, 20, 30)))   # [10.0, 30.0, 60.0]\n```",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Prefer Sequence[T] over list[T] for read-only parameters",
+          body: "When a function only reads from a sequence without mutating it, using `Sequence[T]` in the type hint lets callers pass tuples, strings, ranges, or any sequence — more flexible at zero runtime cost.",
+        },
+        {
+          kind: "why-matters",
+          body: "Understanding the sequence protocol explains why so many standard-library functions accept 'any sequence' without caring whether it is a list, tuple, or string. It also teaches you to design your own functions generically rather than over-constraining them to one type.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-protocol-mc",
+          kind: "multiple-choice",
+          prompt: "Which of the following is NOT a sequence in Python?",
+          beginnerPurpose: "Identify which built-in types satisfy the sequence protocol",
+          expectedConceptIds: ["sequence-protocol"],
+          options: [
+            { id: "a", text: `{"a": 1, "b": 2}`, isCorrect: true, explanation: "Correct! Dictionaries are mappings. They support len() but d[0] is a key lookup, not positional access — so dicts do not satisfy the sequence protocol." },
+            { id: "b", text: `(1, 2, 3)`, isCorrect: false, explanation: "Tuples fully implement the sequence protocol: len() and integer indexing." },
+            { id: "c", text: `range(10)`, isCorrect: false, explanation: "range objects support len() and positional integer indexing — they are sequences." },
+            { id: "d", text: `"hello"`, isCorrect: false, explanation: "Strings support len() and indexing — they are sequences." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "A sequence needs positional integer indexing: obj[0] means 'first element'. Which type lacks this?" }],
+          feedback: { correct: "Correct! Dictionaries are mappings, not sequences — they don't support positional access.", incorrect: "Dictionaries don't support positional indexing (d[0] is a key lookup, not 'first item'). They are mappings, not sequences." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-protocol-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.13 — Named Tuples ─────────────────────────────────────── */
+    {
+      id: "s9-named-tuples",
+      stageId: "stage-09",
+      title: "Named Tuples",
+      kind: "concept",
+      difficulty: "intermediate",
+      objectives: [
+        "Create named tuples with typing.NamedTuple and collections.namedtuple",
+        "Access fields by name instead of index",
+        "Convert a named tuple to a dict and create modified copies with _replace()",
+      ],
+      prerequisites: [],
+      concepts: ["tuple-immutability"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## The Problem with Positional Access\n\nA plain tuple like `(\"Alice\", 30, 95000)` forces readers to remember that index 0 is name, 1 is age, 2 is salary. A **named tuple** adds field names while preserving all tuple properties: immutability, hashability, and memory efficiency.\n\n## typing.NamedTuple — Class Syntax\n\n```python\nfrom typing import NamedTuple\n\nclass Employee(NamedTuple):\n    name:   str\n    age:    int\n    salary: float\n\nemp = Employee(\"Alice\", 30, 95000.0)\n\n# Access by name — readable\nprint(emp.name)    # Alice\nprint(emp.salary)  # 95000.0\n\n# Still a tuple — index and len work too\nprint(emp[0])      # Alice\nprint(len(emp))    # 3\n```\n\n## collections.namedtuple — Factory Function\n\nUseful when field names are computed dynamically:\n\n```python\nfrom collections import namedtuple\n\nPoint = namedtuple(\"Point\", [\"x\", \"y\", \"z\"])\np = Point(1.0, 2.0, 3.0)\nprint(p)     # Point(x=1.0, y=2.0, z=3.0)\nprint(p.x)   # 1.0\n```\n\n## Helper Methods\n\n```python\nemp = Employee(\"Alice\", 30, 95000.0)\n\n# Convert to plain dict\nprint(emp._asdict())\n# {'name': 'Alice', 'age': 30, 'salary': 95000.0}\n\n# Create a modified copy (original unchanged)\nsenior = emp._replace(salary=120000.0)\nprint(senior)   # Employee(name='Alice', age=30, salary=120000.0)\n\n# Field names as a tuple\nprint(Employee._fields)   # ('name', 'age', 'salary')\n```",
+        },
+        {
+          kind: "comparison",
+          leftLabel: "NamedTuple",
+          rightLabel: "Dataclass",
+          leftCode: "from typing import NamedTuple\nclass Point(NamedTuple):\n    x: float\n    y: float\n# Immutable, hashable, tuple-like\n# Can be dict key or set member\n# Access: p.x or p[0]",
+          rightCode: "from dataclasses import dataclass\n@dataclass\nclass Point:\n    x: float\n    y: float\n# Mutable by default\n# Cannot be dict key unless frozen=True\n# Access: p.x only (no index)",
+        },
+        {
+          kind: "why-matters",
+          body: "Named tuples appear throughout the standard library: `os.stat_result`, `sys.version_info`, and `time.struct_time` are all named tuples. Recognizing them and using them in your own code makes the difference between `record[2]` (cryptic) and `record.salary` (self-documenting).",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-named-fill",
+          kind: "fill-code",
+          prompt: "Complete the NamedTuple so that `Color(255, 128, 0).green` returns `128`.",
+          beginnerPurpose: "Define a NamedTuple field with the correct name for attribute access",
+          expectedConceptIds: ["tuple-immutability"],
+          codeTemplate: "from typing import NamedTuple\n\nclass Color(NamedTuple):\n    red:  int\n    ____: int\n    blue: int\n\nc = Color(255, 128, 0)\nprint(c.green)",
+          blanks: [{ placeholder: "____", answer: "green", caseSensitive: true }],
+          allowedAttempts: 3,
+          hints: [{ level: "syntax", text: "The field must be named `green` so that attribute access `c.green` resolves to the second element." }],
+          feedback: { correct: "Correct! Field name `green` makes c.green return the second element (128).", incorrect: "Name the second field `green` so that c.green works. The name in the class definition must match the attribute used." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-named-fill"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    /* ── Lesson 9.14 — Tuple-Driven Data Modeling Drills ───────────────── */
+    {
+      id: "s9-tuple-drills",
+      stageId: "stage-09",
+      title: "Tuple-Driven Data Modeling Drills",
+      kind: "practice",
+      difficulty: "intermediate",
+      objectives: [
+        "Model real-world records as named tuples",
+        "Apply all forms of unpacking to structured data",
+        "Use tuples as dictionary keys and composite sort keys",
+      ],
+      prerequisites: [],
+      concepts: ["tuple-immutability", "tuple-unpacking", "sequence-protocol"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Drill 1 — Route Planning with Tuple Keys\n\nUse `(city_a, city_b)` tuples as dictionary keys to store distances:\n\n```python\ndistances = {\n    (\"New York\", \"London\"):  5570,\n    (\"London\",   \"Tokyo\"):   9560,\n    (\"Tokyo\",    \"Sydney\"):  7823,\n}\n\nroute = (\"London\", \"Tokyo\")\nprint(f\"{route[0]} to {route[1]}: {distances[route]} km\")\n# London to Tokyo: 9560 km\n\ntrip   = [(\"New York\",\"London\"), (\"London\",\"Tokyo\"), (\"Tokyo\",\"Sydney\")]\ntotal  = sum(distances[leg] for leg in trip)\nprint(f\"Total: {total:,} km\")   # Total: 22,953 km\n```",
+        },
+        {
+          kind: "text",
+          markdown:
+            "## Drill 2 — Log Parsing with Extended Unpacking\n\nLog lines have format `timestamp event *details`. Extended unpacking handles variable-length detail sections:\n\n```python\nfrom typing import NamedTuple\n\nclass LogEntry(NamedTuple):\n    timestamp: str\n    event:     str\n    details:   list\n\ndef parse_log(line):\n    parts = line.split()\n    ts, event, *details = parts\n    return LogEntry(ts, event, details)\n\nlogs = [\n    \"10:00:01 LOGIN user=alice ip=192.168.1.1\",\n    \"10:00:05 REQUEST GET /api/users\",\n    \"10:00:07 ERROR 500 internal server error\",\n]\n\nfor line in logs:\n    entry = parse_log(line)\n    print(f\"[{entry.timestamp}] {entry.event}: {' '.join(entry.details)}\")\n```",
+        },
+        {
+          kind: "text",
+          markdown:
+            "## Drill 3 — Leaderboard with Multi-Key Sort\n\nSort players by score descending, then name ascending as a tiebreaker:\n\n```python\nfrom typing import NamedTuple\n\nclass Player(NamedTuple):\n    name:  str\n    score: int\n    level: int\n\nplayers = [\n    Player(\"Zara\",  1500, 8),\n    Player(\"Alice\", 2100, 10),\n    Player(\"Bob\",   2100, 9),\n    Player(\"Carol\", 1800, 7),\n]\n\nranked = sorted(players, key=lambda p: (-p.score, p.name))\nfor i, p in enumerate(ranked, 1):\n    print(f\"{i}. {p.name} {p.score} (level {p.level})\")\n# 1. Alice 2100 (level 10)\n# 2. Bob 2100 (level 9)\n# 3. Carol 1800 (level 7)\n# 4. Zara 1500 (level 8)\n```",
+        },
+        {
+          kind: "text",
+          markdown:
+            "## Drill 4 — Coordinate Transformation with Nested Unpacking\n\nTranslate a polygon by an offset using nested unpacking in a generator:\n\n```python\ndef translate(polygon, offset):\n    dx, dy = offset\n    return tuple((x + dx, y + dy) for x, y in polygon)\n\nsquare = ((0, 0), (1, 0), (1, 1), (0, 1))\nmoved  = translate(square, (3, 2))\nprint(moved)\n# ((3, 2), (4, 2), (4, 3), (3, 3))\n```",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "What you practiced",
+          body: "Tuple keys in dicts, extended unpacking in parsing, NamedTuple for structured records, tuple composite sort keys, and nested unpacking in geometry — patterns that appear constantly in production Python code.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s9-drills-run",
+          kind: "run-code",
+          prompt: "Write `top_n(players, n)` that returns the top-n `(name, score)` tuples sorted by score descending, then name ascending for ties. Print the top 3.",
+          beginnerPurpose: "Combine tuple unpacking with multi-key sorting in a complete function",
+          expectedConceptIds: ["tuple-unpacking", "sequence-protocol"],
+          starterCode: `players = [
+    ("Alice", 320),
+    ("Bob",   450),
+    ("Carol", 280),
+    ("Dave",  450),
+    ("Eve",   390),
+]
+
+def top_n(players, n):
+    # Sort by score descending, then name ascending for ties
+    pass
+
+for name, score in top_n(players, 3):
+    print(f"{name}: {score}")`,
+          task: "Print Bob: 450, Dave: 450, Eve: 390 on separate lines (top 3 by score desc, name asc for ties).",
+          expectedOutputContains: ["Bob: 450", "Dave: 450", "Eve: 390"],
+          pyodideCompatible: true,
+          allowedAttempts: 10,
+          hints: [{ level: "syntax", text: "Use sorted(players, key=lambda p: (-p[1], p[0]))[:n] — negate the score for descending order." }],
+          feedback: { correct: "Correct! sorted with key=(-score, name) and slice [:n] gives the top n in the right order.", incorrect: "Sort by (-score, name) so both 450-score players appear first (Bob before Dave alphabetically), then Eve at 390." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s9-drills-run"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
       },
     },
   ],
 
-  /* ── Project ─────────────────────────────────────────────────────────── */
   project: {
-    id: "s9-contact-book",
+    id: "s9-project",
     stageId: "stage-09",
-    title: "Contact Book",
+    title: "Structured Record Store",
     brief:
-      "Build a Contact Book application using dataclasses for contact storage, a dict as the backing store, and methods to add, search, list, and delete contacts.",
+      "Build a small in-memory record store using a NamedTuple for records and compound tuple pairs as dictionary keys. The store supports inserting, querying by composite key, listing records sorted by two fields, and exporting to plain dicts — uniting NamedTuple definitions, tuple-key dictionaries, multi-key sorting, and _asdict() conversion.",
     requirements: [
-      "Define a `Contact` dataclass with `id`, `name`, `email`, and `phone` fields",
-      "Create a `ContactBook` class that stores contacts in a `dict[str, Contact]`",
-      "Implement `add(contact: Contact) -> None`",
-      "Implement `search(query: str) -> list[Contact]` that matches name or email",
-      "Implement `list_all() -> list[Contact]` sorted by name",
-      "Implement `delete(contact_id: str) -> bool` returning True if deleted",
-      "Add a `__len__` dunder method returning the number of contacts",
+      "Define a Product NamedTuple with category, name, price, and stock fields",
+      "Use (category, name) tuple pairs as dictionary keys",
+      "Implement insert, get, list_sorted (category then price ascending), and export methods",
+      "list_sorted must order by category ascending then price ascending",
+      "export must return plain dicts using _asdict(), not NamedTuple instances",
     ],
     acceptanceCriteria: [
-      "Adding a contact and retrieving it by search returns the correct contact",
-      "Deleting a contact removes it from the book",
-      "`len(book)` returns the correct count",
-      "Searching returns partial matches on name or email",
-      "All code uses type hints",
+      "Inserting and retrieving a product by composite key works correctly",
+      "list_sorted returns products in category-then-price order",
+      "export returns plain dicts (not NamedTuple instances)",
+      "All tuple semantics respected — no list used where a tuple is appropriate",
     ],
-    conceptIds: ["class", "dataclass", "method", "composition"],
+    conceptIds: ["tuple-immutability", "tuple-unpacking", "sequence-protocol"],
     difficulty: "intermediate",
-    starterCode: `from dataclasses import dataclass, field
-import uuid
-
-
-@dataclass
-class Contact:
-    name: str
-    email: str
-    phone: str
-    id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
-
-
-class ContactBook:
-    def __init__(self) -> None:
-        self._contacts: dict[str, Contact] = {}
-
-    def add(self, contact: Contact) -> None:
-        # TODO: store contact by id
-        pass
-
-    def search(self, query: str) -> list[Contact]:
-        # TODO: return contacts where query matches name or email (case-insensitive)
-        pass
-
-    def list_all(self) -> list[Contact]:
-        # TODO: return all contacts sorted by name
-        pass
-
-    def delete(self, contact_id: str) -> bool:
-        # TODO: remove contact, return True if it existed
-        pass
-
-    def __len__(self) -> int:
-        # TODO: return number of contacts
-        pass
-
-
-# Demo
-book = ContactBook()
-book.add(Contact("Alice Smith", "alice@example.com", "555-1234"))
-book.add(Contact("Bob Jones", "bob@example.com", "555-5678"))
-print(len(book))                    # 2
-print(book.search("alice")[0].name) # Alice Smith
-`,
   },
 } satisfies Stage;
