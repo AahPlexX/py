@@ -30,7 +30,7 @@ export const stage13 = {
         "Convert and coerce types safely with fallbacks",
         "Flag vs drop bad rows based on severity",
       ],
-      prerequisites: ["s12-data-validation"],
+      prerequisites: [],
       concepts: ["data-cleaning", "missing-value", "type-coercion"],
       contentBlocks: [
         {
