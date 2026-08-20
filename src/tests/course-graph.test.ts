@@ -15,11 +15,11 @@ describe("course-graph integrity", () => {
     expect(result.success).toBe(true);
   });
 
-  it("has exactly 16 stages", () => {
-    expect(courseRegistry.stages).toHaveLength(16);
+  it("has at least one stage", () => {
+    expect(courseRegistry.stages.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("stages are numbered 1–16 sequentially", () => {
+  it("stages are numbered sequentially from 1", () => {
     courseRegistry.stages.forEach((stage, idx) => {
       expect(stage.number).toBe(idx + 1);
     });

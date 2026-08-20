@@ -197,7 +197,20 @@ function ContentBlockRenderer({ block }: { block: ContentBlock }) {
 }
 
 function markdownToHtml(md: string): string {
-  return md
+  const fenceBlocks: string[] = [];
+
+  // Extract fenced code blocks before HTML escaping so their content is preserved exactly.
+  let text = md.replace(/```(\w*)\n?([\s\S]*?)```/g, (_match, lang: string, code: string) => {
+    const escaped = code
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    const cls = lang ? ` class="language-${lang}"` : "";
+    fenceBlocks.push(`<pre><code${cls}>${escaped}</code></pre>`);
+    return `FENCEBLOCK${fenceBlocks.length - 1}END`;
+  });
+
+  text = text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -213,4 +226,9 @@ function markdownToHtml(md: string): string {
     .replace(/^(?!<[hul])(.+)$/gm, (line) =>
       line ? `<p>${line}</p>` : ""
     );
+
+  // Restore code blocks, unwrapping any <p> wrapper the paragraph pass added.
+  return text.replace(/<p>FENCEBLOCK(\d+)END<\/p>|FENCEBLOCK(\d+)END/g, (_m, a, b) =>
+    fenceBlocks[parseInt(a ?? b)]
+  );
 }

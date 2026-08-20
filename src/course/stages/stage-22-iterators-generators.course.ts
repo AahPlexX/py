@@ -1,0 +1,271 @@
+import type { Stage } from "@/course/course.schema";
+
+export const stage22 = {
+  id: "stage-22",
+  number: 22,
+  title: "Iterators, Generators, and Lazy Computation",
+  summary:
+    "Master Python's iteration protocol, generator functions, and lazy evaluation to process data efficiently without loading it all into memory.",
+  level: "advanced",
+  masteryGateConceptIds: ["generator-function", "iteration-protocol"],
+  lessons: [
+    {
+      id: "s22-iterable-vs-iterator",
+      stageId: "stage-22",
+      title: "Iterable vs Iterator",
+      kind: "concept",
+      difficulty: "advanced",
+      objectives: [
+        "Distinguish iterables from iterators",
+        "Explain the two-step iteration protocol",
+        "Implement a simple iterator class",
+      ],
+      prerequisites: [],
+      concepts: ["iteration-protocol"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Iterable vs Iterator\n\nAn **iterable** can produce an iterator. It implements `__iter__`. Lists, strings, tuples, and dicts are iterables.\n\nAn **iterator** steps through elements. It implements both `__iter__` (returns itself) and `__next__` (returns the next item or raises `StopIteration`).\n\n```python\nnums = [1, 2, 3]      # iterable\nit = iter(nums)        # iterator\nprint(next(it))  # 1\nprint(next(it))  # 2\nprint(next(it))  # 3\nnext(it)         # raises StopIteration\n```\n\nAll iterators are iterables, but not all iterables are iterators.",
+        },
+        {
+          kind: "mental-model",
+          title: "Iterable as book, iterator as bookmark",
+          analogy: "A book (iterable) can have many bookmarks, each remembering a different page. An iterator (bookmark) tracks exactly where one reader left off.",
+          explanation: "Calling iter() creates a new bookmark at the start. You can call iter() multiple times to get independent iterators over the same iterable.",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "for loops use the protocol",
+          body: "Python's for loop calls iter() to get an iterator, then calls next() repeatedly until StopIteration. You can always implement your own iterator class to customize this.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s22-iter-mc",
+          kind: "multiple-choice",
+          prompt: "A list is iterable. After `it = iter(my_list)`, what is `it`?",
+          beginnerPurpose: "Distinguish iterable from iterator",
+          expectedConceptIds: ["iteration-protocol"],
+          options: [
+            { id: "a", text: "A list_iterator object that implements __next__", isCorrect: true, explanation: "Correct! iter() on a list returns a list_iterator, which is the iterator." },
+            { id: "b", text: "The same list", isCorrect: false, explanation: "iter() returns a new iterator object, not the list itself." },
+            { id: "c", text: "A copy of the list", isCorrect: false, explanation: "iter() doesn't copy — it creates an iterator object pointing to the original." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "iter() produces a separate iterator object with __next__." }],
+          feedback: { correct: "Correct! iter() returns a list_iterator.", incorrect: "iter() returns a new iterator object that wraps the list." },
+        },
+        {
+          id: "s22-iter-predict",
+          kind: "predict-output",
+          prompt: "What does this print?",
+          beginnerPurpose: "Trace next() calls",
+          expectedConceptIds: ["iteration-protocol"],
+          code: "it = iter([10, 20, 30])\nprint(next(it))\nprint(next(it))",
+          expectedOutput: "10\n20",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "next() advances the iterator by one step each call." }],
+          feedback: { correct: "Correct!", incorrect: "next() returns items in order: 10, then 20." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s22-iter-mc", "s22-iter-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+    {
+      id: "s22-generator-functions",
+      stageId: "stage-22",
+      title: "Generator Functions and yield",
+      kind: "concept",
+      difficulty: "advanced",
+      objectives: [
+        "Write a generator function using yield",
+        "Explain how generator state is preserved between yields",
+        "Use generators for lazy sequences",
+      ],
+      prerequisites: ["s22-iterable-vs-iterator"],
+      concepts: ["generator-function"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Generator Functions\n\nA **generator function** contains `yield`. Calling it returns a generator object (an iterator) — the function body does not run until you call `next()`.\n\n```python\ndef countdown(n: int):\n    while n > 0:\n        yield n\n        n -= 1\n\nfor x in countdown(3):\n    print(x)\n# 3\n# 2\n# 1\n```\n\nEach `yield` **suspends** the function, saving all local state. The next `next()` call resumes from that exact point.",
+        },
+        {
+          kind: "comparison",
+          leftLabel: "List — eager, all in memory",
+          rightLabel: "Generator — lazy, one at a time",
+          leftCode: "def squares_list(n):\n    return [i*i for i in range(n)]\n\nresult = squares_list(1_000_000)\n# All 1M values in RAM immediately",
+          rightCode: "def squares_gen(n):\n    for i in range(n):\n        yield i * i\n\nresult = squares_gen(1_000_000)\n# No values in RAM yet!\nprint(next(result))  # 0 -- one at a time",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Generators are one-shot",
+          body: "Once a generator is exhausted, you cannot rewind it. To iterate again, create a new generator by calling the function again.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s22-gen-fill",
+          kind: "fill-code",
+          prompt: "Complete the generator that yields even numbers up to n.",
+          beginnerPurpose: "Write a generator function",
+          expectedConceptIds: ["generator-function"],
+          codeTemplate: "def evens(n: int):\n    for i in range(n + 1):\n        if i % 2 == 0:\n            _____ i\n\nprint(list(evens(10)))",
+          blanks: [{ placeholder: "_____", answer: "yield", caseSensitive: true }],
+          allowedAttempts: 3,
+          hints: [{ level: "syntax", text: "Use yield (not return) to produce values lazily." }],
+          feedback: { correct: "Correct! yield produces values lazily.", incorrect: "Use 'yield i' to produce each even number." },
+        },
+        {
+          id: "s22-gen-predict",
+          kind: "predict-output",
+          prompt: "What does this print?",
+          beginnerPurpose: "Trace generator execution",
+          expectedConceptIds: ["generator-function"],
+          code: "def two_items():\n    print(\"before first\")\n    yield 1\n    print(\"before second\")\n    yield 2\n\ng = two_items()\nprint(next(g))\nprint(next(g))",
+          expectedOutput: "before first\n1\nbefore second\n2",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "The generator body runs up to each yield, then suspends." }],
+          feedback: { correct: "Correct! The generator resumes from where it left off.", incorrect: "Between yields, the generator pauses. 'before first' prints before yield 1, 'before second' before yield 2." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s22-gen-fill", "s22-gen-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+    {
+      id: "s22-yield-from",
+      stageId: "stage-22",
+      title: "yield from and Generator Delegation",
+      kind: "concept",
+      difficulty: "advanced",
+      objectives: [
+        "Use yield from to delegate to a sub-generator",
+        "Explain what yield from passes through",
+        "Flatten nested iterables with yield from",
+      ],
+      prerequisites: ["s22-generator-functions"],
+      concepts: ["generator-function"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## yield from\n\n`yield from iterable` yields all items from `iterable` without a manual loop:\n\n```python\ndef flatten(nested):\n    for item in nested:\n        if isinstance(item, list):\n            yield from flatten(item)  # recurse into sub-lists\n        else:\n            yield item\n\nprint(list(flatten([1, [2, [3, 4]], 5])))\n# [1, 2, 3, 4, 5]\n```\n\n`yield from` also passes through `send()` and `throw()` calls to the sub-generator, making it useful for coroutine delegation.",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "yield from vs for ... yield",
+          body: "`yield from x` is functionally equivalent to `for item in x: yield item` for simple cases, but also handles bidirectional communication (send/throw) and final return values.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s22-yieldfrom-predict",
+          kind: "predict-output",
+          prompt: "What does this print?",
+          beginnerPurpose: "Trace yield from",
+          expectedConceptIds: ["generator-function"],
+          code: "def chain(*iterables):\n    for it in iterables:\n        yield from it\n\nprint(list(chain([1, 2], [3], [4, 5])))",
+          expectedOutput: "[1, 2, 3, 4, 5]",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "yield from delegates to each iterable in turn." }],
+          feedback: { correct: "Correct! yield from flattens the sub-iterables.", incorrect: "yield from it yields all items from each iterable in sequence." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s22-yieldfrom-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+    {
+      id: "s22-memory-efficient",
+      stageId: "stage-22",
+      title: "Memory-Efficient Data Pipelines",
+      kind: "concept",
+      difficulty: "advanced",
+      objectives: [
+        "Chain generators into a processing pipeline",
+        "Measure memory savings from lazy evaluation",
+        "Identify when generators are better than lists",
+      ],
+      prerequisites: ["s22-yield-from"],
+      concepts: ["generator-function"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Generator Pipelines\n\nChain generators to process data without materializing intermediate collections:\n\n```python\ndef read_lines(filename: str):\n    with open(filename) as f:\n        for line in f:\n            yield line.rstrip()\n\ndef only_errors(lines):\n    for line in lines:\n        if \"ERROR\" in line:\n            yield line\n\ndef extract_timestamp(lines):\n    for line in lines:\n        yield line.split(\" \")[0]\n\n# Pipeline: file -> filter -> transform\n# At no point is the whole file in memory\npipeline = extract_timestamp(only_errors(read_lines(\"app.log\")))\nfor ts in pipeline:\n    print(ts)\n```\n\nEach generator processes one item at a time — a 10 GB log file uses no more RAM than a 10 KB one.",
+        },
+        {
+          kind: "why-matters",
+          body: "Generator pipelines are essential for ETL processing, log analysis, streaming APIs, and any data that doesn't fit in memory. They also start producing results immediately rather than waiting for the full computation.",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Use itertools for pipeline utilities",
+          body: "itertools.chain, itertools.islice, itertools.takewhile, and itertools.filterfalse are built-in generator-based tools that compose naturally with your own generators.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s22-pipeline-mc",
+          kind: "multiple-choice",
+          prompt: "You chain 3 generators: read_csv -> filter_valid -> format_output. How many full copies of the data exist in memory?",
+          beginnerPurpose: "Understand generator memory model",
+          expectedConceptIds: ["generator-function"],
+          options: [
+            { id: "a", text: "3 — one per stage", isCorrect: false, explanation: "Generators don't buffer their output — each row flows through all stages before the next row is read." },
+            { id: "b", text: "0 — no copies, one row at a time flows through", isCorrect: true, explanation: "Correct! Generators are lazy — one item flows through all three stages, then the next item, etc." },
+            { id: "c", text: "1 — the final output", isCorrect: false, explanation: "Even the final output is lazy until consumed by list() or a for loop." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "Generators process one item at a time — no buffering between stages." }],
+          feedback: { correct: "Correct! The pipeline is fully lazy.", incorrect: "Generator pipelines process one item at a time — no copies." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s22-pipeline-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+  ],
+  project: {
+    id: "s22-project",
+    stageId: "stage-22",
+    title: "Iterator Pipeline Project",
+    brief:
+      "Build a lazy CSV processing pipeline using generators that reads a large CSV file line-by-line, filters rows, transforms values, and writes output without loading the whole file into memory.",
+    requirements: [
+      "Generator function that reads CSV lines one at a time",
+      "Filtering generator that skips invalid/incomplete rows",
+      "Transformation generator that reformats each row",
+      "Pipeline composed without any intermediate lists",
+      "Works correctly on a 1000-row test CSV",
+    ],
+    acceptanceCriteria: [
+      "Peak memory usage stays near constant regardless of file size",
+      "All stages produce correct output",
+      "Code uses yield and generator composition",
+    ],
+    conceptIds: ["generator-function", "iteration-protocol"],
+    difficulty: "advanced",
+  },
+} satisfies Stage;

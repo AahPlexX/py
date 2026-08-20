@@ -3,824 +3,632 @@ import type { Stage } from "@/course/course.schema";
 export const stage01 = {
   id: "stage-01",
   number: 1,
-  title: "Zero Start: What Programming Is",
+  title: "Absolute Zero Programming Foundations",
   summary:
-    "Understand what a program is, how Python runs code, how to produce output, how to read errors, and how to write comments. No prior experience needed.",
+    "Understand what a program is, what programming languages do, what Python is, and how to think algorithmically before writing a single line of code.",
   level: "beginner",
-  masteryGateConceptIds: ["program", "output", "error", "comment", "interpreter"],
+  masteryGateConceptIds: ["program-definition", "algorithm-thinking", "python-overview"],
 
   lessons: [
-    /* ── Lesson 1: What Is a Program? ─────────────────────────────────────── */
     {
       id: "s1-what-is-a-program",
       stageId: "stage-01",
-      title: "What Is a Program?",
+      title: "What a Computer Program Is",
       kind: "concept",
       difficulty: "beginner",
       objectives: [
-        "Define what a computer program is in plain language",
-        "Recognise that Python programs are sequences of instructions",
-        "Write and mentally trace a single print() call",
+        "Define a computer program in plain language",
+        "Explain the concepts of instructions, sequence, input, processing, and output",
+        "Recognise that a program is an exact, ordered list of steps",
       ],
       prerequisites: [],
-      concepts: ["program", "output", "interpreter"],
+      concepts: ["program-definition"],
       contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## What Is a Computer Program?\n\nA **computer program** is an ordered list of instructions written for a computer to execute. Like a recipe that a cook follows step by step, a program tells the computer exactly what to do — and in what order.\n\nEvery program involves these fundamental ideas:\n\n- **Instructions**: individual commands (`print`, `add`, `compare`)\n- **Sequence**: instructions execute one after another, top to bottom\n- **Input**: data the program receives (from keyboard, file, or network)\n- **Processing**: transforming input into a useful result\n- **Output**: what the program produces (text on screen, a file, a network response)\n\n```python\n# A tiny program demonstrating all five concepts:\nmessage = input('Enter your name: ')   # INPUT\ngreeting = 'Hello, ' + message         # PROCESSING\nprint(greeting)                         # OUTPUT\n```",
+        },
         {
           kind: "mental-model",
           title: "A Program Is Like a Recipe",
           analogy:
-            "Think of a recipe: it lists exact steps in order, and the cook follows every step precisely. A computer program is the same thing — a list of exact steps written for a computer to follow.",
+            "A recipe lists exact steps in order, and the cook follows every step precisely. A computer program does the same — a list of exact steps for the computer to follow.",
           explanation:
-            "Just as a recipe cannot skip steps or guess what the chef meant, a program must be completely unambiguous. The computer executes every instruction exactly as written, one after another.",
+            "Just like a recipe cannot skip steps or guess what the chef meant, a program must be completely unambiguous. The computer executes every instruction exactly as written.",
         },
+        {
+          kind: "why-matters",
+          body: "Understanding that programs are just sequences of instructions removes the mystery from programming. There is no magic — just clear, ordered steps. Once you internalise this, reading and writing code becomes a matter of thinking through steps.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-program-mc",
+          kind: "multiple-choice",
+          prompt: "Which of the following best describes a computer program?",
+          beginnerPurpose: "Confirm understanding of the program definition.",
+          expectedConceptIds: ["program-definition"],
+          options: [
+            { id: "a", text: "A piece of hardware inside the computer", isCorrect: false, explanation: "Hardware is physical equipment. A program is software — instructions, not physical parts." },
+            { id: "b", text: "An ordered list of instructions that a computer executes", isCorrect: true, explanation: "Correct! A program is an exact, ordered set of instructions the computer follows step by step." },
+            { id: "c", text: "A collection of random data stored on disk", isCorrect: false, explanation: "Programs are meaningful, ordered instructions — not random data." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "Think about the recipe analogy: what is a recipe in terms of steps?" }],
+          feedback: { correct: "Correct! A program is a sequence of instructions — like a recipe for the computer.", incorrect: "A program is an ordered set of instructions the computer follows step by step." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-program-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-programming-languages",
+      stageId: "stage-01",
+      title: "What Programming Languages Are",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Explain why programming languages exist",
+        "Distinguish between human-readable source code and machine code",
+        "Describe the difference between an interpreter and a compiler",
+      ],
+      prerequisites: [],
+      concepts: ["programming-language"],
+      contentBlocks: [
         {
           kind: "text",
           markdown:
-            "## What Is a Program?\n\nA **program** is a sequence of instructions that a computer can execute. When you run a Python program, Python reads your instructions and carries them out one by one.\n\nEvery app on your phone, every website you visit, and every video game you play is built from programs — collections of instructions that tell the computer exactly what to do.\n\nPython is a **high-level language**: you write instructions in something close to English, and Python translates them into operations the machine can perform.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: 'print("Hello")',
-          caption:
-            "The simplest Python program: one instruction that tells Python to display the word Hello.",
+            "## Why Programming Languages Exist\n\nComputers only understand binary (0s and 1s). Writing programs directly in binary would be tedious and error-prone. **Programming languages** are a middle ground — they let you write instructions in human-readable text, then automatically translate that text into instructions the computer can run.\n\n```\nHuman-readable code   →   Translation   →   Machine execution\nprint('Hello')            (interpreter)      CPU executes\n```\n\n## Interpreters vs Compilers\n\n| Approach | How it works | Examples |\n|----------|-------------|----------|\n| **Interpreter** | Translates and runs code line by line | Python, Ruby |\n| **Compiler** | Translates the entire program first, then runs the result | C, Rust, Go |\n\nPython is an **interpreted** language — the Python interpreter reads your code and runs it immediately, line by line.",
         },
         {
           kind: "callout",
           variant: "info",
-          title: "Python as an Instruction Set",
-          body: "Every line of Python code you write is an instruction. print(\"Hello\") is the instruction \"display Hello on the screen\". Python executes that instruction the moment it reaches that line.",
+          title: "High-level vs Low-level Languages",
+          body: "Python is a high-level language — it uses words close to English. Assembly is a low-level language — it uses mnemonic codes close to machine instructions. High-level languages are easier to read and write but require translation. Low-level languages give more control but are harder to write.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-lang-mc",
+          kind: "multiple-choice",
+          prompt: "What is the key difference between an interpreter and a compiler?",
+          beginnerPurpose: "Distinguish the two translation approaches.",
+          expectedConceptIds: ["programming-language"],
+          options: [
+            { id: "a", text: "An interpreter translates and runs code line by line; a compiler translates the whole program first", isCorrect: true, explanation: "Correct! Python uses an interpreter that reads and runs code one line at a time." },
+            { id: "b", text: "An interpreter is faster than a compiler at runtime", isCorrect: false, explanation: "Compiled code is usually faster at runtime because the translation is done in advance." },
+            { id: "c", text: "A compiler only works with high-level languages", isCorrect: false, explanation: "Both interpreters and compilers can work with high-level languages." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "Think about when the translation happens — before running, or while running?" }],
+          feedback: { correct: "Correct! Python is interpreted — it translates each line as it runs.", incorrect: "An interpreter translates and runs code line by line; a compiler translates the entire program before running it." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-lang-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-what-is-python",
+      stageId: "stage-01",
+      title: "What Python Is",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Describe Python as an interpreted, general-purpose language",
+        "Explain Python's emphasis on readability",
+        "Name areas where Python is commonly used",
+      ],
+      prerequisites: [],
+      concepts: ["python-overview"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## What Python Is\n\nPython is a **general-purpose, interpreted, high-level programming language** created by Guido van Rossum and first released in 1991. Its design philosophy emphasises code readability — Python code often reads almost like plain English.\n\n**Python's key characteristics:**\n- **Interpreted**: code runs line by line; no separate compile step\n- **General-purpose**: used for web development, data science, automation, AI/ML, scripting, and more\n- **High-level**: handles memory management, types, and other low-level details automatically\n- **Large standard library**: hundreds of built-in modules for common tasks\n- **Cross-platform**: runs on Windows, macOS, Linux\n\n```python\n# Python code reads almost like English:\nnames = ['Alice', 'Bob', 'Carol']\nfor name in names:\n    print(f'Hello, {name}!')\n```",
         },
         {
           kind: "why-matters",
-          body: "Understanding that programs are just sequences of instructions removes the mystery from programming. There is no magic — just clear, ordered steps. Once you internalise this, reading and writing code becomes a matter of thinking through steps, not memorising spells.",
+          body: "Python is consistently ranked among the top 3 most popular programming languages in the world. It is the dominant language for data science, machine learning, and scripting. Learning Python opens doors to virtually every area of software development.",
         },
       ],
       interactions: [
         {
-          id: "s1-wip-mc-what-is-program",
+          id: "s1-python-mc",
           kind: "multiple-choice",
-          prompt: "Which of the following best describes what a computer program is?",
-          beginnerPurpose: "Confirm the learner can state a correct definition of a program.",
-          expectedConceptIds: ["program"],
+          prompt: "Which characteristic is NOT true of Python?",
+          beginnerPurpose: "Confirm understanding of Python's nature.",
+          expectedConceptIds: ["python-overview"],
           options: [
-            {
-              id: "opt-a",
-              text: "A piece of hardware inside the computer",
-              isCorrect: false,
-              explanation:
-                "Hardware is the physical equipment. A program is software — instructions, not physical parts.",
-            },
-            {
-              id: "opt-b",
-              text: "A sequence of instructions that a computer executes",
-              isCorrect: true,
-              explanation:
-                "Exactly right. A program is an ordered set of instructions the computer follows step by step.",
-            },
-            {
-              id: "opt-c",
-              text: "A type of file that stores images",
-              isCorrect: false,
-              explanation:
-                "Image files store pictures, not instructions for the computer to execute.",
-            },
-            {
-              id: "opt-d",
-              text: "A collection of random numbers",
-              isCorrect: false,
-              explanation:
-                "Programs are meaningful, ordered instructions — not random data.",
-            },
+            { id: "a", text: "Python is interpreted — it runs code line by line", isCorrect: false, explanation: "This IS true. Python is interpreted." },
+            { id: "b", text: "Python requires you to manually manage memory allocation", isCorrect: true, explanation: "Correct — Python handles memory management automatically. You do NOT need to manually allocate or free memory." },
+            { id: "c", text: "Python is general-purpose — usable for web, data, automation", isCorrect: false, explanation: "This IS true. Python is indeed general-purpose." },
           ],
           allowMultiple: false,
           allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Think about the recipe analogy: what is a recipe in terms of steps?",
-            },
-          ],
-          feedback: {
-            correct: "Correct! A program is a sequence of instructions — like a recipe for the computer.",
-            incorrect:
-              "Not quite. A program is a set of instructions the computer follows in order, similar to how a recipe is a set of cooking steps.",
-          },
-        },
-        {
-          id: "s1-wip-predict-hello-world",
-          kind: "predict-output",
-          prompt: 'What will Python print when it runs this code?',
-          beginnerPurpose:
-            "Practice tracing a single print() call to build the habit of predicting output before running code.",
-          expectedConceptIds: ["output", "program"],
-          code: 'print("Hello, world!")',
-          expectedOutput: "Hello, world!",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "print() displays whatever is inside the parentheses.",
-            },
-            {
-              level: "syntax",
-              text: "The quotes are not printed — only the text between them appears.",
-            },
-          ],
-          feedback: {
-            correct: "Exactly! Python prints the text inside the quotes, without the quotes themselves.",
-            incorrect:
-              "Look carefully at what is inside the parentheses — that text is what gets displayed. Quotes are not shown in the output.",
-            misconception:
-              "Many beginners include the quotes in their answer. Python strips the quotes; they are syntax, not content.",
-          },
-        },
-        {
-          id: "s1-wip-explain-program",
-          kind: "plain-language-explain",
-          prompt:
-            "In your own words, explain what a program does and how the recipe analogy applies to Python code.",
-          beginnerPurpose:
-            "Force the learner to articulate the concept in plain language, deepening retention.",
-          expectedConceptIds: ["program", "interpreter"],
-          code: 'print("Step 1")\nprint("Step 2")\nprint("Step 3")',
-          keyPointsToHit: [
-            "A program is a list of instructions",
-            "The computer follows instructions in order",
-            "Python executes each line one at a time",
-          ],
-          sampleAnswer:
-            "A program is like a recipe: it lists instructions that the computer follows exactly, one after another. Just like a chef follows cooking steps in order, Python runs each line of code from top to bottom without skipping or reordering anything.",
-          allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Focus on order and exactness — what makes a recipe different from a shopping list?",
-            },
-          ],
-          feedback: {
-            correct:
-              "Great explanation! You captured the key ideas: ordered steps and exact execution.",
-            incorrect:
-              "Try to mention that instructions are followed in order and that Python is the one carrying them out.",
-          },
+          hints: [{ level: "concept", text: "One of these descriptions fits C/C++ but not Python." }],
+          feedback: { correct: "Correct! Python handles memory management for you automatically.", incorrect: "Python is a high-level language that handles memory management automatically — you don't need to manage it yourself." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "program",
-          recallPrompt: "In one sentence, what is a computer program?",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s1-wip-mc-what-is-program",
-          "s1-wip-predict-hello-world",
-          "s1-wip-explain-program",
-        ],
+        requiredInteractionIds: ["s1-python-mc"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["program"],
+        reviewHookIds: [],
       },
     },
 
-    /* ── Lesson 2: How Python Runs Your Code ──────────────────────────────── */
     {
-      id: "s1-how-python-runs",
+      id: "s1-what-programmers-do",
       stageId: "stage-01",
-      title: "How Python Runs Your Code",
+      title: "What a Programmer Does",
       kind: "concept",
       difficulty: "beginner",
       objectives: [
-        "Explain that Python uses an interpreter to execute code line by line",
-        "Predict the order of output for a multi-line program",
-        "Understand that execution always flows top to bottom by default",
+        "Describe the programmer's core workflow: break down, code, test, correct",
+        "Explain why precision matters in programming",
+        "Recognise that debugging is a normal part of programming",
       ],
-      prerequisites: ["s1-what-is-a-program"],
-      concepts: ["interpreter", "output"],
+      prerequisites: [],
+      concepts: ["programmer-workflow"],
       contentBlocks: [
         {
           kind: "text",
           markdown:
-            "## The Python Interpreter\n\nPython is an **interpreted language**. That means there is a program called the **interpreter** that reads your code and executes each instruction immediately, one line at a time, starting from the top.\n\nThis is different from compiled languages (like C) where the entire program is translated before running. With Python, each line is processed and run in sequence.",
+            "## What a Programmer Does\n\nA programmer's job is not just typing code — it's **problem-solving**. The core workflow is:\n\n1. **Understand the problem**: what exactly needs to happen?\n2. **Break it down**: divide the problem into smaller, solvable pieces\n3. **Write code**: express the solution as precise instructions\n4. **Test**: check whether the program does what you intended\n5. **Correct**: fix anything that doesn't work and repeat\n\n**Precision matters enormously.** Computers do exactly what you say, not what you mean. A single misplaced character can change a program's behavior completely.\n\n```python\n# These two lines do very different things:\nprint(2 + 3)    # adds 2 and 3 → prints 5\nprint('2 + 3')  # treats it as text → prints 2 + 3\n```",
         },
         {
-          kind: "code",
-          language: "python",
-          code: 'print("First")\nprint("Second")\nprint("Third")',
-          caption:
-            "Python runs these three lines in order: First, then Second, then Third.",
-          highlight: [1, 2, 3],
+          kind: "callout",
+          variant: "tip",
+          title: "Debugging is normal",
+          body: "Professional programmers spend as much time finding and fixing bugs as writing new code. Getting errors is not a sign of failure — it's a normal part of the process. Every programmer, at every level, writes code that doesn't work on the first try.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-programmer-mc",
+          kind: "multiple-choice",
+          prompt: "Which step comes AFTER writing code in a programmer's typical workflow?",
+          beginnerPurpose: "Understand the iterative nature of programming.",
+          expectedConceptIds: ["programmer-workflow"],
+          options: [
+            { id: "a", text: "Breaking the problem into smaller pieces", isCorrect: false, explanation: "Problem breakdown happens before writing code, not after." },
+            { id: "b", text: "Testing to check if the program does what was intended", isCorrect: true, explanation: "Correct! After writing code, you test it to see if it works as expected." },
+            { id: "c", text: "Understanding the problem requirements", isCorrect: false, explanation: "Understanding comes first, before writing anything." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "The workflow is: understand → break down → write → _____ → correct." }],
+          feedback: { correct: "Correct! Testing follows coding — you check whether your code does what you intended.", incorrect: "After writing code, you test it to verify it works correctly, then correct any issues found." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-programmer-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-algorithms-before-code",
+      stageId: "stage-01",
+      title: "Algorithms Before Code",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Define an algorithm in plain language",
+        "Recognise step-by-step thinking, ordering, conditions, and repetition",
+        "Write a simple algorithm in plain English before coding",
+      ],
+      prerequisites: [],
+      concepts: ["algorithm-thinking"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## What Is an Algorithm?\n\nAn **algorithm** is a precise, step-by-step set of instructions for solving a problem. Algorithms exist independently of code — you can describe them in plain English before writing a single line.\n\nGood algorithms include four elements:\n- **Steps**: individual actions\n- **Order**: steps happen in a specific sequence\n- **Conditions**: sometimes a step only happens if something is true\n- **Repetition**: sometimes steps repeat until a condition is met\n\n**Example algorithm — making tea:**\n```\n1. Fill kettle with water\n2. Boil the water\n3. Place teabag in cup\n4. Pour boiling water into cup\n5. Wait 3 minutes\n6. Remove teabag\n7. If you like milk: add milk\n8. Serve\n```\n\nNotice: steps 1–6 are sequential, step 7 is conditional (`if`), and step 5 involves waiting (repetition could be used: 'repeat until 3 minutes pass').",
         },
         {
-          kind: "output",
-          text: "First\nSecond\nThird",
-          isError: false,
+          kind: "callout",
+          variant: "tip",
+          title: "Think before you type",
+          body: "Professional programmers often sketch an algorithm in plain English or pseudocode before writing real code. This catches logical errors early, before they become coding bugs. The algorithm is the thinking; the code is the expression of that thinking.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-algorithm-mc",
+          kind: "multiple-choice",
+          prompt: "Which of these demonstrates a CONDITIONAL step in an algorithm?",
+          beginnerPurpose: "Identify the four elements of an algorithm.",
+          expectedConceptIds: ["algorithm-thinking"],
+          options: [
+            { id: "a", text: "Step 3: Add flour", isCorrect: false, explanation: "This is a plain sequential step, not conditional." },
+            { id: "b", text: "Step 4: If the mixture is too dry, add water", isCorrect: true, explanation: "Correct! 'If' signals a conditional step — the action only happens when a condition is true." },
+            { id: "c", text: "Step 5: Repeat mixing for 2 minutes", isCorrect: false, explanation: "This is a repetition step, not a conditional step." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "A conditional step only happens when a specific condition is true." }],
+          feedback: { correct: "Correct! 'If' marks a conditional — the step only runs when the condition holds.", incorrect: "A conditional step uses 'if' — it only happens when a specific condition is true." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-algorithm-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-mental-models-for-code",
+      stageId: "stage-01",
+      title: "Mental Models for Code",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Explain what 'state' means in a running program",
+        "Describe how memory, names, and values relate",
+        "Trace simple execution flow mentally",
+      ],
+      prerequisites: [],
+      concepts: ["mental-model-code"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## How to Think About Running Code\n\nTo understand what a program does, you need mental models — ways of picturing what's happening inside the computer.\n\n**Key concepts:**\n\n- **State**: the current values of all variables at a moment in time. A program's state changes as it runs.\n- **Memory**: the computer's working space where values are stored. Think of it as a whiteboard.\n- **Names (variables)**: labels attached to locations in memory. `score = 10` writes `10` on the whiteboard and labels it `score`.\n- **Values**: the actual data stored (`10`, `'Alice'`, `True`).\n- **Execution flow**: the order in which instructions run — normally top to bottom.\n\n```python\nscore = 0        # state: score=0\nscore = score + 5  # state: score=5 (old value + 5)\nscore = score + 3  # state: score=8\nprint(score)     # output: 8\n```\n\nTrace this mentally: after each line, what is the state of `score`?",
         },
         {
           kind: "mental-model",
-          title: "Reading a Book Top to Bottom",
+          title: "Memory as a Whiteboard",
           analogy:
-            "Imagine reading a book: you start at the first word on the first line, read left to right, then move to the next line. You never jump ahead or skip back (unless the story tells you to). Python's interpreter works the same way.",
+            "Imagine a whiteboard with labeled boxes. `score = 10` writes 10 in a box labeled 'score'. `score = score + 5` reads the box, adds 5, and writes 15 back. At any moment, the whiteboard shows the program's current state.",
           explanation:
-            "The interpreter processes line 1 completely before moving to line 2. If line 1 causes an error, execution stops there — lines 2 and 3 never run.",
+            "When you mentally trace code, update your mental whiteboard after each assignment. This is how professional programmers debug: they trace state changes step by step.",
         },
       ],
       interactions: [
         {
-          id: "s1-hrp-predict-order",
+          id: "s1-mental-predict",
           kind: "predict-output",
-          prompt: "What will Python print when it runs this program? Write each word on its own line.",
-          beginnerPurpose:
-            "Verify the learner understands top-to-bottom execution order.",
-          expectedConceptIds: ["interpreter", "output"],
-          code: 'print("Apple")\nprint("Banana")\nprint("Cherry")',
-          expectedOutput: "Apple\nBanana\nCherry",
+          prompt: "What value does Python print?",
+          beginnerPurpose: "Trace state changes through simple assignments.",
+          expectedConceptIds: ["mental-model-code"],
+          code: "x = 10\nx = x + 5\nx = x * 2\nprint(x)",
+          expectedOutput: "30",
           allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "Python runs lines from top to bottom. What is on line 1? Line 2? Line 3?",
-            },
-          ],
-          feedback: {
-            correct:
-              "Perfect! Python executes each print() in order: Apple first, then Banana, then Cherry.",
-            incorrect:
-              "Remember, Python starts at the top. Line 1 runs first, then line 2, then line 3.",
-          },
-        },
-        {
-          id: "s1-hrp-reorder-execution",
-          kind: "reorder-code",
-          prompt:
-            "Arrange these lines so the program prints: Red, Green, Blue (one colour per line).",
-          beginnerPurpose:
-            "Reinforce that output order is determined by the order of the lines in the program.",
-          expectedConceptIds: ["interpreter", "output"],
-          lines: [
-            'print("Green")',
-            'print("Blue")',
-            'print("Red")',
-          ],
-          correctOrder: [2, 0, 1],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "The first line Python runs produces the first line of output.",
-            },
-            {
-              level: "structural",
-              text: "Which print statement outputs Red? That needs to come first.",
-            },
-          ],
-          feedback: {
-            correct: "Correct order! print(\"Red\") first, then Green, then Blue.",
-            incorrect:
-              "Think about which line prints each colour, and match them to the desired output order.",
-          },
-        },
-        {
-          id: "s1-hrp-mc-execution-order",
-          kind: "multiple-choice",
-          prompt:
-            "Given this program, which word is printed LAST?\n\n```python\nprint(\"cat\")\nprint(\"dog\")\nprint(\"fish\")\n```",
-          beginnerPurpose:
-            "Confirm understanding that the last line in the file is the last to execute.",
-          expectedConceptIds: ["interpreter"],
-          options: [
-            {
-              id: "opt-a",
-              text: "cat",
-              isCorrect: false,
-              explanation: "cat is printed first because print(\"cat\") is on line 1.",
-            },
-            {
-              id: "opt-b",
-              text: "dog",
-              isCorrect: false,
-              explanation: "dog is printed second.",
-            },
-            {
-              id: "opt-c",
-              text: "fish",
-              isCorrect: true,
-              explanation:
-                "fish is on the last line, so it is printed last.",
-            },
-            {
-              id: "opt-d",
-              text: "All three are printed at the same time",
-              isCorrect: false,
-              explanation:
-                "Python executes lines sequentially — one at a time, never simultaneously.",
-            },
-          ],
-          allowMultiple: false,
-          allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "Python starts at line 1 and works its way down.",
-            },
-          ],
-          feedback: {
-            correct: "Right! The interpreter reaches print(\"fish\") last, so fish appears last in the output.",
-            incorrect:
-              "Remember: the interpreter reads top to bottom. The last line of code produces the last line of output.",
-          },
+          hints: [{ level: "concept", text: "Trace step by step: x starts at 10, then becomes 15, then 30." }],
+          feedback: { correct: "Correct! x=10, then x=15, then x=30.", incorrect: "Trace each line: x=10 → x=10+5=15 → x=15*2=30 → print(30)." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "interpreter",
-          recallPrompt:
-            "What does the Python interpreter do, and in what order does it process your code?",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s1-hrp-predict-order",
-          "s1-hrp-reorder-execution",
-          "s1-hrp-mc-execution-order",
-        ],
+        requiredInteractionIds: ["s1-mental-predict"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["interpreter"],
+        reviewHookIds: [],
       },
     },
 
-    /* ── Lesson 3: Your First Output ──────────────────────────────────────── */
     {
-      id: "s1-your-first-output",
+      id: "s1-reading-code-top-to-bottom",
       stageId: "stage-01",
-      title: "Your First Output",
-      kind: "practice",
-      difficulty: "beginner",
-      objectives: [
-        "Use print() to display text to the screen",
-        "Write string literals with single and double quotes",
-        "Call print() multiple times to produce multiple lines of output",
-      ],
-      prerequisites: ["s1-how-python-runs"],
-      concepts: ["output"],
-      contentBlocks: [
-        {
-          kind: "text",
-          markdown:
-            "## The print() Function\n\n`print()` is Python's built-in way to display output. Whatever you put inside the parentheses gets shown on the screen.\n\nThe text you pass to `print()` must be surrounded by quotes — either single quotes `'like this'` or double quotes `\"like this\"`. That piece of text is called a **string**.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: 'print("Hello, Python!")\nprint(\'Single quotes work too!\')\nprint("I can print multiple lines")\nprint("just by calling print() more than once")',
-          caption: "Four calls to print() produce four lines of output.",
-        },
-        {
-          kind: "glossary-term",
-          term: "string",
-          definition:
-            "A sequence of characters (letters, digits, spaces, punctuation) enclosed in quotes. Strings represent text data in Python.",
-          example: '"Hello"  \'Python\'  "123"  \'hello world\'',
-        },
-        {
-          kind: "glossary-term",
-          term: "function call",
-          definition:
-            "A function call is an instruction that tells Python to run a named piece of code. You write the function name followed by parentheses, and you can pass values inside the parentheses.",
-          example: "print(\"Hello\")  — this calls the print function with the string \"Hello\"",
-        },
-      ],
-      interactions: [
-        {
-          id: "s1-yfo-fill-print",
-          kind: "fill-code",
-          prompt: 'Complete the print() call so it outputs: Hello, Python!',
-          beginnerPurpose: "Practice writing a complete print() call with a string argument.",
-          expectedConceptIds: ["output"],
-          codeTemplate: 'print(___)',
-          blanks: [
-            {
-              placeholder: "___",
-              answer: '"Hello, Python!"',
-              caseSensitive: true,
-            },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "Strings must be wrapped in quotes inside the parentheses.",
-            },
-            {
-              level: "syntax",
-              text: 'Try: "Hello, Python!" — with double quotes around the text.',
-            },
-          ],
-          feedback: {
-            correct: 'Correct! print("Hello, Python!") outputs Hello, Python!',
-            incorrect:
-              "Make sure the text is wrapped in quotes inside the parentheses.",
-          },
-        },
-        {
-          id: "s1-yfo-run-three-prints",
-          kind: "run-code",
-          prompt:
-            "Write a program that prints your name, your favourite colour, and your favourite number — each on its own line.",
-          beginnerPurpose:
-            "Build confidence by writing multiple print() calls from scratch.",
-          expectedConceptIds: ["output"],
-          starterCode: "# Print your name, favourite colour, and favourite number below\n",
-          task: "Use three print() calls. Each call should output one piece of information on its own line.",
-          expectedOutputContains: [],
-          pyodideCompatible: true,
-          allowedAttempts: 10,
-          hints: [
-            {
-              level: "concept",
-              text: "You need three separate print() calls, one for each piece of information.",
-            },
-            {
-              level: "syntax",
-              text: 'Each call looks like: print("your text here")',
-            },
-          ],
-          feedback: {
-            correct: "Well done! Three print() calls, three lines of output.",
-            incorrect: "Make sure you have three separate print() calls, each with a string inside.",
-          },
-        },
-        {
-          id: "s1-yfo-predict-quotes",
-          kind: "predict-output",
-          prompt: "What does this program print?",
-          beginnerPurpose:
-            "Verify the learner understands that quotes delimit strings but do not appear in output.",
-          expectedConceptIds: ["output"],
-          code: "print('Python is fun')\nprint(\"I agree!\")",
-          expectedOutput: "Python is fun\nI agree!",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "Single quotes and double quotes both work — neither type of quote appears in the output.",
-            },
-          ],
-          feedback: {
-            correct: "Correct! The quotes are syntax only — they don't appear in the output.",
-            incorrect:
-              "The text inside the quotes is what gets printed. The quotes themselves are never shown.",
-          },
-        },
-      ],
-      reviewHooks: [
-        {
-          conceptId: "output",
-          recallPrompt: "How do you display text on the screen in Python?",
-          nextReviewAfterDays: 3,
-        },
-      ],
-      masteryCriteria: {
-        requiredInteractionIds: [
-          "s1-yfo-fill-print",
-          "s1-yfo-run-three-prints",
-          "s1-yfo-predict-quotes",
-        ],
-        minimumCorrectFraction: 0.8,
-        reviewHookIds: ["output"],
-      },
-    },
-
-    /* ── Lesson 4: Reading Python Errors ─────────────────────────────────── */
-    {
-      id: "s1-reading-errors",
-      stageId: "stage-01",
-      title: "Reading Python Errors",
-      kind: "debugging",
-      difficulty: "beginner",
-      objectives: [
-        "Identify a SyntaxError and understand when it occurs",
-        "Identify a NameError and understand when it occurs",
-        "Read a traceback to locate the line that caused an error",
-        "Treat error messages as helpful information, not failures",
-      ],
-      prerequisites: ["s1-your-first-output"],
-      concepts: ["error"],
-      contentBlocks: [
-        {
-          kind: "text",
-          markdown:
-            "## Errors Are Your Friends\n\nWhen Python cannot execute your code, it stops and prints an **error message** (also called a **traceback**). Error messages tell you:\n\n1. **Which file and line** caused the problem\n2. **What type of error** occurred\n3. A **short description** of what went wrong\n\nLearning to read error messages is one of the most valuable skills you can develop. Every programmer — beginner and expert alike — sees errors constantly.",
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: 'print("Hello, world!)\nprint("This line never runs")',
-          caption: "Can you spot the bug? The closing quote is missing on line 1.",
-        },
-        {
-          kind: "output",
-          text: '  File "example.py", line 1\n    print("Hello, world!)\n          ^\nSyntaxError: EOL while scanning string literal',
-          isError: true,
-        },
-        {
-          kind: "code",
-          language: "python",
-          code: "print(message)",
-          caption: "NameError: the variable 'message' was never defined before being used.",
-        },
-        {
-          kind: "callout",
-          variant: "tip",
-          title: "Errors Are Not Failures",
-          body: "Getting an error does not mean you are bad at programming. It means Python found something it could not understand and is asking for clarification. Read the error message, find the line it points to, and fix the specific issue described.",
-        },
-      ],
-      interactions: [
-        {
-          id: "s1-re-debug-missing-quote",
-          kind: "debug-code",
-          prompt:
-            "This code raises a SyntaxError. Find and fix the bug so it prints: Welcome to Python!",
-          beginnerPurpose:
-            "Practice identifying and fixing a missing-quote SyntaxError, the most common beginner mistake.",
-          expectedConceptIds: ["error"],
-          brokenCode: 'print("Welcome to Python!)',
-          bugDescription: "The closing double quote is missing from the string.",
-          fixedCode: 'print("Welcome to Python!")',
-          errorType: "SyntaxError",
-          allowedAttempts: 4,
-          hints: [
-            {
-              level: "concept",
-              text: "A SyntaxError often means Python couldn't understand how you wrote something.",
-            },
-            {
-              level: "syntax",
-              text: "Every string that starts with \" must end with \". Count the quotes.",
-            },
-          ],
-          feedback: {
-            correct: 'Fixed! The string now has both an opening and closing quote: "Welcome to Python!"',
-            incorrect:
-              "Look at the string inside print(). Every opening quote needs a matching closing quote.",
-          },
-        },
-        {
-          id: "s1-re-mc-error-type",
-          kind: "multiple-choice",
-          prompt:
-            "Python raises a **NameError** when:\n\n```python\nprint(greeting)\n```\n\nWhat is the most likely cause of this NameError?",
-          beginnerPurpose:
-            "Distinguish between error types so the learner can diagnose bugs faster.",
-          expectedConceptIds: ["error"],
-          options: [
-            {
-              id: "opt-a",
-              text: "The quotes around greeting are missing",
-              isCorrect: false,
-              explanation:
-                "Missing quotes would cause a SyntaxError. A NameError is about an undefined name.",
-            },
-            {
-              id: "opt-b",
-              text: "The variable `greeting` was never assigned a value before this line",
-              isCorrect: true,
-              explanation:
-                "A NameError means Python looked up the name `greeting` and couldn't find it. You need to assign it a value first.",
-            },
-            {
-              id: "opt-c",
-              text: "print() is spelled incorrectly",
-              isCorrect: false,
-              explanation:
-                "If print were misspelled, that would also be a NameError — but in this code print is correct; the issue is the undefined variable `greeting`.",
-            },
-            {
-              id: "opt-d",
-              text: "The program is too short to run",
-              isCorrect: false,
-              explanation:
-                "Python can run a program with a single line. Length is not the issue.",
-            },
-          ],
-          allowMultiple: false,
-          allowedAttempts: 2,
-          hints: [
-            {
-              level: "concept",
-              text: "NameError means Python heard a name it doesn't recognise. Where do names come from in Python?",
-            },
-          ],
-          feedback: {
-            correct:
-              "Exactly! A NameError occurs when you use a variable or function name that Python has never seen defined.",
-            incorrect:
-              "A NameError is specifically about an unknown name. The variable `greeting` was never given a value before Python tried to use it.",
-          },
-        },
-        {
-          id: "s1-re-predict-error",
-          kind: "predict-output",
-          prompt:
-            "Will this code run without errors? If not, what type of error will Python raise?",
-          beginnerPurpose:
-            "Build the habit of reading code for errors before running it.",
-          expectedConceptIds: ["error"],
-          code: 'name = "Alice"\nprint(name)',
-          expectedOutput: "Alice",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "Check: is name assigned a value before print(name) is called?",
-            },
-          ],
-          feedback: {
-            correct:
-              "Correct! name is assigned on line 1, so print(name) on line 2 succeeds and prints Alice.",
-            incorrect:
-              "Trace through the code: line 1 assigns the string \"Alice\" to name, and line 2 prints it. No error occurs.",
-          },
-        },
-      ],
-      reviewHooks: [
-        {
-          conceptId: "error",
-          recallPrompt:
-            "Name two common Python error types and describe what causes each.",
-          nextReviewAfterDays: 3,
-        },
-      ],
-      masteryCriteria: {
-        requiredInteractionIds: [
-          "s1-re-debug-missing-quote",
-          "s1-re-mc-error-type",
-          "s1-re-predict-error",
-        ],
-        minimumCorrectFraction: 0.8,
-        reviewHookIds: ["error"],
-      },
-    },
-
-    /* ── Lesson 5: Comments and Code Clarity ──────────────────────────────── */
-    {
-      id: "s1-comments-and-clarity",
-      stageId: "stage-01",
-      title: "Comments and Code Clarity",
+      title: "Reading Code Top to Bottom",
       kind: "concept",
       difficulty: "beginner",
       objectives: [
-        "Write single-line comments using the # character",
-        "Explain why comments exist and when to use them",
-        "Understand that comments are ignored by the Python interpreter",
+        "Explain that Python executes statements top to bottom by default",
+        "Distinguish between statements and expressions",
+        "Identify indentation and comments when reading code",
       ],
-      prerequisites: ["s1-reading-errors"],
-      concepts: ["comment"],
+      prerequisites: [],
+      concepts: ["execution-order"],
       contentBlocks: [
         {
           kind: "text",
           markdown:
-            "## What Is a Comment?\n\nA **comment** is a note written in your code that Python completely ignores. It is meant for humans — you, your teammates, or your future self — not for the computer.\n\nIn Python, any text that follows a `#` on a line is a comment:\n\n```python\n# This is a comment — Python ignores it\nprint(\"Hello\")  # This part is code; this part is a comment\n```\n\nComments help explain *why* code works the way it does, not just *what* it does.",
-        },
-        {
-          kind: "comparison",
-          leftLabel: "Without Comments",
-          rightLabel: "With Comments",
-          leftCode:
-            'print("Hello, Alice")\nprint("You have 3 messages")\nprint("Last login: Monday")',
-          rightCode:
-            '# Greet the user by name\nprint("Hello, Alice")\n# Show notification count\nprint("You have 3 messages")\n# Show last login date\nprint("Last login: Monday")',
-          caption:
-            "Both programs produce identical output, but the version on the right is far easier to understand at a glance.",
+            "## How Python Reads Your Code\n\nBy default, Python executes instructions **top to bottom**, one line at a time. Understanding this lets you predict what any program will do.\n\n**Statements vs expressions:**\n- A **statement** is a complete instruction (`x = 5`, `print('hi')`, `if x > 0:`).\n- An **expression** is a piece of code that produces a value (`2 + 3`, `len('hello')`, `x * y`).\n\n**Indentation**: Python uses indentation (spaces) to group related statements. Indented blocks belong to the line above them (you'll learn this fully in later stages).\n\n**Comments**: Lines starting with `#` are ignored by Python — they're notes for humans.\n\n```python\n# This is a comment — Python ignores it\nx = 5          # statement: assign 5 to x\ny = x + 3      # statement using expression x + 3\nprint(y)       # statement: output y\n# Output: 8\n```\n\nReading from top to bottom: x=5, y=8, print(8).",
         },
         {
           kind: "callout",
-          variant: "tip",
-          title: "When to Add a Comment",
-          body: "Add a comment when the *reason* for a line isn't obvious from reading the code. You don't need to comment every single line — that creates noise. Focus on the 'why', not the 'what'.",
+          variant: "info",
+          title: "Read code like a story",
+          body: "When encountering new code, read it top to bottom just as you'd read a story. On the first read, just get the gist. On the second read, trace the values and state changes. This two-pass approach helps you understand even complex programs.",
         },
       ],
       interactions: [
         {
-          id: "s1-cc-mc-valid-comment",
+          id: "s1-reading-predict",
+          kind: "predict-output",
+          prompt: "What does this program print?",
+          beginnerPurpose: "Practice top-to-bottom execution tracing.",
+          expectedConceptIds: ["execution-order"],
+          code: 'print("First")\n# This line is a comment\nprint("Second")\nprint("Third")',
+          expectedOutput: "First\nSecond\nThird",
+          allowedAttempts: 3,
+          hints: [{ level: "concept", text: "Comments are ignored. Only the print() calls produce output, in order." }],
+          feedback: { correct: "Correct! Comments are skipped; the three print calls run in order.", incorrect: "Python ignores comment lines (starting with #). The three print() statements run top to bottom." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-reading-predict"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-beginner-error-literacy",
+      stageId: "stage-01",
+      title: "Beginner Error Literacy",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Distinguish between syntax errors, runtime errors, and wrong results",
+        "Recognise what a SyntaxError and NameError look like",
+        "Treat error messages as helpful information",
+      ],
+      prerequisites: [],
+      concepts: ["error-types"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Types of Errors\n\nBeginners encounter three categories of problems:\n\n**1. Syntax errors** — Python can't parse your code at all (the grammar is wrong). Python refuses to run the program.\n```python\nprint('Hello'   # SyntaxError: missing closing parenthesis\n```\n\n**2. Runtime errors** — The code is valid Python, but something goes wrong while running.\n```python\nprint(message)  # NameError: 'message' is not defined\n```\n\n**3. Wrong results** — The program runs without errors, but produces incorrect output. These are logic bugs.\n```python\narea = width + height  # should be * not +: logic bug\n```\n\n**Error messages are your friends.** They tell you:\n- The **file and line number** where the problem occurred\n- The **error type** (SyntaxError, NameError, TypeError, etc.)\n- A short **description** of what went wrong\n\nAlways read the last line of an error first — that's the most important part.",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Error messages tell you where to look",
+          body: "When you see an error, don't panic. Find the line number, go to that line, read the error type, then read the description. Fix only that one issue before re-running. Changing random things hoping something will work always makes debugging harder.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-error-mc",
           kind: "multiple-choice",
-          prompt: "Which of the following is a valid Python comment?",
-          beginnerPurpose:
-            "Confirm the learner can identify correct comment syntax.",
-          expectedConceptIds: ["comment"],
+          prompt: "A program runs without crashing but produces the wrong answer. What kind of error is this?",
+          beginnerPurpose: "Classify the three error categories.",
+          expectedConceptIds: ["error-types"],
           options: [
-            {
-              id: "opt-a",
-              text: "// This is a comment",
-              isCorrect: false,
-              explanation:
-                "// is used for comments in languages like JavaScript and C, not Python.",
-            },
-            {
-              id: "opt-b",
-              text: "/* This is a comment */",
-              isCorrect: false,
-              explanation:
-                "/* */ is block-comment syntax from C/Java — not valid Python comment syntax.",
-            },
-            {
-              id: "opt-c",
-              text: "# This is a comment",
-              isCorrect: true,
-              explanation:
-                "Correct! The # character starts a comment in Python. Everything after # on that line is ignored.",
-            },
-            {
-              id: "opt-d",
-              text: "-- This is a comment",
-              isCorrect: false,
-              explanation: "-- is used for comments in SQL and Lua, not Python.",
-            },
+            { id: "a", text: "Syntax error — Python couldn't parse the code", isCorrect: false, explanation: "A syntax error prevents the program from running at all." },
+            { id: "b", text: "Runtime error — Python crashed while running", isCorrect: false, explanation: "A runtime error causes the program to crash mid-execution." },
+            { id: "c", text: "Logic error — the program runs but produces incorrect results", isCorrect: true, explanation: "Correct! Logic errors produce wrong results without crashing. They're the hardest to find." },
           ],
           allowMultiple: false,
           allowedAttempts: 2,
-          hints: [
-            {
-              level: "syntax",
-              text: "Python uses a single special character to start a comment.",
-            },
-          ],
-          feedback: {
-            correct: "Right! # is the comment character in Python.",
-            incorrect:
-              "Python uses the # character to start a comment. Everything after # on that line is ignored by the interpreter.",
-          },
-        },
-        {
-          id: "s1-cc-fill-comment",
-          kind: "fill-code",
-          prompt:
-            "Add a comment on the blank line that explains the purpose of the print statement.",
-          beginnerPurpose: "Practice writing a comment in the correct location with correct syntax.",
-          expectedConceptIds: ["comment"],
-          codeTemplate: "___\nprint(\"Program starting...\")",
-          blanks: [
-            {
-              placeholder: "___",
-              answer: "# Display startup message",
-              caseSensitive: false,
-            },
-          ],
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "syntax",
-              text: "A comment line starts with # followed by your description.",
-            },
-          ],
-          feedback: {
-            correct: "Good! Your comment starts with # and describes what the code does.",
-            incorrect: "Remember: a comment starts with # on its own line or after code.",
-          },
-        },
-        {
-          id: "s1-cc-predict-comment-output",
-          kind: "predict-output",
-          prompt:
-            "What will this program print? (Be careful — look at every line.)",
-          beginnerPurpose:
-            "Prove that comments produce no output — they are invisible to the interpreter.",
-          expectedConceptIds: ["comment"],
-          code: '# This program greets the world\nprint("Hello!")\n# The next line is also a comment\n# print("This won\'t print")\nprint("Goodbye!")',
-          expectedOutput: "Hello!\nGoodbye!",
-          allowedAttempts: 3,
-          hints: [
-            {
-              level: "concept",
-              text: "Python ignores everything on a line after #. How many print() calls are NOT commented out?",
-            },
-          ],
-          feedback: {
-            correct:
-              'Correct! Only the two uncommented print() calls run. The commented-out print("This won\'t print") is ignored.',
-            incorrect:
-              "Comments are completely invisible to Python. Lines starting with # produce no output, even if they contain print().",
-          },
+          hints: [{ level: "concept", text: "If the program runs but gives wrong output, the error is in your logic, not your syntax." }],
+          feedback: { correct: "Correct! Logic errors let the program run but produce wrong results.", incorrect: "A program that runs but gives wrong results has a logic error — the code is syntactically valid but does the wrong thing." },
         },
       ],
-      reviewHooks: [
-        {
-          conceptId: "comment",
-          recallPrompt: "How do you write a comment in Python, and what effect does it have when the program runs?",
-          nextReviewAfterDays: 3,
-        },
-      ],
+      reviewHooks: [],
       masteryCriteria: {
-        requiredInteractionIds: [
-          "s1-cc-mc-valid-comment",
-          "s1-cc-fill-comment",
-          "s1-cc-predict-comment-output",
-        ],
+        requiredInteractionIds: ["s1-error-mc"],
         minimumCorrectFraction: 0.8,
-        reviewHookIds: ["comment"],
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-using-examples-safely",
+      stageId: "stage-01",
+      title: "Using Examples Safely",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Describe a safe process for learning from code examples",
+        "Explain why copying code without understanding is risky",
+        "Practice the copy → modify → observe → explain workflow",
+      ],
+      prerequisites: [],
+      concepts: ["learning-from-examples"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Learning from Code Examples\n\nExamples are your best learning tool, but only if you use them actively. The four-step process:\n\n**1. Copy** — Type the example yourself (don't paste). Typing forces you to read every character.\n\n**2. Modify** — Change one thing and predict what will happen. Then run it to see if you were right.\n\n**3. Observe** — Notice what changed. If your prediction was wrong, figure out why.\n\n**4. Explain** — Can you describe in plain English what the example does and why? If not, re-read it.\n\n```python\n# Original example:\nprint('Hello, world!')\n\n# Modification 1: change the message\nprint('Hello, Python!')  # What changed?\n\n# Modification 2: add a second print\nprint('Hello, world!')\nprint('Second line')     # What will the output look like?\n```\n\nIf you can predict the output of every modification you make, you understand the example.",
+        },
+        {
+          kind: "callout",
+          variant: "warning",
+          title: "Cargo-cult coding",
+          body: "Copying code without understanding it is called 'cargo-cult coding'. It works until something breaks, and then you have no idea how to fix it. Always make sure you can explain what each line does before moving on.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-examples-mc",
+          kind: "multiple-choice",
+          prompt: "In the 'copy → modify → observe → explain' workflow, what is the purpose of the MODIFY step?",
+          beginnerPurpose: "Understand active learning from examples.",
+          expectedConceptIds: ["learning-from-examples"],
+          options: [
+            { id: "a", text: "To make the code shorter and more efficient", isCorrect: false, explanation: "The modify step isn't about efficiency — it's about testing your understanding." },
+            { id: "b", text: "To test your mental model by predicting how a change will affect output", isCorrect: true, explanation: "Correct! Modifying forces you to predict and then verify — building a real understanding of how the code works." },
+            { id: "c", text: "To fix bugs in the original example", isCorrect: false, explanation: "Examples are usually bug-free. The modify step is for learning, not fixing." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "What does changing one thing and predicting the result test?" }],
+          feedback: { correct: "Correct! Modifying tests whether your mental model accurately predicts the code's behavior.", incorrect: "The modify step makes a small change and has you predict the outcome — this tests and strengthens your understanding." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-examples-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-non-code-exercises",
+      stageId: "stage-01",
+      title: "First Non-Code Exercises: Daily Tasks as Algorithms",
+      kind: "practice",
+      difficulty: "beginner",
+      objectives: [
+        "Describe a familiar daily task as an algorithm with numbered steps",
+        "Include at least one conditional and one repeated action",
+        "Recognise that algorithm thinking is programming thinking",
+      ],
+      prerequisites: [],
+      concepts: ["algorithm-thinking"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## Thinking Algorithmically Without Code\n\nBefore writing any code, you can practice programming thinking by describing everyday tasks as precise, ordered steps.\n\n**Example: Making toast**\n```\n1. Put bread in toaster\n2. Set toaster to desired darkness level\n3. Press the lever down\n4. Wait until toast pops up\n5. If toast is too light: repeat steps 2–4\n6. Remove toast from toaster\n7. Spread butter on toast (if desired)\n8. Serve\n```\n\nThis algorithm includes:\n- **Sequential steps** (1–4, 6–8)\n- **Repetition** ('Wait until' in step 4; 'repeat' in step 5)\n- **Conditional** ('If toast is too light' in step 5; 'if desired' in step 7)\n\n**Your challenge**: Describe one of these tasks as an algorithm:\n- Sending an email\n- Making a cup of coffee\n- Finding a book in a library\n- Checking if a store is open",
+        },
+        {
+          kind: "callout",
+          variant: "info",
+          title: "Precision is everything",
+          body: "When writing an algorithm, imagine the reader is someone who has never done the task before and will follow your instructions literally. If a step is ambiguous ('add some flour'), the reader will not know what to do. Algorithms must be precise enough that a machine — or a very literal human — can follow them without guessing.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-daily-task-mc",
+          kind: "multiple-choice",
+          prompt: "Which version of an algorithm step is precise enough for a computer to follow?",
+          beginnerPurpose: "Practice writing precise algorithmic steps.",
+          expectedConceptIds: ["algorithm-thinking"],
+          options: [
+            { id: "a", text: "Add some water", isCorrect: false, explanation: "'Some' is ambiguous — a computer needs an exact amount." },
+            { id: "b", text: "Add 250ml of cold water", isCorrect: true, explanation: "Correct! This is precise: exact quantity, exact temperature. A computer can act on this without guessing." },
+            { id: "c", text: "Add water until it looks right", isCorrect: false, explanation: "'Looks right' requires human judgement — not a precise algorithmic step." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "Which step leaves nothing to interpretation?" }],
+          feedback: { correct: "Correct! Algorithms need precise, measurable steps — not vague judgements.", incorrect: "Algorithmic steps must be exact. '250ml of cold water' leaves nothing to interpretation; 'some water' does." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-daily-task-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-pseudocode-exercises",
+      stageId: "stage-01",
+      title: "First Pseudocode Exercises",
+      kind: "practice",
+      difficulty: "beginner",
+      objectives: [
+        "Write pseudocode that describes a recipe, checklist, or branching decision",
+        "Translate a plain-English algorithm into structured pseudocode",
+        "Recognise how pseudocode maps to real programming constructs",
+      ],
+      prerequisites: [],
+      concepts: ["algorithm-thinking"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## What Is Pseudocode?\n\n**Pseudocode** is algorithm-writing that uses programming-like structure but plain English words. It's halfway between a prose description and real code — precise enough to be unambiguous, but not tied to any specific language's syntax.\n\n**Common pseudocode keywords:**\n- `IF ... THEN ... ELSE ... END IF` for conditions\n- `WHILE ... DO ... END WHILE` for loops\n- `FOR each ... DO ... END FOR` for iteration\n- `PRINT`, `INPUT`, `SET` for basic operations\n\n**Example: Checking if a number is positive**\n```\nINPUT number\nIF number > 0 THEN\n    PRINT \"positive\"\nELSE IF number < 0 THEN\n    PRINT \"negative\"\nELSE\n    PRINT \"zero\"\nEND IF\n```\n\nCompare this to real Python:\n```python\nnumber = int(input())\nif number > 0:\n    print('positive')\nelif number < 0:\n    print('negative')\nelse:\n    print('zero')\n```\n\nThe structure is almost identical — pseudocode maps directly to code.",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Pseudocode is about thinking, not syntax",
+          body: "There's no single correct pseudocode format. The goal is to express the logic clearly enough that anyone could convert it to real code. Focus on the IF/ELSE/WHILE structure — not on getting the exact keywords right.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-pseudocode-mc",
+          kind: "multiple-choice",
+          prompt: "What does pseudocode help you do BEFORE writing real Python?",
+          beginnerPurpose: "Understand the purpose of pseudocode.",
+          expectedConceptIds: ["algorithm-thinking"],
+          options: [
+            { id: "a", text: "Run your algorithm to test it without installing Python", isCorrect: false, explanation: "Pseudocode can't be executed — it's a planning tool, not runnable code." },
+            { id: "b", text: "Plan the logical structure of your program without worrying about syntax", isCorrect: true, explanation: "Correct! Pseudocode lets you get the logic right before dealing with Python's specific syntax rules." },
+            { id: "c", text: "Automatically generate Python code from English descriptions", isCorrect: false, explanation: "Pseudocode is manually written and read — it doesn't auto-generate code." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "What problem does pseudocode solve that writing real code directly doesn't?" }],
+          feedback: { correct: "Correct! Pseudocode separates logic planning from syntax concerns.", incorrect: "Pseudocode is a planning tool that lets you think through the logic without Python syntax getting in the way." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-pseudocode-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
+      },
+    },
+
+    {
+      id: "s1-debugging-habit",
+      stageId: "stage-01",
+      title: "First Debugging Habit: One Change at a Time",
+      kind: "concept",
+      difficulty: "beginner",
+      objectives: [
+        "Apply the 'one change at a time' debugging rule",
+        "Explain why changing multiple things simultaneously makes debugging harder",
+        "Describe a systematic approach to isolating bugs",
+      ],
+      prerequisites: [],
+      concepts: ["debugging-habits"],
+      contentBlocks: [
+        {
+          kind: "text",
+          markdown:
+            "## The Most Important Debugging Habit\n\nWhen code doesn't work, the temptation is to change multiple things at once hoping something will fix it. **Resist this urge.** Changing many things at once:\n- Makes it impossible to know which change fixed the bug\n- Can introduce new bugs while fixing the original one\n- Leaves you unable to reproduce your fix\n\n**The rule: isolate one change at a time.**\n\n**Systematic debugging process:**\n```\n1. Observe the problem: what exactly is wrong?\n2. Form a hypothesis: what do you think is causing it?\n3. Make ONE change to test that hypothesis\n4. Run the program\n5. If fixed: done. If not: undo the change and form a new hypothesis\n6. Repeat\n```\n\n**Example:**\n```python\n# Bug: this prints the wrong sum\na = 5\nb = '3'           # Hypothesis: b is a string, not a number\ntotal = a + b     # TypeError: can't add int and str\nprint(total)\n\n# Test: change b to int\nb = 3             # ONE change only\ntotal = a + b\nprint(total)      # Now prints 8 ✓\n```",
+        },
+        {
+          kind: "callout",
+          variant: "tip",
+          title: "Scientific debugging",
+          body: "Think of debugging like a science experiment. You have a hypothesis ('b is the wrong type'). You test it by making one change. The result either confirms or refutes your hypothesis. This systematic approach works even for the most complex bugs.",
+        },
+      ],
+      interactions: [
+        {
+          id: "s1-debug-mc",
+          kind: "multiple-choice",
+          prompt: "Why is it important to make only ONE change at a time when debugging?",
+          beginnerPurpose: "Establish the single-change debugging habit.",
+          expectedConceptIds: ["debugging-habits"],
+          options: [
+            { id: "a", text: "Because Python only allows one change per debugging session", isCorrect: false, explanation: "Python has no such restriction. This is about effective debugging practice." },
+            { id: "b", text: "So you know exactly which change fixed (or broke) the problem", isCorrect: true, explanation: "Correct! If you change one thing and the bug is fixed, you know that was the cause. Multiple changes make this impossible to determine." },
+            { id: "c", text: "Because debugging with multiple changes causes syntax errors", isCorrect: false, explanation: "Multiple changes don't cause syntax errors — they just make it hard to understand what fixed the bug." },
+          ],
+          allowMultiple: false,
+          allowedAttempts: 2,
+          hints: [{ level: "concept", text: "If you make 3 changes and the bug disappears, which change fixed it?" }],
+          feedback: { correct: "Correct! One change at a time lets you pinpoint exactly what caused (and fixed) the bug.", incorrect: "One change at a time is essential so you know which change fixed the bug. With multiple changes, you can't tell which one worked." },
+        },
+      ],
+      reviewHooks: [],
+      masteryCriteria: {
+        requiredInteractionIds: ["s1-debug-mc"],
+        minimumCorrectFraction: 0.8,
+        reviewHookIds: [],
       },
     },
   ],
@@ -828,22 +636,21 @@ export const stage01 = {
   project: {
     id: "s1-project",
     stageId: "stage-01",
-    title: "Hello, World — Your First Program",
+    title: "Algorithm Design: Daily Task as a Program",
     brief:
-      "Write a complete Python program that introduces yourself using multiple print statements and at least two comments.",
+      "Before writing any Python, design two algorithms in pseudocode: one for a familiar daily task and one for a simple decision (e.g., checking if a shop is open). Then write a brief reflection on what you learned about algorithmic thinking.",
     requirements: [
-      "At least 4 print() calls",
-      "At least 2 comments (lines starting with #)",
-      "No errors when run",
-      "Output reads as a coherent introduction",
+      "Pseudocode for a sequential algorithm with at least 5 steps",
+      "Pseudocode for a decision algorithm using IF/ELSE",
+      "Both algorithms use precise, unambiguous language",
+      "Reflection notes: one thing that surprised you about algorithmic thinking",
     ],
     acceptanceCriteria: [
-      "Program runs without errors",
-      "Output contains your name",
-      "Comments explain what the code does",
+      "Algorithms include sequential, conditional, and (where appropriate) repetitive steps",
+      "Each step is precise enough for a literal reader to follow without guessing",
+      "Reflection identifies a concrete learning insight",
     ],
-    conceptIds: ["output", "comment", "program", "interpreter"],
+    conceptIds: ["algorithm-thinking", "program-definition", "python-overview"],
     difficulty: "beginner",
-    starterCode: "# My first Python program\n# Write your introduction below\n\n",
   },
 } satisfies Stage;
