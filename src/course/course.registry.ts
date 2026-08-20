@@ -11,7 +11,7 @@ import { stage09 } from "./stages/stage-09-oop.course";
 import { stage10 } from "./stages/stage-10-testing-types.course";
 import { stage11 } from "./stages/stage-11-automation-cli.course";
 import { stage12 } from "./stages/stage-12-apis-web.course";
-import { stage13 } from "./stages/stage-13-data.course";
+import { stage13 } from "./stages/stage-13-functions.course";
 import { stage14 } from "./stages/stage-14-async-performance.course";
 import { stage15 } from "./stages/stage-15-security-packaging.course";
 import { stage16 } from "./stages/stage-16-architecture-capstone.course";

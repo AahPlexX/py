@@ -29,7 +29,7 @@ export const stage14 = {
         "Write generator functions with yield",
         "Use generators for memory-efficient processing",
       ],
-      prerequisites: ["s13-date-time-processing"],
+      prerequisites: [],
       concepts: ["iterator", "generator"],
       contentBlocks: [
         {
